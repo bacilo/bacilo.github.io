@@ -12,7 +12,7 @@ This roadmap transforms bacilo.github.io from Jekyll to Astro through 10 phases,
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Foundation & Astro Setup** - Astro project scaffolding and deployment pipeline
+- [x] **Phase 1: Foundation & Astro Setup** - Astro project scaffolding and deployment pipeline
 - [ ] **Phase 2: Core Layout & Navigation** - Base layout, navigation, and responsive design
 - [ ] **Phase 3: Author Profile** - Author sidebar and about page
 - [ ] **Phase 4: Publications** - Publications listing with metadata and links
@@ -37,9 +37,9 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 3 plans
 
 Plans:
-- [ ] 01-01-PLAN.md — Initialize Astro project with configuration and deployment workflow
-- [ ] 01-02-PLAN.md — Migrate Jekyll content to Astro content collections
-- [ ] 01-03-PLAN.md — Commit, deploy, and verify GitHub Pages deployment
+- [x] 01-01-PLAN.md — Initialize Astro project with configuration and deployment workflow
+- [x] 01-02-PLAN.md — Migrate Jekyll content to Astro content collections
+- [x] 01-03-PLAN.md — Commit, deploy, and verify GitHub Pages deployment
 
 ### Phase 2: Core Layout & Navigation
 **Goal**: Site has functional layout with navigation and responsive design
@@ -50,10 +50,12 @@ Plans:
   2. Site works on mobile and desktop screen sizes
   3. Design maintains clean academic aesthetic
   4. URLs match Jekyll permalink structure (no broken links from old site)
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] TBD during phase planning
+- [ ] 02-01-PLAN.md — Create global styles, layout shell, and navigation components
+- [ ] 02-02-PLAN.md — Implement dynamic routes preserving Jekyll URL structure
+- [ ] 02-03-PLAN.md — Create content listing pages and verify navigation flow
 
 ### Phase 3: Author Profile
 **Goal**: Users can view author information and identity throughout the site
@@ -173,8 +175,8 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Astro Setup | 0/3 | Planning complete | - |
-| 2. Core Layout & Navigation | 0/? | Not started | - |
+| 1. Foundation & Astro Setup | 3/3 | Complete | 2026-02-12 |
+| 2. Core Layout & Navigation | 0/3 | Planning complete | - |
 | 3. Author Profile | 0/? | Not started | - |
 | 4. Publications | 0/? | Not started | - |
 | 5. Talks | 0/? | Not started | - |
