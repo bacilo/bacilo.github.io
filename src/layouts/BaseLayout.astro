@@ -25,6 +25,12 @@ const {
     <meta name="description" content={description} />
     <link rel="icon" type="image/png" href="/images/favicon.ico" />
     <link rel="stylesheet" href="/styles/global.css" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="Pedro Figueira - Blog"
+      href={new URL('rss.xml', Astro.site)}
+    />
     <title>{title}</title>
   </head>
   <body>
