@@ -1,0 +1,119 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const posts = await getCollection('posts');
+// Sort by date, newest first, filter out future posts
+const now = new Date();
+const sortedPosts = posts
+  .filter(post => post.data.date <= now)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+---
+
+<BaseLayout title="Blog - Pedro Figueira">
+  <h1>Blog</h1>
+  <p class="intro">Thoughts on research, technology, and nomadic life.</p>
+
+  <ul class="post-list">
+    {sortedPosts.map(post => {
+      // Generate permalink if not in frontmatter
+      const permalink = post.data.permalink || (() => {
+        const date = post.data.date;
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const postName = post.id.replace(/^\d{4}-\d{2}-\d{2}-/, '').replace(/\.md$/, '');
+        return `/posts/${year}/${month}/${postName}/`;
+      })();
+
+      return (
+        <li class="post-item">
+          <a href={permalink}>
+            <h2>{post.data.title}</h2>
+          </a>
+          <p class="meta">
+            <time datetime={post.data.date.toISOString()}>
+              {post.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+            </time>
+          </p>
+          {post.data.tags && post.data.tags.length > 0 && (
+            <div class="tags">
+              {post.data.tags.map(tag => (
+                <span class="tag">{tag}</span>
+              ))}
+            </div>
+          )}
+        </li>
+      );
+    })}
+  </ul>
+
+  {sortedPosts.length === 0 && (
+    <p class="empty">No posts yet. Check back soon!</p>
+  )}
+</BaseLayout>
+
+<style>
+  h1 {
+    margin-bottom: var(--space-xs);
+  }
+
+  .intro {
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-lg);
+  }
+
+  .post-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .post-item {
+    padding: var(--space-md) 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .post-item:last-child {
+    border-bottom: none;
+  }
+
+  .post-item h2 {
+    font-size: 1.125rem;
+    margin: 0 0 var(--space-xs) 0;
+    line-height: 1.4;
+  }
+
+  .post-item a {
+    text-decoration: none;
+  }
+
+  .post-item a:hover h2 {
+    color: var(--color-link);
+  }
+
+  .meta {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    margin: 0 0 var(--space-xs) 0;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+  }
+
+  .tag {
+    display: inline-block;
+    background: var(--color-header-bg);
+    color: var(--color-text-muted);
+    padding: 0.125rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+  }
+
+  .empty {
+    color: var(--color-text-muted);
+    font-style: italic;
+  }
+</style>

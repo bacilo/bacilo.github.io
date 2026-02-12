@@ -1,0 +1,33 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="CV - Pedro Figueira">
+  <h1>Curriculum Vitae</h1>
+  <p class="placeholder">Full CV coming soon. This page will contain academic history, positions, and qualifications.</p>
+
+  <section class="contact">
+    <h2>Contact</h2>
+    <p>For academic inquiries, please reach out via LinkedIn or academic profiles.</p>
+  </section>
+</BaseLayout>
+
+<style>
+  h1 {
+    margin-bottom: var(--space-md);
+  }
+
+  .placeholder {
+    color: var(--color-text-muted);
+    font-style: italic;
+    padding: var(--space-md);
+    background: var(--color-header-bg);
+    border-radius: 4px;
+    margin-bottom: var(--space-lg);
+  }
+
+  .contact h2 {
+    font-size: 1.25rem;
+    margin-bottom: var(--space-sm);
+  }
+</style>
