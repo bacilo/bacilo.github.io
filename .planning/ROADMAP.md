@@ -66,10 +66,11 @@ Plans:
   2. Sidebar includes working links to Twitter, LinkedIn, and GitHub
   3. Sidebar includes working links to Google Scholar and ORCID
   4. About/home page displays author introduction and background
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] TBD during phase planning
+- [ ] 03-01-PLAN.md — Create author sidebar component with config, social links, and layout integration
+- [ ] 03-02-PLAN.md — Update homepage with author introduction content
 
 ### Phase 4: Publications
 **Goal**: Users can discover and access academic publications
@@ -176,8 +177,8 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation & Astro Setup | 3/3 | Complete | 2026-02-12 |
-| 2. Core Layout & Navigation | 0/3 | Planning complete | - |
-| 3. Author Profile | 0/? | Not started | - |
+| 2. Core Layout & Navigation | 3/3 | Complete | 2026-02-12 |
+| 3. Author Profile | 0/2 | Planning complete | - |
 | 4. Publications | 0/? | Not started | - |
 | 5. Talks | 0/? | Not started | - |
 | 6. CV Page | 0/? | Not started | - |
