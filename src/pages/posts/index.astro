@@ -38,7 +38,7 @@ const sortedPosts = posts
           {post.data.tags && post.data.tags.length > 0 && (
             <div class="tags">
               {post.data.tags.map(tag => (
-                <span class="tag">{tag}</span>
+                <a href={`/tags/${encodeURIComponent(tag.toLowerCase())}/`} class="tag">{tag}</a>
               ))}
             </div>
           )}
@@ -110,6 +110,13 @@ const sortedPosts = posts
     padding: 0.125rem 0.5rem;
     border-radius: 4px;
     font-size: 0.75rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  .tag:hover {
+    background: var(--color-link);
+    color: var(--color-bg);
   }
 
   .empty {
