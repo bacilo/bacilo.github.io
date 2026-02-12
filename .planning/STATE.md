@@ -10,28 +10,28 @@ See: .planning/PROJECT.md (updated 2026-02-11)
 ## Current Position
 
 Phase: 1 of 10 (Foundation & Astro Setup)
-Plan: 1 of TBD in current phase
+Plan: 2 of TBD in current phase
 Status: In progress
-Last activity: 2026-02-12 — Completed 01-01-PLAN.md (Astro initialization)
+Last activity: 2026-02-12 — Completed 01-02-PLAN.md (content migration)
 
-Progress: [█░░░░░░░░░] 10%
+Progress: [██░░░░░░░░] 20%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 1
-- Average duration: 9 minutes
-- Total execution time: 0.15 hours
+- Total plans completed: 2
+- Average duration: 6.5 minutes
+- Total execution time: 0.22 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 01 | 1 | 9m | 9m |
+| 01 | 2 | 13m | 6.5m |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (9m)
-- Trend: Establishing baseline
+- Last 5 plans: 01-01 (9m), 01-02 (4m)
+- Trend: Accelerating execution
 
 *Updated after each plan completion*
 
@@ -47,6 +47,7 @@ Recent decisions affecting current work:
 - Migrate all content: User wants to preserve publication/talk history
 - Portfolio embeds as enhancement: Core portfolio works with GitHub cards, interactivity layered on
 - Use @astrojs/sitemap ^3.7.0: Version 4.0.0 doesn't exist yet; 3.7.0 is latest stable (01-01)
+- [Phase 01-02]: Convert portfolio-2.html to portfolio-2.md for Astro content collection compatibility
 
 ### Pending Todos
 
@@ -61,6 +62,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-12 — Plan 01-01 execution
-Stopped at: Completed 01-01-PLAN.md (Astro initialization), ready for next plan
+Last session: 2026-02-12 — Plan 01-02 execution
+Stopped at: Completed 01-02-PLAN.md (content migration), ready for next plan
 Resume file: None
