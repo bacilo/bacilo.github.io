@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-11)
 
 **Core value:** A professional online presence that showcases work and is easy to maintain with monthly content updates
-**Current focus:** Phase 3 - Author Profile
+**Current focus:** Phase 6 - CV Page
 
 ## Current Position
 
-Phase: 3 of 10 (Author Profile)
-Plan: 2 of 2 in current phase
+Phase: 6 of 10 (CV Page)
+Plan: 1 of 1 in current phase
 Status: Complete
-Last activity: 2026-02-12 — Completed plan 03-01 (Author Sidebar)
+Last activity: 2026-02-12 — Completed plan 06-01 (CV Page Implementation)
 
-Progress: [█████░░░░░] 50%
+Progress: [██████░░░░] 60%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 8
-- Average duration: 9.9 minutes
-- Total execution time: 1.32 hours
+- Total plans completed: 9
+- Average duration: 8.9 minutes
+- Total execution time: 1.37 hours
 
 **By Phase:**
 
@@ -30,10 +30,11 @@ Progress: [█████░░░░░] 50%
 | 01 | 3 | 19m | 6.3m |
 | 02 | 3 | 51m | 17.0m |
 | 03 | 2 | 3m | 1.5m |
+| 06 | 1 | 2m | 2.0m |
 
 **Recent Trend:**
-- Last 5 plans: 02-02 (3m), 02-03 (46m), 03-02 (1m), 03-01 (2m)
-- Trend: Variable (checkpoint verification adds time, content updates fast)
+- Last 5 plans: 02-03 (46m), 03-02 (1m), 03-01 (2m), 06-01 (2m)
+- Trend: Fast execution for content-focused plans
 
 *Updated after each plan completion*
 
@@ -65,6 +66,9 @@ Recent decisions affecting current work:
 - [Phase 03-01]: Centralized author config in src/config/site.ts for reusability
 - [Phase 03-01]: Regular img tag for public folder assets instead of Astro Image component
 - [Phase 03-01]: Mobile-first responsive design with 768px breakpoint for sidebar layout
+- [Phase 06-01]: Publications and Talks sections link to dedicated pages rather than embedding content
+- [Phase 06-01]: Print styles hide sidebar and show link URLs for PDF export functionality
+- [Phase 06-01]: CV uses placeholder content for user to replace with actual academic history
 
 ### Pending Todos
 
@@ -110,9 +114,16 @@ None yet.
 - Sidebar integrated into BaseLayout with responsive wrapper
 - Centralized author configuration in src/config/site.ts
 
+**Phase 6 Complete:**
+- Plan 06-01: CV page implementation
+- Complete CV page with Education, Work Experience, Skills, Publications, Talks, Teaching, Service sections
+- Print-friendly styles for PDF export
+- Links to Publications and Talks pages
+- Academic CV structure with placeholder content
+
 ## Session Continuity
 
-Last session: 2026-02-12 — Phase 03 completion
-Stopped at: Completed 03-01 (Author Sidebar) - Phase 3 fully complete
+Last session: 2026-02-12 — Phase 06 completion
+Stopped at: Completed 06-01 (CV Page Implementation) - Phase 6 fully complete
 Resume file: None
-Next: Phase 04 - Home Page & Content Enhancement
+Next: Remaining phases (04, 05, 07, 08, 09, 10)
