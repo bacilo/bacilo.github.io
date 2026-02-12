@@ -24,7 +24,7 @@ export interface AuthorConfig {
 }
 
 export const SITE: SiteConfig = {
-  title: "Pedro Figueira",
+  title: "Pedro Ferreira",
   description: "Academic researcher - HCI, nomadic work, and digital technologies",
   url: "https://pedropaf.com"
 };
