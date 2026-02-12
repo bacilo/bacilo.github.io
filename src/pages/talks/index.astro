@@ -1,0 +1,98 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const talks = await getCollection('talks');
+// Sort by date, newest first
+const sortedTalks = talks.sort((a, b) =>
+  b.data.date.getTime() - a.data.date.getTime()
+);
+---
+
+<BaseLayout title="Talks - Pedro Figueira">
+  <h1>Talks</h1>
+  <p class="intro">Conference presentations, tutorials, and invited talks.</p>
+
+  <ul class="talk-list">
+    {sortedTalks.map(talk => (
+      <li class="talk-item">
+        <a href={talk.data.permalink}>
+          <h2>{talk.data.title}</h2>
+        </a>
+        <p class="meta">
+          <span class="type">{talk.data.type}</span>
+          <span class="venue">{talk.data.venue}</span>
+          <span class="location">{talk.data.location}</span>
+          <span class="date">{talk.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'short' })}</span>
+        </p>
+      </li>
+    ))}
+  </ul>
+</BaseLayout>
+
+<style>
+  h1 {
+    margin-bottom: var(--space-xs);
+  }
+
+  .intro {
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-lg);
+  }
+
+  .talk-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .talk-item {
+    padding: var(--space-md) 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .talk-item:last-child {
+    border-bottom: none;
+  }
+
+  .talk-item h2 {
+    font-size: 1.125rem;
+    margin: 0 0 var(--space-xs) 0;
+    line-height: 1.4;
+  }
+
+  .talk-item a {
+    text-decoration: none;
+  }
+
+  .talk-item a:hover h2 {
+    color: var(--color-link);
+  }
+
+  .meta {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  .meta .type {
+    font-weight: 500;
+    color: var(--color-text);
+  }
+
+  .meta .type::after {
+    content: " at ";
+  }
+
+  .meta .venue {
+    font-style: italic;
+  }
+
+  .meta .location::before {
+    content: ", ";
+  }
+
+  .meta .date::before {
+    content: " · ";
+  }
+</style>
