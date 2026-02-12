@@ -13,7 +13,7 @@ This roadmap transforms bacilo.github.io from Jekyll to Astro through 10 phases,
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation & Astro Setup** - Astro project scaffolding and deployment pipeline
-- [ ] **Phase 2: Core Layout & Navigation** - Base layout, navigation, and responsive design
+- [x] **Phase 2: Core Layout & Navigation** - Base layout, navigation, and responsive design
 - [ ] **Phase 3: Author Profile** - Author sidebar and about page
 - [ ] **Phase 4: Publications** - Publications listing with metadata and links
 - [ ] **Phase 5: Talks** - Talks listing with metadata and links
@@ -53,9 +53,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 02-01-PLAN.md — Create global styles, layout shell, and navigation components
-- [ ] 02-02-PLAN.md — Implement dynamic routes preserving Jekyll URL structure
-- [ ] 02-03-PLAN.md — Create content listing pages and verify navigation flow
+- [x] 02-01-PLAN.md — Create global styles, layout shell, and navigation components
+- [x] 02-02-PLAN.md — Implement dynamic routes preserving Jekyll URL structure
+- [x] 02-03-PLAN.md — Create content listing pages and verify navigation flow
 
 ### Phase 3: Author Profile
 **Goal**: Users can view author information and identity throughout the site
