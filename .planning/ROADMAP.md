@@ -124,10 +124,10 @@ Plans:
   2. Each blog post displays tags
   3. User can browse all posts chronologically in archive
   4. Blog posts use preserved URLs from Jekyll site
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] TBD during phase planning
+- [ ] 07-01-PLAN.md — Complete prose typography and verify blog functionality
 
 ### Phase 8: Blog Enhancement
 **Goal**: Users can discover blog content through filtering and subscription
@@ -184,7 +184,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 4. Publications | 0/0 | Complete (Phase 2) | 2026-02-12 |
 | 5. Talks | 0/0 | Complete (Phase 2) | 2026-02-12 |
 | 6. CV Page | 1/1 | Complete | 2026-02-12 |
-| 7. Blog Foundation | 0/? | Not started | - |
+| 7. Blog Foundation | 0/1 | Planned | - |
 | 8. Blog Enhancement | 0/? | Not started | - |
 | 9. Static Portfolio | 0/? | Not started | - |
 | 10. Interactive Portfolio | 0/? | Not started | - |
