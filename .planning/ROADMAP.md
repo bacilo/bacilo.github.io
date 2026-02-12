@@ -20,7 +20,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 6: CV Page** - Academic CV page
 - [x] **Phase 7: Blog Foundation** - Blog posts with tags and chronological browsing
 - [x] **Phase 8: Blog Enhancement** - Tag/category filtering and RSS feed
-- [ ] **Phase 9: Static Portfolio** - Portfolio page with static project cards
+- [x] **Phase 9: Static Portfolio** - Portfolio page with static project cards
 - [ ] **Phase 10: Interactive Portfolio** - GitHub API integration and live embeds
 
 ## Phase Details
@@ -156,7 +156,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 09-01-PLAN.md — Create portfolio page with CSS Grid cards and navigation link
+- [x] 09-01-PLAN.md — Create portfolio page with CSS Grid cards and navigation link
 
 ### Phase 10: Interactive Portfolio
 **Goal**: Portfolio showcases projects with rich, interactive features
@@ -187,5 +187,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 6. CV Page | 1/1 | Complete | 2026-02-12 |
 | 7. Blog Foundation | 1/1 | Complete | 2026-02-12 |
 | 8. Blog Enhancement | 2/2 | Complete | 2026-02-12 |
-| 9. Static Portfolio | 0/1 | Not started | - |
+| 9. Static Portfolio | 1/1 | Complete | 2026-02-12 |
 | 10. Interactive Portfolio | 0/? | Not started | - |
