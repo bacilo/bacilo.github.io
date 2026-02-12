@@ -5,13 +5,15 @@
 See: .planning/PROJECT.md (updated 2026-02-12)
 
 **Core value:** A professional online presence that showcases work and is easy to maintain with monthly content updates
-**Current focus:** v1.0 shipped — planning next milestone
+**Current focus:** v2.0 Content Management — CMS integration
 
 ## Current Position
 
-Milestone: v1.0 Personal Website Rebuild
-Status: ✅ SHIPPED
-Last activity: 2026-02-12 — Milestone v1.0 archived
+Milestone: v2.0 Content Management
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-02-12 — Milestone v2.0 started
 
 ## Performance Metrics (v1.0)
 
