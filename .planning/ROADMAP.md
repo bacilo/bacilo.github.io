@@ -17,7 +17,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 3: Author Profile** - Author sidebar and about page
 - [x] **Phase 4: Publications** - Publications listing with metadata and links
 - [x] **Phase 5: Talks** - Talks listing with metadata and links
-- [ ] **Phase 6: CV Page** - Academic CV page
+- [x] **Phase 6: CV Page** - Academic CV page
 - [ ] **Phase 7: Blog Foundation** - Blog posts with tags and chronological browsing
 - [ ] **Phase 8: Blog Enhancement** - Tag/category filtering and RSS feed
 - [ ] **Phase 9: Static Portfolio** - Portfolio page with static project cards
@@ -113,7 +113,7 @@ Note: Slide/recording links depend on content having slideurl field. Add to fron
 **Plans**: 1 plan
 
 Plans:
-- [ ] 06-01-PLAN.md — Create CV page with academic sections and print-friendly styles
+- [x] 06-01-PLAN.md — Create CV page with academic sections and print-friendly styles
 
 ### Phase 7: Blog Foundation
 **Goal**: Users can read and browse blog posts
@@ -183,7 +183,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 3. Author Profile | 2/2 | Complete | 2026-02-12 |
 | 4. Publications | 0/0 | Complete (Phase 2) | 2026-02-12 |
 | 5. Talks | 0/0 | Complete (Phase 2) | 2026-02-12 |
-| 6. CV Page | 0/1 | In Progress | - |
+| 6. CV Page | 1/1 | Complete | 2026-02-12 |
 | 7. Blog Foundation | 0/? | Not started | - |
 | 8. Blog Enhancement | 0/? | Not started | - |
 | 9. Static Portfolio | 0/? | Not started | - |
