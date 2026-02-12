@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-11)
 
 **Core value:** A professional online presence that showcases work and is easy to maintain with monthly content updates
-**Current focus:** Phase 7 - Blog Foundation
+**Current focus:** Phase 8 - Blog Enhancement
 
 ## Current Position
 
-Phase: 7 of 10 (Blog Foundation)
-Plan: 1 of 1 in current phase
-Status: Complete
-Last activity: 2026-02-12 — Completed plan 07-01 (Blog Foundation)
+Phase: 8 of 10 (Blog Enhancement)
+Plan: 1 of 2 in current phase
+Status: In Progress
+Last activity: 2026-02-12 — Completed plan 08-01 (Tag-based Filtering)
 
-Progress: [███████░░░] 70%
+Progress: [███████░░░] 72%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 10
-- Average duration: 8.1 minutes
-- Total execution time: 1.38 hours
+- Total plans completed: 11
+- Average duration: 7.5 minutes
+- Total execution time: 1.45 hours
 
 **By Phase:**
 
@@ -32,9 +32,10 @@ Progress: [███████░░░] 70%
 | 03 | 2 | 3m | 1.5m |
 | 06 | 1 | 2m | 2.0m |
 | 07 | 1 | 1m | 1.0m |
+| 08 | 1 | 1m | 1.0m |
 
 **Recent Trend:**
-- Last 5 plans: 03-02 (1m), 03-01 (2m), 06-01 (2m), 07-01 (1m)
+- Last 5 plans: 03-01 (2m), 06-01 (2m), 07-01 (1m), 08-01 (1m)
 - Trend: Fast execution for content-focused plans
 
 *Updated after each plan completion*
@@ -73,6 +74,9 @@ Recent decisions affecting current work:
 - [Phase 07-01]: Custom CSS over Tailwind Typography plugin to avoid adding Tailwind dependency
 - [Phase 07-01]: Use :global() selectors for rendered markdown content within scoped styles
 - [Phase 07-01]: All typography uses CSS custom properties for dark mode compatibility
+- [Phase 08-01]: Tag normalization to lowercase prevents duplicate pages for case variations
+- [Phase 08-01]: Tag index sorted by post count descending for discoverability
+- [Phase 08-01]: Clickable tags use transition animation for smooth hover effect
 
 ### Pending Todos
 
@@ -132,9 +136,17 @@ None yet.
 - Dark mode compatible using CSS custom properties
 - Blog posts render correctly with proper styling
 
+**Phase 8 In Progress:**
+- Plan 08-01: Tag-based filtering implementation
+- Dynamic tag pages at /tags/[tag]/ showing filtered posts
+- Tag index at /tags/ with all tags and post counts
+- Clickable tags on blog listing and individual post pages
+- Tag normalization to lowercase prevents duplicate pages
+- Users can discover related content through tag-based browsing
+
 ## Session Continuity
 
-Last session: 2026-02-12 — Phase 07 completion
-Stopped at: Completed 07-01-PLAN.md
+Last session: 2026-02-12 — Phase 08 plan 01 completion
+Stopped at: Completed 08-01-PLAN.md
 Resume file: None
-Next: Remaining phases (04, 05, 08, 09, 10)
+Next: 08-02-PLAN.md (Search & Navigation), then phases 04, 05, 09, 10
