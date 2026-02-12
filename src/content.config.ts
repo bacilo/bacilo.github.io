@@ -47,6 +47,7 @@ const portfolio = defineCollection({
     repoUrl: z.string().url().optional(),
     demoUrl: z.string().url().optional(),
     description: z.string().optional(),
+    playgroundUrl: z.string().url().optional(),
   })
 });
 

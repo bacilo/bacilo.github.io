@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import GitHubCard from '../../components/portfolio/GitHubCard.astro';
 
 const portfolio = await getCollection('portfolio');
 // Sort alphabetically by title - Astro collection order is non-deterministic
@@ -13,18 +14,31 @@ const sortedPortfolio = portfolio.sort((a, b) => a.data.title.localeCompare(b.da
 
   <ul class="portfolio-grid">
     {sortedPortfolio.map(project => (
-      <li class="portfolio-card">
-        <h2>{project.data.title}</h2>
-        <p class="description">{project.data.description || project.data.excerpt}</p>
-        <div class="card-links">
-          {project.data.repoUrl && (
-            <a href={project.data.repoUrl} class="link-button">View Repo</a>
-          )}
+      project.data.repoUrl?.includes('github.com') ? (
+        <li class="portfolio-item">
+          <GitHubCard
+            repoUrl={project.data.repoUrl}
+            title={project.data.title}
+            description={project.data.description || project.data.excerpt}
+          />
           {project.data.demoUrl && (
-            <a href={project.data.demoUrl} class="link-button">Live Demo</a>
+            <a href={project.data.demoUrl} class="demo-link">Live Demo</a>
           )}
-        </div>
-      </li>
+        </li>
+      ) : (
+        <li class="portfolio-card">
+          <h2>{project.data.title}</h2>
+          <p class="description">{project.data.description || project.data.excerpt}</p>
+          <div class="card-links">
+            {project.data.repoUrl && (
+              <a href={project.data.repoUrl} class="link-button">View Repo</a>
+            )}
+            {project.data.demoUrl && (
+              <a href={project.data.demoUrl} class="link-button">Live Demo</a>
+            )}
+          </div>
+        </li>
+      )
     ))}
   </ul>
 
@@ -50,6 +64,12 @@ const sortedPortfolio = portfolio.sort((a, b) => a.data.title.localeCompare(b.da
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: var(--space-md);
+  }
+
+  .portfolio-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
   }
 
   .portfolio-card {
@@ -96,6 +116,21 @@ const sortedPortfolio = portfolio.sort((a, b) => a.data.title.localeCompare(b.da
   }
 
   .link-button:hover {
+    background: var(--color-link-hover);
+  }
+
+  .demo-link {
+    padding: var(--space-xs) var(--space-sm);
+    background: var(--color-link);
+    color: var(--color-bg);
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+    align-self: flex-start;
+  }
+
+  .demo-link:hover {
     background: var(--color-link-hover);
   }
 
