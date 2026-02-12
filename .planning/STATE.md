@@ -5,33 +5,34 @@
 See: .planning/PROJECT.md (updated 2026-02-11)
 
 **Core value:** A professional online presence that showcases work and is easy to maintain with monthly content updates
-**Current focus:** Phase 1 - Foundation & Astro Setup
+**Current focus:** Phase 2 - Core Layout & Navigation
 
 ## Current Position
 
-Phase: 1 of 10 (Foundation & Astro Setup)
-Plan: 3 of 3 in current phase
-Status: Phase complete
-Last activity: 2026-02-12 — Completed Phase 01 (Foundation & Astro Setup)
+Phase: 2 of 10 (Core Layout & Navigation)
+Plan: 1 of 3 in current phase
+Status: In progress
+Last activity: 2026-02-12 — Completed plan 02-01 (Core Layout System)
 
-Progress: [███░░░░░░░] 30%
+Progress: [███░░░░░░░] 33%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 3
-- Average duration: 6.3 minutes
-- Total execution time: 0.32 hours
+- Total plans completed: 4
+- Average duration: 5.5 minutes
+- Total execution time: 0.35 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01 | 3 | 19m | 6.3m |
+| 02 | 1 | 2m | 2.0m |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (9m), 01-02 (4m), 01-03 (6m)
-- Trend: Consistent execution speed
+- Last 5 plans: 01-01 (9m), 01-02 (4m), 01-03 (6m), 02-01 (2m)
+- Trend: Improving execution speed
 
 *Updated after each plan completion*
 
@@ -49,6 +50,10 @@ Recent decisions affecting current work:
 - Use @astrojs/sitemap ^3.7.0: Version 4.0.0 doesn't exist yet; 3.7.0 is latest stable (01-01)
 - [Phase 01-02]: Convert portfolio-2.html to portfolio-2.md for Astro content collection compatibility
 - [Phase 01-03]: Replace withastro/action with manual build steps to avoid duplicate artifact upload error in GitHub Actions
+- [Phase 02-01]: System font stack over web fonts for performance
+- [Phase 02-01]: CSS custom properties for theming with automatic dark mode
+- [Phase 02-01]: Data-driven navigation array for maintainability
+- [Phase 02-01]: 768px breakpoint for mobile/desktop responsive split
 
 ### Pending Todos
 
@@ -69,9 +74,15 @@ None yet.
 - Site live at bacilo.github.io and pedropaf.com
 - Foundation ready for Phase 2 (content rendering and URL preservation)
 
+**Phase 2 Progress:**
+- Plan 02-01 complete: Core layout system with responsive navigation, accessibility features, and design tokens
+- BaseLayout component provides consistent site shell
+- Navigation component with active state detection
+- Global CSS with custom properties and dark mode support
+
 ## Session Continuity
 
-Last session: 2026-02-12 — Phase 01 completion
-Stopped at: Completed Phase 01 (Foundation & Astro Setup) - all 3 plans executed, site deployed and live
+Last session: 2026-02-12 — Phase 02 plan 01 completion
+Stopped at: Completed plan 02-01 (Core Layout System) - BaseLayout with navigation and accessibility features
 Resume file: None
-Next phase: Phase 02 (Content rendering and URL preservation)
+Next plan: 02-02 (Content Page Templates)
