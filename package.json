@@ -1,7 +1,7 @@
 {
-  "name": "pedropaf-website",
+  "name": "bacilo-github-io",
   "version": "1.0.0",
-  "description": "Personal academic website for Pedro Paf",
+  "description": "Personal academic website for Pedro Figueira",
   "type": "module",
   "scripts": {
     "dev": "astro dev",
@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "astro": "^5.0.0",
-    "@astrojs/mdx": "^4.3.13",
+    "@astrojs/mdx": "^4.0.0",
     "@astrojs/sitemap": "^3.7.0"
   },
   "devDependencies": {
