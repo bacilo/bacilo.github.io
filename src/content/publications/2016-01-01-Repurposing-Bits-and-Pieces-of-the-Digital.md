@@ -7,4 +7,4 @@ venue: 'In the proceedings of Proceedings of the 2016 CHI Conference on Human Fa
 paperurl: 'http://dl.acm.org/citation.cfm?id=2858297'
 citation: ' Vygandas&apos; Simbelis,  Pedro Ferreira,  Elsa Vaara,  Jarmo Laaksolahti,  Kristina Höök, &quot;Repurposing Bits and Pieces of the Digital.&quot; In the proceedings of Proceedings of the 2016 CHI Conference on Human Factors in Computing Systems, 2016.'
 ---
-[Access paper here](http://dl.acm.org/citation.cfm?id=2858297){:target="_blank"}
+[Access paper here](http://dl.acm.org/citation.cfm?id=2858297)

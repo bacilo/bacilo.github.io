@@ -7,4 +7,4 @@ venue: 'In the proceedings of Proceedings of the 18th ACM Conference on Computer
 paperurl: 'http://doi.acm.org/10.1145/2675133.2675224'
 citation: ' Indrani Medhi-Thies,  Pedro Ferreira,  Nakull Gupta,  Jacki O&apos;Neill,  Edward Cutrell, &quot;KrishiPustak: A Social Networking System for Low-Literate Farmers.&quot; In the proceedings of Proceedings of the 18th ACM Conference on Computer Supported Cooperative Work &amp;amp;#38; Social Computing, 2015.'
 ---
-[Access paper here](http://doi.acm.org/10.1145/2675133.2675224){:target="_blank"}
+[Access paper here](http://doi.acm.org/10.1145/2675133.2675224)

@@ -9,4 +9,4 @@ citation: ' Karey Helms,  Pedro Ferreira,  Barry Brown,  Airi Lampinen, &quot;Aw
 ---
 Publisher: ACM New York, NY, USA
 
-Use [Google Scholar](https://scholar.google.com/scholar?q=Away+and+(Dis)+connection:+Reconsidering+the+use+of+digital+technologies+in+light+of+long+term+outdoor+activities){:target="_blank"} for full citation
+Use [Google Scholar](https://scholar.google.com/scholar?q=Away+and+(Dis)+connection:+Reconsidering+the+use+of+digital+technologies+in+light+of+long+term+outdoor+activities) for full citation

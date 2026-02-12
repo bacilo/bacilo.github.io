@@ -9,4 +9,4 @@ citation: ' Pedro Ferreira,  Karey Helms,  Barry Brown,  Airi Lampinen, &quot;Fr
 ---
 Publisher: ACM New York, NY, USA
 
-Use [Google Scholar](https://scholar.google.com/scholar?q=From+nomadic+work+to+nomadic+leisure+practice:+A+study+of+long+term+bike+touring){:target="_blank"} for full citation
+Use [Google Scholar](https://scholar.google.com/scholar?q=From+nomadic+work+to+nomadic+leisure+practice:+A+study+of+long+term+bike+touring) for full citation
