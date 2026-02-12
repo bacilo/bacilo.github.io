@@ -1,0 +1,74 @@
+:root {
+  /* Colors - Clean academic palette */
+  --color-bg: #ffffff;
+  --color-text: #333333;
+  --color-text-muted: #666666;
+  --color-link: #0066cc;
+  --color-link-hover: #004499;
+  --color-border: #e0e0e0;
+  --color-header-bg: #f8f9fa;
+
+  /* Typography - System font stack for performance */
+  --font-system: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  --font-mono: 'SF Mono', Monaco, 'Cascadia Code', Consolas, monospace;
+
+  /* Spacing */
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 2rem;
+  --space-lg: 4rem;
+
+  /* Layout */
+  --max-width: 800px;
+  --header-height: 4rem;
+}
+
+/* Dark mode support via media query */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #1a1a1a;
+    --color-text: #e0e0e0;
+    --color-text-muted: #a0a0a0;
+    --color-link: #6699ff;
+    --color-link-hover: #99bbff;
+    --color-border: #404040;
+    --color-header-bg: #252525;
+  }
+}
+
+/* Base reset and defaults */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-system);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--color-text);
+  background: var(--color-bg);
+}
+
+a {
+  color: var(--color-link);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--color-link-hover);
+  text-decoration: underline;
+}
+
+/* Screen reader only utility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
