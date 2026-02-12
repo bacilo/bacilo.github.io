@@ -1,0 +1,154 @@
+---
+import SkeletonCard from './SkeletonCard.astro';
+
+interface Props {
+  repoUrl: string;
+  title: string;
+  description?: string;
+}
+
+const { repoUrl, title, description } = Astro.props;
+
+// Parse owner and repo from GitHub URL
+const match = repoUrl.match(/github\.com\/([^/]+)\/([^/]+)/);
+if (!match) {
+  throw new Error(`Invalid GitHub URL: ${repoUrl}`);
+}
+const [, owner, repo] = match;
+---
+
+<div class="github-card" data-owner={owner} data-repo={repo}>
+  <div class="skeleton-wrapper">
+    <SkeletonCard />
+  </div>
+  <div class="content" style="display: none;">
+    <h2 class="repo-name">{title}</h2>
+    <p class="repo-desc">{description || 'No description'}</p>
+    <div class="repo-stats">
+      <span class="stars">Stars: <span class="star-count">-</span></span>
+      <span class="language">Language: <span class="lang-value">-</span></span>
+    </div>
+    <a href={repoUrl} class="repo-link">View on GitHub</a>
+  </div>
+</div>
+
+<script>
+  import { fetchRepoData } from '../../scripts/github-api';
+
+  // Initialize all GitHub cards when DOM is ready
+  document.addEventListener('DOMContentLoaded', async () => {
+    const cards = document.querySelectorAll('.github-card');
+
+    cards.forEach(async (card) => {
+      const owner = card.getAttribute('data-owner');
+      const repo = card.getAttribute('data-repo');
+
+      if (!owner || !repo) return;
+
+      const skeletonWrapper = card.querySelector('.skeleton-wrapper') as HTMLElement;
+      const content = card.querySelector('.content') as HTMLElement;
+      const descElement = content.querySelector('.repo-desc') as HTMLParagraphElement;
+      const starsElement = content.querySelector('.star-count') as HTMLSpanElement;
+      const langElement = content.querySelector('.lang-value') as HTMLSpanElement;
+
+      try {
+        const data = await fetchRepoData(owner, repo);
+
+        if (data) {
+          // Update description if available from API
+          if (data.description) {
+            descElement.textContent = data.description;
+          }
+
+          // Update stars
+          starsElement.textContent = data.stargazers_count.toLocaleString();
+
+          // Update language
+          langElement.textContent = data.language || 'N/A';
+        } else {
+          // API failed - show fallback
+          const statsContainer = content.querySelector('.repo-stats') as HTMLElement;
+          statsContainer.innerHTML = '<span class="error">Unable to load stats</span>';
+        }
+      } catch (err) {
+        console.error(`Failed to load data for ${owner}/${repo}:`, err);
+        const statsContainer = content.querySelector('.repo-stats') as HTMLElement;
+        statsContainer.innerHTML = '<span class="error">Unable to load stats</span>';
+      }
+
+      // Show content, hide skeleton
+      skeletonWrapper.style.display = 'none';
+      content.style.display = 'flex';
+    });
+  });
+</script>
+
+<style>
+  .github-card {
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: var(--space-md);
+    background: var(--color-header-bg);
+    transition: all 0.2s ease;
+  }
+
+  .github-card:hover,
+  .github-card:focus-within {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-color: var(--color-link);
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .repo-name {
+    font-size: 1.25rem;
+    margin: 0 0 var(--space-xs) 0;
+  }
+
+  .repo-desc {
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-sm);
+    flex-grow: 1;
+  }
+
+  .repo-stats {
+    display: flex;
+    gap: var(--space-md);
+    margin-bottom: var(--space-sm);
+    font-size: 0.875rem;
+  }
+
+  .repo-stats .stars,
+  .repo-stats .language {
+    color: var(--color-text-muted);
+  }
+
+  .repo-stats .star-count,
+  .repo-stats .lang-value {
+    color: var(--color-text);
+    font-weight: 500;
+  }
+
+  .repo-stats .error {
+    color: var(--color-text-muted);
+    font-style: italic;
+  }
+
+  .repo-link {
+    padding: var(--space-xs) var(--space-sm);
+    background: var(--color-link);
+    color: var(--color-bg);
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+    align-self: flex-start;
+  }
+
+  .repo-link:hover {
+    background: var(--color-link-hover);
+  }
+</style>
