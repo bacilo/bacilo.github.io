@@ -110,10 +110,10 @@ Note: Slide/recording links depend on content having slideurl field. Add to fron
   1. User can navigate to CV page from main navigation
   2. CV displays academic history in readable format
   3. CV uses preserved URL from Jekyll site
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] TBD during phase planning
+- [ ] 06-01-PLAN.md — Create CV page with academic sections and print-friendly styles
 
 ### Phase 7: Blog Foundation
 **Goal**: Users can read and browse blog posts
@@ -183,7 +183,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 3. Author Profile | 2/2 | Complete | 2026-02-12 |
 | 4. Publications | 0/0 | Complete (Phase 2) | 2026-02-12 |
 | 5. Talks | 0/0 | Complete (Phase 2) | 2026-02-12 |
-| 6. CV Page | 0/? | Not started | - |
+| 6. CV Page | 0/1 | In Progress | - |
 | 7. Blog Foundation | 0/? | Not started | - |
 | 8. Blog Enhancement | 0/? | Not started | - |
 | 9. Static Portfolio | 0/? | Not started | - |
