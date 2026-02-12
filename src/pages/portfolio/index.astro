@@ -2,6 +2,8 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import GitHubCard from '../../components/portfolio/GitHubCard.astro';
+import DemoEmbed from '../../components/portfolio/DemoEmbed.astro';
+import PlaygroundEmbed from '../../components/portfolio/PlaygroundEmbed.astro';
 
 const portfolio = await getCollection('portfolio');
 // Sort alphabetically by title - Astro collection order is non-deterministic
@@ -22,7 +24,16 @@ const sortedPortfolio = portfolio.sort((a, b) => a.data.title.localeCompare(b.da
             description={project.data.description || project.data.excerpt}
           />
           {project.data.demoUrl && (
-            <a href={project.data.demoUrl} class="demo-link">Live Demo</a>
+            <DemoEmbed
+              src={project.data.demoUrl}
+              title={`${project.data.title} Demo`}
+            />
+          )}
+          {project.data.playgroundUrl && (
+            <PlaygroundEmbed
+              url={project.data.playgroundUrl}
+              title={`${project.data.title} Playground`}
+            />
           )}
         </li>
       ) : (
@@ -69,7 +80,7 @@ const sortedPortfolio = portfolio.sort((a, b) => a.data.title.localeCompare(b.da
   .portfolio-item {
     display: flex;
     flex-direction: column;
-    gap: var(--space-xs);
+    gap: var(--space-md);
   }
 
   .portfolio-card {
