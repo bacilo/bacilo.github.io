@@ -167,10 +167,11 @@ Plans:
   2. Portfolio includes live demo embeds loaded in iframes
   3. Portfolio includes code playground embeds for interactive examples
   4. Interactive elements lazy load and work on mobile
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] TBD during phase planning
+- [ ] 10-01-PLAN.md — GitHub API integration with skeleton loading and error handling
+- [ ] 10-02-PLAN.md — Demo and playground embed components with lazy loading
 
 ## Progress
 
@@ -188,4 +189,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 7. Blog Foundation | 1/1 | Complete | 2026-02-12 |
 | 8. Blog Enhancement | 2/2 | Complete | 2026-02-12 |
 | 9. Static Portfolio | 1/1 | Complete | 2026-02-12 |
-| 10. Interactive Portfolio | 0/? | Not started | - |
+| 10. Interactive Portfolio | 0/2 | Not started | - |
