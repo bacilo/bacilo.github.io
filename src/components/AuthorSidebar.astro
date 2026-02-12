@@ -1,0 +1,189 @@
+---
+import { Image } from 'astro:assets';
+import { AUTHOR } from '../config/site';
+
+// Import profile image from public folder
+const profileImage = AUTHOR.avatar;
+---
+
+<aside class="author-sidebar" aria-label="Author information">
+  <div class="author-card">
+    <img
+      src={profileImage}
+      alt={`${AUTHOR.name} profile photo`}
+      width="200"
+      height="200"
+      loading="eager"
+      class="author-photo"
+    />
+
+    <h2 class="author-name">{AUTHOR.name}</h2>
+    <p class="author-bio">{AUTHOR.bio}</p>
+
+    {AUTHOR.location && (
+      <p class="author-location">{AUTHOR.location}</p>
+    )}
+  </div>
+
+  {/* Social links section */}
+  {(AUTHOR.social.twitter || AUTHOR.social.github || AUTHOR.social.linkedin) && (
+    <nav aria-label="Author social links" class="author-links">
+      <h3 class="links-heading">Social</h3>
+      <ul class="links-list">
+        {AUTHOR.social.twitter && (
+          <li>
+            <a
+              href={`https://twitter.com/${AUTHOR.social.twitter}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Twitter
+            </a>
+          </li>
+        )}
+        {AUTHOR.social.github && (
+          <li>
+            <a
+              href={`https://github.com/${AUTHOR.social.github}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              GitHub
+            </a>
+          </li>
+        )}
+        {AUTHOR.social.linkedin && (
+          <li>
+            <a
+              href={`https://linkedin.com/in/${AUTHOR.social.linkedin}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              LinkedIn
+            </a>
+          </li>
+        )}
+      </ul>
+    </nav>
+  )}
+
+  {/* Academic links section */}
+  {(AUTHOR.academic.googleScholar || AUTHOR.academic.orcid) && (
+    <nav aria-label="Academic profile links" class="author-links">
+      <h3 class="links-heading">Academic</h3>
+      <ul class="links-list">
+        {AUTHOR.academic.googleScholar && (
+          <li>
+            <a
+              href={AUTHOR.academic.googleScholar}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Google Scholar
+            </a>
+          </li>
+        )}
+        {AUTHOR.academic.orcid && (
+          <li>
+            <a
+              href={AUTHOR.academic.orcid}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              ORCID
+            </a>
+          </li>
+        )}
+      </ul>
+    </nav>
+  )}
+</aside>
+
+<style>
+  .author-sidebar {
+    background: var(--color-header-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: var(--space-md);
+    width: 100%;
+  }
+
+  /* Desktop: Fixed width sidebar */
+  @media (min-width: 768px) {
+    .author-sidebar {
+      width: 250px;
+      flex-shrink: 0;
+    }
+  }
+
+  .author-card {
+    text-align: center;
+  }
+
+  .author-photo {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: var(--space-sm);
+  }
+
+  .author-name {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin: var(--space-sm) 0 var(--space-xs);
+    color: var(--color-text);
+  }
+
+  .author-bio {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    margin: var(--space-xs) 0;
+    line-height: 1.4;
+  }
+
+  .author-location {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    margin-top: var(--space-xs);
+  }
+
+  .author-links {
+    margin-top: var(--space-md);
+  }
+
+  .links-heading {
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-xs);
+  }
+
+  .links-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .links-list li {
+    margin-bottom: var(--space-xs);
+  }
+
+  .links-list a {
+    color: var(--color-link);
+    text-decoration: none;
+    font-size: 0.9rem;
+  }
+
+  .links-list a:hover {
+    color: var(--color-link-hover);
+    text-decoration: underline;
+  }
+
+  .links-list a:focus {
+    outline: 2px solid var(--color-link);
+    outline-offset: 2px;
+  }
+</style>
