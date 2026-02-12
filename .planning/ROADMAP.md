@@ -138,10 +138,11 @@ Plans:
   2. User can filter blog posts by category
   3. User can subscribe to blog via RSS feed
   4. RSS feed includes recent posts with full content
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] TBD during phase planning
+- [ ] 08-01-PLAN.md — Implement tag filtering with dynamic tag pages and clickable tags
+- [ ] 08-02-PLAN.md — Create RSS feed with full content and auto-discovery
 
 ### Phase 9: Static Portfolio
 **Goal**: Users can view project portfolio with basic information
@@ -185,6 +186,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 5. Talks | 0/0 | Complete (Phase 2) | 2026-02-12 |
 | 6. CV Page | 1/1 | Complete | 2026-02-12 |
 | 7. Blog Foundation | 1/1 | Complete | 2026-02-12 |
-| 8. Blog Enhancement | 0/? | Not started | - |
+| 8. Blog Enhancement | 0/2 | Planned | - |
 | 9. Static Portfolio | 0/? | Not started | - |
 | 10. Interactive Portfolio | 0/? | Not started | - |
