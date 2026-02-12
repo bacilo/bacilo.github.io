@@ -1,0 +1,103 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const posts = await getCollection('posts');
+
+// Filter out future-dated posts
+const now = new Date();
+const publishedPosts = posts.filter(post => post.data.date <= now);
+
+// Count posts per tag
+const tagCounts = publishedPosts.reduce((acc, post) => {
+  if (post.data.tags) {
+    post.data.tags.forEach(tag => {
+      const normalizedTag = tag.toLowerCase();
+      if (!acc.has(normalizedTag)) {
+        acc.set(normalizedTag, { displayTag: tag, count: 0 });
+      }
+      acc.get(normalizedTag).count++;
+    });
+  }
+  return acc;
+}, new Map());
+
+// Convert to array and sort by count descending
+const sortedTags = Array.from(tagCounts.entries())
+  .map(([normalizedTag, data]) => ({
+    normalizedTag,
+    displayTag: data.displayTag,
+    count: data.count,
+  }))
+  .sort((a, b) => b.count - a.count);
+---
+
+<BaseLayout title="All Tags - Pedro Figueira">
+  <h1>All Tags</h1>
+  <p class="intro">Browse posts by topic.</p>
+
+  <ul class="tag-list">
+    {sortedTags.map(({ normalizedTag, displayTag, count }) => (
+      <li class="tag-item">
+        <a href={`/tags/${encodeURIComponent(normalizedTag)}/`}>
+          {displayTag} <span class="count">({count})</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+
+  {sortedTags.length === 0 && (
+    <p class="empty">No tags found.</p>
+  )}
+</BaseLayout>
+
+<style>
+  h1 {
+    margin-bottom: var(--space-xs);
+  }
+
+  .intro {
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-lg);
+  }
+
+  .tag-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--space-sm);
+  }
+
+  .tag-item {
+    padding: var(--space-sm);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    transition: border-color 0.2s ease;
+  }
+
+  .tag-item:hover {
+    border-color: var(--color-link);
+  }
+
+  .tag-item a {
+    color: var(--color-text);
+    text-decoration: none;
+    display: block;
+  }
+
+  .tag-item a:hover {
+    color: var(--color-link);
+  }
+
+  .count {
+    color: var(--color-text-muted);
+    font-size: 0.875rem;
+  }
+
+  .empty {
+    color: var(--color-text-muted);
+    font-style: italic;
+  }
+</style>

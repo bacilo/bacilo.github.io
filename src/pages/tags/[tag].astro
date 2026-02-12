@@ -1,0 +1,157 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+
+  // Filter out future-dated posts
+  const now = new Date();
+  const publishedPosts = posts.filter(post => post.data.date <= now);
+
+  // Collect all unique tags (normalized to lowercase)
+  const tagMap = new Map();
+
+  publishedPosts.forEach(post => {
+    if (post.data.tags) {
+      post.data.tags.forEach(tag => {
+        const normalizedTag = tag.toLowerCase();
+        if (!tagMap.has(normalizedTag)) {
+          tagMap.set(normalizedTag, tag); // Store first occurrence for display
+        }
+      });
+    }
+  });
+
+  // Generate routes for each unique tag
+  return Array.from(tagMap.entries()).map(([normalizedTag, displayTag]) => {
+    // Filter posts that have this tag (case-insensitive)
+    const taggedPosts = publishedPosts
+      .filter(post =>
+        post.data.tags?.some(t => t.toLowerCase() === normalizedTag)
+      )
+      .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+    return {
+      params: { tag: normalizedTag },
+      props: { tag: normalizedTag, displayTag, posts: taggedPosts },
+    };
+  });
+}
+
+const { tag, displayTag, posts } = Astro.props;
+---
+
+<BaseLayout title={`Posts tagged "${displayTag}" - Pedro Figueira`}>
+  <nav class="breadcrumb">
+    <a href="/posts/">Blog</a> / <a href="/tags/">Tags</a> / {displayTag}
+  </nav>
+
+  <h1>Posts tagged "{displayTag}"</h1>
+  <p class="count">{posts.length} {posts.length === 1 ? 'post' : 'posts'}</p>
+
+  <ul class="post-list">
+    {posts.map(post => {
+      // Generate permalink if not in frontmatter
+      const permalink = post.data.permalink || (() => {
+        const date = post.data.date;
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const postName = post.id.replace(/^\d{4}-\d{2}-\d{2}-/, '').replace(/\.md$/, '');
+        return `/posts/${year}/${month}/${postName}/`;
+      })();
+
+      return (
+        <li class="post-item">
+          <a href={permalink}>
+            <h2>{post.data.title}</h2>
+          </a>
+          <p class="meta">
+            <time datetime={post.data.date.toISOString()}>
+              {post.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+            </time>
+          </p>
+        </li>
+      );
+    })}
+  </ul>
+
+  <p class="all-tags-link">
+    <a href="/tags/">← View all tags</a>
+  </p>
+</BaseLayout>
+
+<style>
+  .breadcrumb {
+    color: var(--color-text-muted);
+    font-size: 0.875rem;
+    margin-bottom: var(--space-md);
+  }
+
+  .breadcrumb a {
+    color: var(--color-link);
+    text-decoration: none;
+  }
+
+  .breadcrumb a:hover {
+    text-decoration: underline;
+  }
+
+  h1 {
+    margin-bottom: var(--space-xs);
+  }
+
+  .count {
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-lg);
+    font-size: 0.875rem;
+  }
+
+  .post-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .post-item {
+    padding: var(--space-md) 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .post-item:last-child {
+    border-bottom: none;
+  }
+
+  .post-item h2 {
+    font-size: 1.125rem;
+    margin: 0 0 var(--space-xs) 0;
+    line-height: 1.4;
+  }
+
+  .post-item a {
+    text-decoration: none;
+  }
+
+  .post-item a:hover h2 {
+    color: var(--color-link);
+  }
+
+  .meta {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  .all-tags-link {
+    margin-top: var(--space-lg);
+  }
+
+  .all-tags-link a {
+    color: var(--color-link);
+    text-decoration: none;
+  }
+
+  .all-tags-link a:hover {
+    text-decoration: underline;
+  }
+</style>
