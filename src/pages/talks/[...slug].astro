@@ -1,0 +1,79 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const talks = await getCollection('talks');
+
+  return talks.map(talk => {
+    // Extract slug from permalink (e.g., "/talks/2012-03-01-talk-1" -> "2012-03-01-talk-1")
+    const permalink = talk.data.permalink;
+    const slug = permalink.replace(/^\/talks\//, '');
+
+    return {
+      params: { slug },
+      props: { talk },
+    };
+  });
+}
+
+const { talk } = Astro.props;
+const { Content } = await render(talk);
+---
+
+<BaseLayout title={talk.data.title}>
+  <article class="talk">
+    <header>
+      <h1>{talk.data.title}</h1>
+      <p class="meta">
+        <span class="type">{talk.data.type}</span>
+        <span class="venue">{talk.data.venue}</span>
+        <span class="location">{talk.data.location}</span>
+        <span class="date">{talk.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+      </p>
+    </header>
+
+    <section class="content">
+      <Content />
+    </section>
+  </article>
+</BaseLayout>
+
+<style>
+  .talk {
+    max-width: 100%;
+  }
+
+  h1 {
+    font-size: 1.75rem;
+    line-height: 1.3;
+    margin-bottom: var(--space-sm);
+  }
+
+  .meta {
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-md);
+  }
+
+  .meta span {
+    display: block;
+  }
+
+  .meta .type {
+    font-weight: bold;
+    color: var(--color-text);
+  }
+
+  .meta .venue {
+    font-style: italic;
+  }
+
+  .meta .location,
+  .meta .date {
+    font-size: 0.875rem;
+  }
+
+  .content {
+    margin-top: var(--space-md);
+  }
+</style>
