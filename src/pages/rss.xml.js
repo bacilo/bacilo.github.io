@@ -15,7 +15,7 @@ export async function GET(context) {
     .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
   return rss({
-    title: 'Pedro Figueira - Blog',
+    title: 'Pedro Ferreira - Blog',
     description: 'Thoughts on research, technology, and nomadic life',
     site: context.site,
     items: publishedPosts.map(post => {

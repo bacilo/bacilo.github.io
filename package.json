@@ -1,7 +1,7 @@
 {
   "name": "bacilo-github-io",
   "version": "1.0.0",
-  "description": "Personal academic website for Pedro Figueira",
+  "description": "Personal academic website for Pedro Ferreira",
   "type": "module",
   "scripts": {
     "dev": "astro dev",
