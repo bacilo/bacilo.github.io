@@ -19,7 +19,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 5: Talks** - Talks listing with metadata and links
 - [x] **Phase 6: CV Page** - Academic CV page
 - [x] **Phase 7: Blog Foundation** - Blog posts with tags and chronological browsing
-- [ ] **Phase 8: Blog Enhancement** - Tag/category filtering and RSS feed
+- [x] **Phase 8: Blog Enhancement** - Tag/category filtering and RSS feed
 - [ ] **Phase 9: Static Portfolio** - Portfolio page with static project cards
 - [ ] **Phase 10: Interactive Portfolio** - GitHub API integration and live embeds
 
@@ -141,8 +141,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 08-01-PLAN.md — Implement tag filtering with dynamic tag pages and clickable tags
-- [ ] 08-02-PLAN.md — Create RSS feed with full content and auto-discovery
+- [x] 08-01-PLAN.md — Implement tag filtering with dynamic tag pages and clickable tags
+- [x] 08-02-PLAN.md — Create RSS feed with full content and auto-discovery
 
 ### Phase 9: Static Portfolio
 **Goal**: Users can view project portfolio with basic information
@@ -186,6 +186,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 5. Talks | 0/0 | Complete (Phase 2) | 2026-02-12 |
 | 6. CV Page | 1/1 | Complete | 2026-02-12 |
 | 7. Blog Foundation | 1/1 | Complete | 2026-02-12 |
-| 8. Blog Enhancement | 0/2 | Planned | - |
+| 8. Blog Enhancement | 2/2 | Complete | 2026-02-12 |
 | 9. Static Portfolio | 0/? | Not started | - |
 | 10. Interactive Portfolio | 0/? | Not started | - |
