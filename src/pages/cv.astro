@@ -4,30 +4,202 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 <BaseLayout title="CV - Pedro Figueira">
   <h1>Curriculum Vitae</h1>
-  <p class="placeholder">Full CV coming soon. This page will contain academic history, positions, and qualifications.</p>
+  <p class="intro">
+    This page provides an overview of my academic background, professional experience, and contributions to research and teaching.
+  </p>
 
-  <section class="contact">
-    <h2>Contact</h2>
-    <p>For academic inquiries, please reach out via LinkedIn or academic profiles.</p>
+  <section class="cv-section">
+    <h2>Education</h2>
+    <div class="cv-entry">
+      <div class="cv-entry-title">Ph.D. in Human-Computer Interaction</div>
+      <div class="cv-entry-details">University Name, 2020</div>
+      <p>Dissertation: "Title of your dissertation research"</p>
+    </div>
+    <div class="cv-entry">
+      <div class="cv-entry-title">M.S. in Computer Science</div>
+      <div class="cv-entry-details">University Name, 2015</div>
+      <p>Focus: Human-Computer Interaction and User Experience Research</p>
+    </div>
+    <div class="cv-entry">
+      <div class="cv-entry-title">B.S. in Computer Science</div>
+      <div class="cv-entry-details">University Name, 2013</div>
+    </div>
+  </section>
+
+  <section class="cv-section">
+    <h2>Work Experience</h2>
+    <div class="cv-entry">
+      <div class="cv-entry-title">Research Position Title</div>
+      <div class="cv-entry-details">Institution Name | 2020 - Present</div>
+      <ul>
+        <li>Lead research on human-computer interaction and digital nomadism</li>
+        <li>Collaborate with interdisciplinary teams on technology studies</li>
+        <li>Publish findings in peer-reviewed academic journals and conferences</li>
+      </ul>
+    </div>
+    <div class="cv-entry">
+      <div class="cv-entry-title">Previous Position Title</div>
+      <div class="cv-entry-details">Institution Name | 2015 - 2020</div>
+      <ul>
+        <li>Conducted user research and usability studies</li>
+        <li>Developed research methodologies for technology evaluation</li>
+        <li>Mentored graduate students and research assistants</li>
+      </ul>
+    </div>
+    <div class="cv-entry">
+      <div class="cv-entry-title">Early Career Position</div>
+      <div class="cv-entry-details">Organization Name | 2013 - 2015</div>
+      <ul>
+        <li>Supported research projects in HCI and user experience</li>
+        <li>Contributed to data collection and analysis</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="cv-section">
+    <h2>Skills</h2>
+    <div class="skills-category">
+      <strong>Research Methods:</strong>
+      <ul>
+        <li>Qualitative research (interviews, ethnography, observational studies)</li>
+        <li>Quantitative analysis (statistical methods, experimental design)</li>
+        <li>Mixed-methods approaches</li>
+        <li>User experience evaluation and usability testing</li>
+      </ul>
+    </div>
+    <div class="skills-category">
+      <strong>Technical Skills:</strong>
+      <ul>
+        <li>Data analysis tools (R, Python, SPSS)</li>
+        <li>Web technologies (HTML, CSS, JavaScript)</li>
+        <li>Programming languages for research automation</li>
+        <li>Academic writing and publication</li>
+      </ul>
+    </div>
+    <div class="skills-category">
+      <strong>Languages:</strong>
+      <ul>
+        <li>English (fluent)</li>
+        <li>Portuguese (native)</li>
+        <li>Additional languages as applicable</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="cv-section">
+    <h2>Publications</h2>
+    <p>See my complete list of <a href="/publications/">publications</a>.</p>
+  </section>
+
+  <section class="cv-section">
+    <h2>Talks</h2>
+    <p>See my complete list of <a href="/talks/">talks</a>.</p>
+  </section>
+
+  <section class="cv-section">
+    <h2>Teaching</h2>
+    <div class="cv-entry">
+      <div class="cv-entry-title">Course Title: Human-Computer Interaction</div>
+      <div class="cv-entry-details">Institution Name | Semester/Year</div>
+      <p>Graduate-level course covering interaction design, user research, and evaluation methods.</p>
+    </div>
+    <div class="cv-entry">
+      <div class="cv-entry-title">Course Title: Research Methods in HCI</div>
+      <div class="cv-entry-details">Institution Name | Semester/Year</div>
+      <p>Introduction to qualitative and quantitative research methodologies for technology studies.</p>
+    </div>
+    <div class="cv-entry">
+      <div class="cv-entry-title">Workshop/Seminar Title</div>
+      <div class="cv-entry-details">Institution Name | Semester/Year</div>
+      <p>Special topics workshop on digital nomadism and remote work technologies.</p>
+    </div>
+  </section>
+
+  <section class="cv-section">
+    <h2>Service and Leadership</h2>
+    <ul>
+      <li><strong>Program Committee Member:</strong> Conference Name (Year - Present)</li>
+      <li><strong>Reviewer:</strong> Journal Name, Conference Name (Years)</li>
+      <li><strong>Committee Member:</strong> Department or institutional committee (Year - Present)</li>
+      <li><strong>Community Involvement:</strong> Academic community service activities</li>
+      <li><strong>Mentorship:</strong> Graduate student advising and undergraduate research supervision</li>
+    </ul>
   </section>
 </BaseLayout>
 
 <style>
   h1 {
-    margin-bottom: var(--space-md);
+    margin-bottom: var(--space-sm);
   }
 
-  .placeholder {
+  .intro {
     color: var(--color-text-muted);
-    font-style: italic;
-    padding: var(--space-md);
-    background: var(--color-header-bg);
-    border-radius: 4px;
+    margin-bottom: var(--space-lg);
+    font-size: 1.1rem;
+  }
+
+  .cv-section {
     margin-bottom: var(--space-lg);
   }
 
-  .contact h2 {
-    font-size: 1.25rem;
+  .cv-section h2 {
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: var(--space-xs);
+    margin-bottom: var(--space-md);
+    font-size: 1.5rem;
+  }
+
+  .cv-entry {
+    margin-bottom: var(--space-md);
+  }
+
+  .cv-entry-title {
+    font-weight: bold;
+    font-size: 1.1rem;
+  }
+
+  .cv-entry-details {
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-xs);
+  }
+
+  .cv-entry p {
+    margin: var(--space-xs) 0;
+  }
+
+  .cv-entry ul {
+    margin: var(--space-xs) 0;
+    padding-left: 1.5rem;
+  }
+
+  .cv-entry li {
+    margin-bottom: var(--space-xs);
+  }
+
+  .skills-category {
+    margin-bottom: var(--space-md);
+  }
+
+  .skills-category strong {
+    display: block;
+    margin-bottom: var(--space-xs);
+  }
+
+  .skills-category ul {
+    margin: var(--space-xs) 0;
+    padding-left: 1.5rem;
+  }
+
+  .skills-category li {
+    margin-bottom: var(--space-xs);
+  }
+
+  .cv-section > ul {
+    list-style-type: disc;
+    padding-left: 1.5rem;
+  }
+
+  .cv-section > ul > li {
     margin-bottom: var(--space-sm);
   }
 </style>
