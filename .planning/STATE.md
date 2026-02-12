@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-11)
 
 **Core value:** A professional online presence that showcases work and is easy to maintain with monthly content updates
-**Current focus:** Phase 2 - Core Layout & Navigation
+**Current focus:** Phase 3 - Author Profile
 
 ## Current Position
 
-Phase: 2 of 10 (Core Layout & Navigation)
-Plan: 3 of 3 in current phase
-Status: Complete
-Last activity: 2026-02-12 — Completed plan 02-03 (Content Listing Pages)
+Phase: 3 of 10 (Author Profile)
+Plan: 1 of 2 in current phase (plan 03-02 complete)
+Status: In Progress
+Last activity: 2026-02-12 — Completed plan 03-02 (Home Page Content)
 
-Progress: [████░░░░░░] 43%
+Progress: [█████░░░░░] 50%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 6
-- Average duration: 12.8 minutes
-- Total execution time: 1.17 hours
+- Total plans completed: 7
+- Average duration: 10.7 minutes
+- Total execution time: 1.25 hours
 
 **By Phase:**
 
@@ -29,10 +29,11 @@ Progress: [████░░░░░░] 43%
 |-------|-------|-------|----------|
 | 01 | 3 | 19m | 6.3m |
 | 02 | 3 | 51m | 17.0m |
+| 03 | 1 | 1m | 1.0m |
 
 **Recent Trend:**
-- Last 5 plans: 01-03 (6m), 02-01 (2m), 02-02 (3m), 02-03 (46m)
-- Trend: Variable (checkpoint verification adds time)
+- Last 5 plans: 02-01 (2m), 02-02 (3m), 02-03 (46m), 03-02 (1m)
+- Trend: Variable (checkpoint verification adds time, content updates fast)
 
 *Updated after each plan completion*
 
@@ -60,6 +61,7 @@ Recent decisions affecting current work:
 - [Phase 02-03]: Filter future-dated posts from blog archive for draft support
 - [Phase 02-03]: Generate permalink fallback for posts to handle missing frontmatter
 - [Phase 02-03]: CV placeholder now, full content deferred to later phase
+- [Phase 03-02]: External links use target='_blank' rel='noopener noreferrer' for security
 
 ### Pending Todos
 
@@ -96,9 +98,15 @@ None yet.
 - CV placeholder page
 - Complete navigation flow from header through listings to individual pages
 
+**Phase 3 Progress:**
+- Plan 03-02 complete: Homepage content with author introduction
+- Homepage displays professional affiliation and research focus
+- External link to Technologies in Practice group
+- Next: Plan 03-01 (Author sidebar implementation)
+
 ## Session Continuity
 
-Last session: 2026-02-12 — Phase 02 completion
-Stopped at: Completed plan 02-03 (Content Listing Pages) - Phase 2 fully complete
+Last session: 2026-02-12 — Phase 03 plan 02
+Stopped at: Completed 03-02 (Home Page Content)
 Resume file: None
-Next: Phase 03 - Home Page & Content Enhancement
+Next: Plan 03-01 - Author Sidebar
