@@ -16,7 +16,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: Core Layout & Navigation** - Base layout, navigation, and responsive design
 - [x] **Phase 3: Author Profile** - Author sidebar and about page
 - [x] **Phase 4: Publications** - Publications listing with metadata and links
-- [ ] **Phase 5: Talks** - Talks listing with metadata and links
+- [x] **Phase 5: Talks** - Talks listing with metadata and links
 - [ ] **Phase 6: CV Page** - Academic CV page
 - [ ] **Phase 7: Blog Foundation** - Blog posts with tags and chronological browsing
 - [ ] **Phase 8: Blog Enhancement** - Tag/category filtering and RSS feed
@@ -95,10 +95,12 @@ Plans:
   2. Each talk shows date, venue, and location
   3. Each talk has working link to slides or recording
   4. Talks use preserved URLs from Jekyll site
-**Plans**: TBD
+**Plans**: 0 plans (satisfied by Phase 2 implementation)
 
 Plans:
-- [ ] TBD during phase planning
+- [x] (No additional plans needed - talks listing and individual pages created in Phase 2)
+
+Note: Slide/recording links depend on content having slideurl field. Add to frontmatter when available.
 
 ### Phase 6: CV Page
 **Goal**: Users can view comprehensive academic CV
@@ -180,7 +182,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 2. Core Layout & Navigation | 3/3 | Complete | 2026-02-12 |
 | 3. Author Profile | 2/2 | Complete | 2026-02-12 |
 | 4. Publications | 0/0 | Complete (Phase 2) | 2026-02-12 |
-| 5. Talks | 0/? | Not started | - |
+| 5. Talks | 0/0 | Complete (Phase 2) | 2026-02-12 |
 | 6. CV Page | 0/? | Not started | - |
 | 7. Blog Foundation | 0/? | Not started | - |
 | 8. Blog Enhancement | 0/? | Not started | - |
