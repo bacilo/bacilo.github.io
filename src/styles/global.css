@@ -21,6 +21,7 @@
   /* Layout */
   --max-width: 800px;
   --header-height: 4rem;
+  --sidebar-width: 250px;
 }
 
 /* Dark mode support via media query */

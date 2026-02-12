@@ -2,15 +2,18 @@
 import SkipLink from '../components/SkipLink.astro';
 import Navigation from '../components/Navigation.astro';
 import Footer from '../components/Footer.astro';
+import AuthorSidebar from '../components/AuthorSidebar.astro';
 
 interface Props {
   title?: string;
   description?: string;
+  showSidebar?: boolean;
 }
 
 const {
   title = 'Pedro Figueira',
-  description = 'Academic researcher - HCI, nomadic work, and digital technologies'
+  description = 'Academic researcher - HCI, nomadic work, and digital technologies',
+  showSidebar = true
 } = Astro.props;
 ---
 
@@ -32,9 +35,12 @@ const {
       </div>
     </header>
     <Navigation />
-    <main id="main-content">
-      <slot />
-    </main>
+    <div class="content-wrapper">
+      {showSidebar && <AuthorSidebar />}
+      <main id="main-content">
+        <slot />
+      </main>
+    </div>
     <Footer />
   </body>
 </html>
@@ -62,10 +68,24 @@ const {
     color: var(--color-link);
   }
 
-  main {
-    max-width: var(--max-width);
+  .content-wrapper {
+    max-width: calc(var(--max-width) + var(--sidebar-width) + var(--space-md));
     margin: 0 auto;
     padding: var(--space-md) var(--space-sm);
+  }
+
+  /* Desktop: Flexbox layout with sidebar */
+  @media (min-width: 768px) {
+    .content-wrapper {
+      display: flex;
+      gap: var(--space-md);
+      align-items: flex-start;
+    }
+  }
+
+  main {
+    flex: 1;
+    min-width: 0; /* Prevent flex overflow */
     min-height: calc(100vh - 300px);
   }
 </style>
