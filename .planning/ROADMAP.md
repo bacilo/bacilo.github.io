@@ -14,7 +14,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation & Astro Setup** - Astro project scaffolding and deployment pipeline
 - [x] **Phase 2: Core Layout & Navigation** - Base layout, navigation, and responsive design
-- [ ] **Phase 3: Author Profile** - Author sidebar and about page
+- [x] **Phase 3: Author Profile** - Author sidebar and about page
 - [ ] **Phase 4: Publications** - Publications listing with metadata and links
 - [ ] **Phase 5: Talks** - Talks listing with metadata and links
 - [ ] **Phase 6: CV Page** - Academic CV page
@@ -69,8 +69,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 03-01-PLAN.md — Create author sidebar component with config, social links, and layout integration
-- [ ] 03-02-PLAN.md — Update homepage with author introduction content
+- [x] 03-01-PLAN.md — Create author sidebar component with config, social links, and layout integration
+- [x] 03-02-PLAN.md — Update homepage with author introduction content
 
 ### Phase 4: Publications
 **Goal**: Users can discover and access academic publications
@@ -178,7 +178,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 |-------|----------------|--------|-----------|
 | 1. Foundation & Astro Setup | 3/3 | Complete | 2026-02-12 |
 | 2. Core Layout & Navigation | 3/3 | Complete | 2026-02-12 |
-| 3. Author Profile | 0/2 | Planning complete | - |
+| 3. Author Profile | 2/2 | Complete | 2026-02-12 |
 | 4. Publications | 0/? | Not started | - |
 | 5. Talks | 0/? | Not started | - |
 | 6. CV Page | 0/? | Not started | - |
