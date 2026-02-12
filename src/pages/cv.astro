@@ -202,4 +202,81 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   .cv-section > ul > li {
     margin-bottom: var(--space-sm);
   }
+
+  /* Print-friendly styles */
+  @media print {
+    /* Hide sidebar and navigation */
+    :global(.author-sidebar),
+    :global(nav),
+    :global(.site-header),
+    :global(footer),
+    :global(.skip-link) {
+      display: none !important;
+    }
+
+    /* Full width for content */
+    :global(.content-wrapper) {
+      max-width: 100%;
+      padding: 0;
+    }
+
+    :global(main) {
+      max-width: 100%;
+      width: 100%;
+    }
+
+    /* Black text on white background */
+    :global(body) {
+      background: white;
+      color: black;
+    }
+
+    h1, h2, .cv-entry-title, .cv-section h2 {
+      color: black;
+    }
+
+    .cv-entry-details {
+      color: #333;
+    }
+
+    /* Show URLs after links */
+    a[href]::after {
+      content: " (" attr(href) ")";
+      font-size: 0.9em;
+      color: #666;
+    }
+
+    /* Avoid breaking inside CV entries */
+    .cv-entry,
+    .skills-category {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    /* Section headers should not break from content */
+    .cv-section h2 {
+      page-break-after: avoid;
+      break-after: avoid;
+    }
+
+    /* Remove decorative backgrounds */
+    .intro,
+    .cv-section h2 {
+      background: none;
+      border-bottom: 1px solid #333;
+    }
+
+    /* Tighter spacing for print */
+    h1 {
+      margin-bottom: 0.5rem;
+    }
+
+    .cv-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .cv-entry {
+      margin-bottom: 1rem;
+    }
+  }
 </style>
