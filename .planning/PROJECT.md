@@ -2,83 +2,68 @@
 
 ## What This Is
 
-A personal academic website rebuilt with Astro to showcase publications, talks, blog posts, and portfolio projects. Replaces the current Jekyll/Minimal Mistakes site with modern tooling while maintaining the clean academic aesthetic. Deployed to GitHub Pages at bacilo.github.io.
+A personal academic website built with Astro showcasing publications, talks, blog posts, and an interactive portfolio. Deployed to GitHub Pages at bacilo.github.io with responsive design and dark mode support.
 
 ## Core Value
 
 A professional online presence that showcases work and is easy to maintain with monthly content updates.
 
+## Current State (v1.0 shipped)
+
+**Tech stack:** Astro 5.x, TypeScript, GitHub Pages, CSS custom properties
+**Lines of code:** ~2,400 (TypeScript/Astro)
+**Content:** 15 publications, 4 talks, 5 blog posts, 2 portfolio items
+
+**Features delivered:**
+- Publications and Talks listings with preserved Jekyll URLs
+- Blog with tag filtering, RSS feed, prose typography
+- CV page with print-friendly styles
+- Interactive portfolio with GitHub API cards, demo embeds, playground embeds
+- Author sidebar with social/academic links
+- Responsive design with automatic dark mode
+
 ## Requirements
 
-### Validated
+### Validated (v1.0)
 
-<!-- Existing capabilities from current Jekyll site -->
+- ✓ **INFR-01-04**: Astro site with GitHub Pages deployment, markdown authoring, content migration
+- ✓ **NAV-01-04**: Navigation, responsive design, academic aesthetic, URL preservation
+- ✓ **AUTH-01-04**: Author sidebar with photo, bio, social links, about page
+- ✓ **ACAD-01-05**: Publications, talks, CV with metadata and links
+- ✓ **BLOG-01-06**: Blog posts, tags, archive, tag filtering, RSS feed
+- ✓ **PORT-01-05**: Portfolio cards, GitHub API integration, demo/playground embeds
 
-- ✓ Publications listing with metadata (title, venue, date, links) — existing
-- ✓ Talks listing with metadata — existing
-- ✓ Blog posts with tags and chronological archive — existing
-- ✓ Author profile sidebar with bio, photo, social links — existing
-- ✓ About/home page — existing
-- ✓ CV page — existing
-- ✓ Responsive design (mobile/desktop) — existing
-- ✓ GitHub Pages deployment — existing
+### Active (v2.0 candidates)
 
-### Active
-
-<!-- New requirements for this rebuild -->
-
-- [ ] Astro-based static site generator
-- [ ] Clean academic design (similar aesthetic to current)
-- [ ] Publications page with migrated content
-- [ ] Talks page with migrated content
-- [ ] Blog with migrated posts
-- [ ] Portfolio page with project cards
-- [ ] Portfolio: GitHub repo cards with stats
-- [ ] Portfolio: Live demo embeds (iframe-based)
-- [ ] Portfolio: Code playground embeds
-- [ ] Portfolio: Data visualization embeds
-- [ ] Author sidebar profile component
-- [ ] Navigation with all sections
-- [ ] Content migration from Jekyll markdown
-- [ ] Easy content authoring (markdown + frontmatter)
+- [ ] PORT-06: Data visualization embeds
+- [ ] PORT-07: Portfolio filtering/sorting
+- [ ] CONT-01: Dark mode toggle (currently auto via prefers-color-scheme)
+- [ ] CONT-02: Search functionality
+- [ ] Teaching section (user mentioned interest)
 
 ### Out of Scope
 
-- Teaching section — not needed for current goals
 - Comments system — complexity not worth it for monthly updates
-- Search functionality — site is small enough to browse
-- Custom domain setup — sticking with bacilo.github.io
-- Analytics — can add later if needed
-- Dark mode — nice to have but not essential
-
-## Context
-
-**Current state:** Jekyll site using Minimal Mistakes theme. Content exists in markdown files with YAML frontmatter. Collections for publications, talks, portfolio, teaching.
-
-**Content to migrate:**
-- `_publications/` — academic papers with citations
-- `_talks/` — presentations with dates and venues
-- `_posts/` — blog posts
-- `images/` — profile photo and assets
-- `files/` — PDFs and downloadable content
-
-**Technical context:** User updates content monthly. Interactive portfolio embeds are nice-to-have, not critical path. GitHub Pages handles deployment automatically on push.
+- Custom domain setup — bacilo.github.io works fine
+- Auto-import from Google Scholar — academics need curation control
 
 ## Constraints
 
-- **Hosting**: GitHub Pages — must work with static hosting, no server-side logic
-- **Framework**: Astro — user preference for modern tooling
-- **Aesthetic**: Similar to current — clean academic, not a dramatic redesign
-- **Content format**: Markdown with frontmatter — familiar workflow from Jekyll
+- **Hosting**: GitHub Pages (static only)
+- **Framework**: Astro
+- **Content**: Markdown with YAML frontmatter
+- **Updates**: Monthly content additions
 
 ## Key Decisions
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Astro over Jekyll | Simpler config, better interactive embed support, modern DX | — Pending |
-| Keep bacilo.github.io | No registrar changes needed, existing URL works | — Pending |
-| Migrate all content | User wants to preserve publication/talk history | — Pending |
-| Portfolio embeds as enhancement | Core portfolio works with GitHub cards, interactivity layered on | — Pending |
+| Astro over Jekyll | Better DX, interactive embed support, modern tooling | ✓ Good |
+| Client-side GitHub API | Always-current data, 1-hour cache reduces rate limits | ✓ Good |
+| CSS custom properties | Dark mode via prefers-color-scheme, no JS needed | ✓ Good |
+| Preserve Jekyll URLs | SEO and academic citations maintained | ✓ Good |
+| System font stack | No web font loading, instant rendering | ✓ Good |
+| Lazy-load embeds | Performance optimization for portfolio page | ✓ Good |
 
 ---
-*Last updated: 2026-02-11 after initialization*
+*Last updated: 2026-02-12 after v1.0 milestone*
