@@ -88,35 +88,35 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| CMS-01 | — | Pending |
-| CMS-02 | — | Pending |
-| CMS-03 | — | Pending |
-| BLOG-01 | — | Pending |
-| BLOG-02 | — | Pending |
-| BLOG-03 | — | Pending |
-| BLOG-04 | — | Pending |
-| PUB-01 | — | Pending |
-| PUB-02 | — | Pending |
-| PUB-03 | — | Pending |
-| TALK-01 | — | Pending |
-| TALK-02 | — | Pending |
-| TALK-03 | — | Pending |
-| PORT-01 | — | Pending |
-| PORT-02 | — | Pending |
-| PORT-03 | — | Pending |
-| MEDIA-01 | — | Pending |
-| MEDIA-02 | — | Pending |
-| MEDIA-03 | — | Pending |
-| NORM-01 | — | Pending |
-| NORM-02 | — | Pending |
-| NORM-03 | — | Pending |
-| NORM-04 | — | Pending |
+| CMS-01 | Phase 11 | Pending |
+| CMS-02 | Phase 11 | Pending |
+| CMS-03 | Phase 11 | Pending |
+| BLOG-01 | Phase 11 | Pending |
+| BLOG-02 | Phase 11 | Pending |
+| BLOG-03 | Phase 11 | Pending |
+| BLOG-04 | Phase 11 | Pending |
+| NORM-01 | Phase 11 | Pending |
+| PUB-01 | Phase 12 | Pending |
+| PUB-02 | Phase 12 | Pending |
+| PUB-03 | Phase 12 | Pending |
+| TALK-01 | Phase 12 | Pending |
+| TALK-02 | Phase 12 | Pending |
+| TALK-03 | Phase 12 | Pending |
+| PORT-01 | Phase 12 | Pending |
+| PORT-02 | Phase 12 | Pending |
+| PORT-03 | Phase 12 | Pending |
+| MEDIA-01 | Phase 12 | Pending |
+| MEDIA-02 | Phase 12 | Pending |
+| MEDIA-03 | Phase 12 | Pending |
+| NORM-02 | Phase 12 | Pending |
+| NORM-03 | Phase 12 | Pending |
+| NORM-04 | Phase 12 | Pending |
 
 **Coverage:**
 - v2.0 requirements: 23 total
-- Mapped to phases: 0
-- Unmapped: 23 ⚠️
+- Mapped to phases: 23
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-02-13*
-*Last updated: 2026-02-13 after initial definition*
+*Last updated: 2026-02-13 after roadmap creation*
