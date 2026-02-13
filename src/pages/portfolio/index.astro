@@ -22,6 +22,8 @@ const sortedPortfolio = portfolio.sort((a, b) => a.data.title.localeCompare(b.da
             repoUrl={project.data.repoUrl}
             title={project.data.title}
             description={project.data.description || project.data.excerpt}
+            image={project.data.image}
+            slug={project.id}
           />
           {project.data.demoUrl && (
             <DemoEmbed
@@ -38,7 +40,7 @@ const sortedPortfolio = portfolio.sort((a, b) => a.data.title.localeCompare(b.da
         </li>
       ) : (
         <li class="portfolio-card">
-          <h2>{project.data.title}</h2>
+          <h2><a href={`/portfolio/${project.id}/`} class="title-link">{project.data.title}</a></h2>
           <p class="description">{project.data.description || project.data.excerpt}</p>
           <div class="card-links">
             {project.data.repoUrl && (
@@ -102,6 +104,15 @@ const sortedPortfolio = portfolio.sort((a, b) => a.data.title.localeCompare(b.da
   .portfolio-card h2 {
     font-size: 1.25rem;
     margin: 0 0 var(--space-xs) 0;
+  }
+
+  .title-link {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .title-link:hover {
+    color: var(--color-link);
   }
 
   .description {

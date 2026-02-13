@@ -47,6 +47,7 @@ const portfolio = defineCollection({
   schema: z.object({
     title: z.string(),
     excerpt: optionalStr,
+    image: optionalStr,
     collection: z.literal('portfolio').optional(),
     repoUrl: optionalUrl,
     demoUrl: optionalUrl,
