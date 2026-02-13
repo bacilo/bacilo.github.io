@@ -1,6 +1,10 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 
+// CMS saves empty strings for optional fields; treat them as undefined
+const optionalUrl = z.preprocess(v => v === '' ? undefined : v, z.string().url().optional());
+const optionalStr = z.preprocess(v => v === '' ? undefined : v, z.string().optional());
+
 const publications = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/publications" }),
   schema: z.object({
@@ -42,12 +46,12 @@ const portfolio = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/portfolio" }),
   schema: z.object({
     title: z.string(),
-    excerpt: z.string().optional(),
+    excerpt: optionalStr,
     collection: z.literal('portfolio').optional(),
-    repoUrl: z.string().url().optional(),
-    demoUrl: z.string().url().optional(),
-    description: z.string().optional(),
-    playgroundUrl: z.string().url().optional(),
+    repoUrl: optionalUrl,
+    demoUrl: optionalUrl,
+    description: optionalStr,
+    playgroundUrl: optionalUrl,
   })
 });
 
