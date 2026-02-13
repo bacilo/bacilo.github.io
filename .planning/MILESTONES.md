@@ -14,3 +14,18 @@
 
 ---
 
+
+## v2.0 Content Management (Shipped: 2026-02-13)
+
+**Phases completed:** 3 phases, 6 plans, 10 tasks
+
+**Key accomplishments:**
+- Deployed Sveltia CMS at /admin with GitHub PAT authentication (no backend server required)
+- Validated all 26 content files across 4 collections against Zod schemas
+- Configured all content types (blog, publications, talks, portfolio) with full CRUD via CMS
+- Created unified build validation script for one-command content verification
+- Built task-oriented CMS user guide with PAT setup, field requirements, and troubleshooting
+- Validated CMS production readiness across Chrome, Firefox, and Safari
+
+---
+
