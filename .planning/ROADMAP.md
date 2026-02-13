@@ -42,8 +42,8 @@
 **Plans:** 2 plans
 
 Plans:
-- [ ] 11-01-PLAN.md — Content audit & frontmatter normalization (NORM-01)
-- [ ] 11-02-PLAN.md — CMS static setup & blog collection with PAT auth (CMS-01, CMS-02, CMS-03, BLOG-01-04)
+- [x] 11-01-PLAN.md — Content audit & frontmatter normalization (NORM-01)
+- [x] 11-02-PLAN.md — CMS static setup & blog collection with PAT auth (CMS-01, CMS-02, CMS-03, BLOG-01-04)
 
 #### Phase 12: Complete Content Coverage
 **Goal**: All content types editable through CMS with media library
@@ -94,6 +94,6 @@ Phases execute in numeric order: 1 → 2 → 3 → ... → 13
 | 8. Blog Enhancement | v1.0 | 2/2 | Complete | 2026-02-12 |
 | 9. Static Portfolio | v1.0 | 1/1 | Complete | 2026-02-12 |
 | 10. Interactive Portfolio | v1.0 | 2/2 | Complete | 2026-02-12 |
-| 11. Content Audit & CMS Setup | v2.0 | 0/2 | Not started | - |
+| 11. Content Audit & CMS Setup | v2.0 | 2/2 | Complete | 2026-02-13 |
 | 12. Complete Content Coverage | v2.0 | 0/TBD | Not started | - |
 | 13. Documentation & Testing | v2.0 | 0/TBD | Not started | - |
