@@ -66,6 +66,7 @@ collections:
     fields:
       - { label: "Title", name: "title", widget: "string", required: true }
       - { label: "Excerpt", name: "excerpt", widget: "text", required: false }
+      - { label: "Image", name: "image", widget: "image", required: false }
       - { label: "Collection", name: "collection", widget: "hidden", default: "portfolio" }
       - { label: "Repository URL", name: "repoUrl", widget: "string", required: false }
       - { label: "Demo URL", name: "demoUrl", widget: "string", required: false }
