@@ -1,336 +1,269 @@
-# Technology Stack
+# Stack Research
 
-**Project:** Personal Academic Website with Astro
-**Researched:** 2026-02-11
-**Overall Confidence:** MEDIUM (based on training data; external verification unavailable)
+**Domain:** CMS Integration for Static Academic Website
+**Researched:** 2026-02-13
+**Confidence:** HIGH
 
 ## Recommended Stack
 
-### Core Framework
+### Core CMS Technology
 
-| Technology | Version | Purpose | Why |
-|------------|---------|---------|-----|
-| Astro | ^5.0.0 | Static site generator | Island architecture for interactive embeds, content collections for publications/talks, excellent DX, zero JS by default |
-| Node.js | 20.x LTS | Runtime | Current LTS as of Jan 2025, required for Astro tooling |
-| TypeScript | ^5.6.0 | Type safety | Astro has built-in support, helps with complex content schemas |
+| Technology | Version | Purpose | Why Recommended |
+|------------|---------|---------|-----------------|
+| Sveltia CMS | 0.140.3 | Git-based headless CMS | Modern successor to Decap CMS with better UX, performance, and active development. 100% compatible with Decap CMS config. Single-user PAT authentication works with static GitHub Pages. |
+| Decap CMS | 3.10.0 | Git-based headless CMS (fallback) | Mature, still maintained (as of Jan 2026), works with Astro content collections. Use if Sveltia has compatibility issues. |
 
-**Rationale:** Astro 5.x is the current stable version (as of my training cutoff). Island architecture allows selective hydration for portfolio embeds while keeping the academic content static and fast. Content Collections provide type-safe frontmatter validation, crucial for migrating structured Jekyll collections (publications, talks).
+### Authentication (Single User - Recommended)
 
-**Confidence:** MEDIUM - Version numbers based on Jan 2025 training data. Verify current Astro stable version before installation.
+| Technology | Version | Purpose | Why Recommended |
+|------------|---------|---------|-----------------|
+| Personal Access Token (PAT) | N/A | GitHub authentication | Simplest approach for single-user scenarios. No server required, works with static GitHub Pages. Built into Sveltia CMS. |
 
-### Content Management
+### Authentication (Multi-User Alternative)
 
-| Technology | Version | Purpose | Why |
-|------------|---------|---------|-----|
-| @astrojs/mdx | ^4.0.0 | MDX support | Enables component embeds in markdown for portfolio interactivity |
-| remark-gfm | ^4.0.0 | GitHub Flavored Markdown | Matches Jekyll/kramdown GFM compatibility for content migration |
-| rehype-slug | ^6.0.0 | Heading anchors | Auto-generate heading IDs for academic paper references |
-| rehype-autolink-headings | ^7.0.0 | Heading links | Click-to-link headings (common in academic content) |
+| Technology | Version | Purpose | When to Use |
+|------------|---------|---------|-------------|
+| Cloudflare Workers | N/A | OAuth proxy for GitHub | Only if you need multi-user support or non-technical editors. Requires Cloudflare account. Not needed for single-user setup. |
+| sveltia-cms-auth | Latest | GitHub OAuth handler | Cloudflare Workers script for OAuth flow. Only needed for multi-user scenarios. |
 
-**Rationale:**
-- MDX over pure Markdown allows embedding interactive components (GitHub cards, code playgrounds) within content files
-- GFM support ensures Jekyll content migrates without reformatting
-- Slug/autolink plugins maintain academic writing conventions (linkable sections)
+### Configuration Files
 
-**Confidence:** MEDIUM - Remark/rehype plugins are stable ecosystem choices but versions need verification.
+| File | Purpose | Notes |
+|------|---------|-------|
+| public/admin/config.yml | CMS collection definitions | Maps to Astro content collections in src/content/ |
+| public/admin/index.html | CMS admin interface | Loads Sveltia/Decap CMS SPA |
 
-### Portfolio Embeds
+## Installation
 
-| Technology | Version | Purpose | Why |
-|------------|---------|---------|-----|
-| @octokit/rest | ^21.0.0 | GitHub API | Fetch repo stats for GitHub cards (stars, forks, language) |
-| astro-embed | ^0.7.0 | Embed helpers | Simplified CodePen, YouTube, Tweet embeds with privacy-friendly loading |
-| chart.js | ^4.4.0 | Data visualization | Canvas-based charts for research data visualizations |
-| react-chart.js-2 | ^5.2.0 | Chart.js React wrapper | For interactive charts as Astro islands |
-| Shiki | Built-in | Syntax highlighting | Already integrated in Astro, same highlighter as VS Code |
-
-**Rationale:**
-- Octokit provides typed GitHub API access for live repo cards vs static embeds
-- astro-embed handles iframe-based embeds (CodePen, etc.) with lazy loading
-- Chart.js is industry standard for academic visualizations, lightweight canvas rendering
-- Shiki is Astro's default highlighter, zero-config setup
-
-**Alternatives Considered:**
-- Recharts (heavier than Chart.js for simple academic charts)
-- Prism.js (Shiki has better out-of-box Astro integration)
-- Direct iframe embeds (astro-embed adds lazy loading + privacy features)
-
-**Confidence:** MEDIUM-LOW - astro-embed version uncertain, verify package exists and version. Octokit and Chart.js versions based on 2024 state.
-
-### UI Components (Optional Interactivity)
-
-| Technology | Version | Purpose | Why |
-|------------|---------|---------|-----|
-| React | ^18.3.0 | Interactive islands | For portfolio interactivity only (GitHub cards, chart interactions) |
-| @astrojs/react | ^3.6.0 | React integration | Official Astro integration for selective hydration |
-| clsx | ^2.1.0 | Conditional classes | Lightweight utility for dynamic styling |
-
-**Rationale:**
-- React only loads for interactive portfolio components via Astro islands
-- Academic content (publications, talks, blog) remains static HTML with zero JS
-- clsx simplifies conditional styling without full CSS-in-JS overhead
-
-**Alternatives Considered:**
-- Preact (smaller but React ecosystem better for chart libraries)
-- Vanilla JS (more code for same result, less maintainable)
-
-**Confidence:** MEDIUM - React integration is standard Astro pattern.
-
-### Styling
-
-| Technology | Version | Purpose | Why |
-|------------|---------|---------|-----|
-| Tailwind CSS | ^3.4.0 | Utility-first CSS | Rapid prototyping, excellent with Astro, maintains clean academic aesthetic |
-| @astrojs/tailwind | ^5.1.0 | Tailwind integration | Official Astro integration |
-| @tailwindcss/typography | ^0.5.0 | Prose styling | Beautiful defaults for long-form academic content |
-
-**Rationale:**
-- Tailwind prose plugin provides academic-quality typography out of box
-- Utility classes avoid CSS bloat from unused Minimal Mistakes theme styles
-- Easy to match current aesthetic with custom config
-- Better mobile responsiveness than semantic CSS for this use case
-
-**Alternatives Considered:**
-- Vanilla CSS (harder to maintain clean academic aesthetic)
-- Sass (Jekyll carryover, but Tailwind better DX for component-based Astro)
-- CSS Modules (overkill for mostly-static academic site)
-
-**Confidence:** HIGH - Tailwind + typography plugin is standard for academic/blog sites in Astro ecosystem.
-
-### Deployment
-
-| Technology | Version | Purpose | Why |
-|------------|---------|---------|-----|
-| @astrojs/github-pages | Built-in adapter | GitHub Pages deployment | Official Astro GitHub Pages support, handles base path automatically |
-| GitHub Actions | N/A | CI/CD | Auto-deploy on push to main, already set up for Jekyll site |
-
-**Rationale:**
-- Astro has native GitHub Pages support with `site` config
-- Existing GitHub Actions workflow can be adapted (change Jekyll build to Astro build)
-- No external services needed (Netlify/Vercel unnecessary for static site)
-
-**Configuration:**
-```typescript
-// astro.config.mjs
-export default defineConfig({
-  site: 'https://pedropaf.com', // or bacilo.github.io
-  base: '/', // No subpath needed for user site
-})
-```
-
-**Confidence:** HIGH - This is standard Astro + GitHub Pages pattern.
-
-### Development Tools
-
-| Technology | Version | Purpose | Why |
-|------------|---------|---------|-----|
-| @astrojs/check | ^0.9.0 | Type checking | Validates content schemas and TypeScript |
-| prettier | ^3.3.0 | Code formatting | Astro has official Prettier plugin |
-| prettier-plugin-astro | ^0.14.0 | Astro formatting | Official formatter for .astro files |
-
-**Rationale:**
-- Astro Check validates Content Collection schemas before build
-- Prettier maintains code consistency across .astro, .ts, .md files
-
-**Confidence:** MEDIUM - Versions approximate based on 2024 state.
-
-## Content Collections Schema
-
-For type-safe migration from Jekyll collections:
-
-```typescript
-// src/content/config.ts
-import { defineCollection, z } from 'astro:content';
-
-const publications = defineCollection({
-  type: 'content',
-  schema: z.object({
-    title: z.string(),
-    authors: z.string().optional(),
-    venue: z.string(),
-    date: z.date(),
-    paperurl: z.string().url().optional(),
-    citation: z.string().optional(),
-    excerpt: z.string().optional(),
-  }),
-});
-
-const talks = defineCollection({
-  type: 'content',
-  schema: z.object({
-    title: z.string(),
-    date: z.date(),
-    venue: z.string(),
-    location: z.string().optional(),
-    talkurl: z.string().url().optional(),
-  }),
-});
-
-const blog = defineCollection({
-  type: 'content',
-  schema: z.object({
-    title: z.string(),
-    date: z.date(),
-    tags: z.array(z.string()).optional(),
-    permalink: z.string().optional(), // For migration compatibility
-  }),
-});
-
-const portfolio = defineCollection({
-  type: 'content',
-  schema: z.object({
-    title: z.string(),
-    excerpt: z.string(),
-    githubRepo: z.string().optional(), // For GitHub cards
-    demoUrl: z.string().url().optional(), // For live embeds
-    tags: z.array(z.string()).optional(),
-  }),
-});
-
-export const collections = { publications, talks, blog, portfolio };
-```
-
-**Confidence:** HIGH - Content Collections API is stable Astro 2.0+ feature.
-
-## Installation Commands
+### For Sveltia CMS (Recommended)
 
 ```bash
-# Initialize Astro project (do this in a separate directory first)
-npm create astro@latest
-
-# Core dependencies
-npm install astro@latest
-
-# Content processing
-npm install @astrojs/mdx remark-gfm rehype-slug rehype-autolink-headings
-
-# Styling
-npm install @astrojs/tailwind tailwindcss @tailwindcss/typography
-
-# Interactive components (for portfolio)
-npm install @astrojs/react react react-dom
-
-# Portfolio embeds
-npm install @octokit/rest chart.js react-chartjs-2
-# npm install astro-embed  # Verify this package exists
-
-# Development tools
-npm install -D @astrojs/check prettier prettier-plugin-astro typescript
-
-# Utility
-npm install clsx
+# No npm dependencies required for static GitHub Pages
+# CMS is loaded via CDN in public/admin/index.html
 ```
 
-**Note:** Install in phases. Start with core Astro + content + styling. Add React/embeds only when implementing portfolio section.
+**Setup files:**
 
-## Migration Strategy
+1. Create `public/admin/index.html`:
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Content Manager</title>
+</head>
+<body>
+  <script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js" type="module"></script>
+</body>
+</html>
+```
 
-### Phase 1: Core Setup
-1. Install Astro with Tailwind + MDX
-2. Set up Content Collections for publications, talks, blog, portfolio
-3. Configure GitHub Pages deployment
+2. Create `public/admin/config.yml` (see Configuration section)
 
-### Phase 2: Content Migration
-1. Copy `_publications/*.md` → `src/content/publications/`
-2. Copy `_talks/*.md` → `src/content/talks/`
-3. Copy `_posts/*.md` → `src/content/blog/`
-4. Copy `images/` → `public/images/`
-5. Copy `files/` → `public/files/`
-6. Update frontmatter to match schemas (minimal changes needed)
+### For Decap CMS (Fallback)
 
-### Phase 3: Static Pages
-1. Build layout components (BaseLayout, AuthorSidebar)
-2. Create index pages for publications, talks, blog
-3. Implement author profile sidebar
-4. Set up navigation
+```bash
+# Alternative: Install as npm package if you need deeper integration
+npm install decap-cms-app
+```
 
-### Phase 4: Portfolio Interactivity (Enhancement)
-1. Add React integration
-2. Create GitHub card component with Octokit
-3. Add embed helpers for CodePen/demos
-4. Implement chart visualizations
+**Or use CDN in `public/admin/index.html`:**
+```html
+<script src="https://unpkg.com/decap-cms@^3.10.0/dist/decap-cms.js"></script>
+```
+
+## Alternatives Considered
+
+| Recommended | Alternative | When to Use Alternative |
+|-------------|-------------|-------------------------|
+| Sveltia CMS (PAT auth) | Decap CMS + Netlify Identity | Never - Netlify Identity is deprecated as of 2026 |
+| Sveltia CMS (PAT auth) | Decap CMS + Git Gateway | Never - Git Gateway deprecated with Netlify Identity |
+| Sveltia CMS (PAT auth) | astro-decap-cms-oauth integration | Never for GitHub Pages - requires SSR (output: "server"), incompatible with static sites |
+| Sveltia CMS (PAT auth) | Pages CMS | If you prefer hosted service over self-managed CMS admin |
+| Sveltia CMS | Decap CMS | Only if Sveltia compatibility issues arise |
 
 ## What NOT to Use
 
-| Technology | Why Not |
-|------------|---------|
-| Jekyll | Outdated Ruby tooling, harder interactive embeds |
-| Gatsby | Over-engineered for academic site, GraphQL unnecessary |
-| Next.js | SSR features wasted on static content, added complexity |
-| WordPress | Too heavy, monthly updates don't need CMS |
-| Vanilla HTML | Defeats purpose of modern tooling, hard to maintain |
-| Vue/Svelte for islands | React has better chart/embed ecosystem |
-| Sass | Tailwind provides better DX for this use case |
-| Netlify CMS / Decap CMS | Monthly updates in markdown files, CMS is overkill |
+| Avoid | Why | Use Instead |
+|-------|-----|-------------|
+| astro-decap-cms | Requires SSR mode, incompatible with static GitHub Pages | CDN-loaded Sveltia/Decap CMS |
+| astro-decap-cms-oauth | Requires SSR mode, incompatible with static GitHub Pages | CDN-loaded Sveltia CMS with PAT auth |
+| astro-sveltia-cms | Requires SSR mode, incompatible with static GitHub Pages | CDN-loaded Sveltia CMS with PAT auth |
+| Netlify Identity | Deprecated as of 2026, no longer maintained | PAT authentication for single user |
+| Git Gateway | Deprecated with Netlify Identity | GitHub backend with PAT |
+| OAuth proxy solutions | Unnecessary complexity for single user | PAT authentication |
+| decap-cms package | Legacy package name | decap-cms-app (if installing via npm) |
 
-## Migration Gotchas
+## Stack Patterns by Variant
 
-### Jekyll to Astro Differences
+**If single user (site owner only):**
+- Use Sveltia CMS with Personal Access Token (PAT) authentication
+- No server component required
+- Works perfectly with static GitHub Pages
+- Because: Simplest setup, no OAuth flow, no third-party services
 
-| Jekyll | Astro Equivalent | Notes |
-|--------|------------------|-------|
-| `_config.yml` | `astro.config.mjs` | JS/TS config instead of YAML |
-| Collections (`_publications/`) | Content Collections (`src/content/publications/`) | Type-safe schemas required |
-| Liquid templates | Astro components | Component syntax similar to JSX |
-| `{% include %}` | `<Component />` | Import and use components |
-| `site.baseurl` | `import.meta.env.BASE_URL` | Environment-aware base path |
-| `kramdown` (GFM) | `remark-gfm` | Add plugin for GFM support |
-| Frontmatter dates | ISO 8601 strings or Date objects | Zod schema enforces format |
+**If multiple users (collaborators/editors):**
+- Use Sveltia CMS with sveltia-cms-auth on Cloudflare Workers
+- Requires Cloudflare Workers (free tier sufficient)
+- Because: Enables OAuth flow for better UX with multiple users
+- Note: Consider if GitHub Pages is still appropriate (may want to migrate to Netlify/Vercel)
 
-### Content Migration Checklist
+**If complex multi-user needs:**
+- Consider Pages CMS instead (hosted service)
+- Supports email invitations, magic links
+- Because: Better user management for non-technical editors
 
-- [ ] Update image paths: `/images/foo.png` → `/images/foo.png` (same, but verify `public/` structure)
-- [ ] Update file links: `/files/paper.pdf` → `/files/paper.pdf` (same with `public/`)
-- [ ] Convert Liquid syntax to Astro components (if any in content)
-- [ ] Update internal links: Jekyll permalinks → Astro routes
-- [ ] Validate frontmatter with `astro check` after schema setup
+## Version Compatibility
 
-## Confidence Assessment
+| Package | Compatible With | Notes |
+|---------|-----------------|-------|
+| Sveltia CMS 0.140.3 | Astro 5.x | Framework-agnostic, works via static files |
+| Decap CMS 3.10.0 | Astro 5.x | Framework-agnostic, works via static files |
+| Sveltia/Decap config.yml | Astro content collections | Collections in config.yml map to src/content/* folders |
 
-| Area | Confidence | Notes |
-|------|------------|-------|
-| Core Astro stack | HIGH | Standard pattern, well-documented |
-| Content Collections | HIGH | Stable API since Astro 2.0 |
-| Tailwind + Typography | HIGH | Common academic site pattern |
-| GitHub Pages deployment | HIGH | Official Astro support |
-| React islands | MEDIUM | Standard but version needs verification |
-| Portfolio embed packages | MEDIUM-LOW | astro-embed existence unverified, may need alternatives |
-| Package versions | MEDIUM-LOW | Based on Jan 2025 training, need npm registry verification |
+## Configuration Details
 
-## Verification Needed
+### Example config.yml for Astro Content Collections
 
-**Before implementation, verify:**
-1. Current Astro stable version (likely 5.x but confirm)
-2. `astro-embed` package status (may have been renamed/deprecated)
-3. `@astrojs/react` current version
-4. Tailwind CSS and plugin versions
-5. Octokit REST API v21 compatibility
+```yaml
+backend:
+  name: github
+  repo: username/repo-name
+  branch: master
 
-**How to verify:**
-```bash
-npm view astro version
-npm view @astrojs/react version
-npm view astro-embed version  # Check if exists
-npm view tailwindcss version
+media_folder: "public/images/uploads"
+public_folder: "/images/uploads"
+
+collections:
+  - name: "blog"
+    label: "Blog Posts"
+    folder: "src/content/blog"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Description", name: "description", widget: "string"}
+      - {label: "Publish Date", name: "pubDate", widget: "datetime"}
+      - {label: "Author", name: "author", widget: "string"}
+      - {label: "Body", name: "body", widget: "markdown"}
+
+  - name: "publications"
+    label: "Publications"
+    folder: "src/content/publications"
+    create: true
+    fields:
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Authors", name: "authors", widget: "string"}
+      - {label: "Year", name: "year", widget: "number"}
+      - {label: "Venue", name: "venue", widget: "string"}
+      - {label: "PDF URL", name: "pdf", widget: "string", required: false}
+      - {label: "Body", name: "body", widget: "markdown"}
+
+  - name: "talks"
+    label: "Talks"
+    folder: "src/content/talks"
+    create: true
+    fields:
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Event", name: "event", widget: "string"}
+      - {label: "Date", name: "date", widget: "datetime"}
+      - {label: "Location", name: "location", widget: "string"}
+      - {label: "Slides URL", name: "slides", widget: "string", required: false}
+      - {label: "Body", name: "body", widget: "markdown"}
+
+  - name: "portfolio"
+    label: "Portfolio"
+    folder: "src/content/portfolio"
+    create: true
+    fields:
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Description", name: "description", widget: "string"}
+      - {label: "Image", name: "image", widget: "image"}
+      - {label: "URL", name: "url", widget: "string", required: false}
+      - {label: "Body", name: "body", widget: "markdown"}
+
+  - name: "pages"
+    label: "Pages"
+    files:
+      - label: "About Page"
+        name: "about"
+        file: "src/content/pages/about.md"
+        fields:
+          - {label: "Title", name: "title", widget: "string"}
+          - {label: "Body", name: "body", widget: "markdown"}
 ```
+
+## Integration with Existing Stack
+
+**Astro 5.x compatibility:** ✅ Excellent
+- Sveltia/Decap CMS are framework-agnostic
+- Load as static files in public/admin/
+- Access via yoursite.com/admin
+
+**Content Collections compatibility:** ✅ Excellent
+- config.yml collections map 1:1 to src/content/ folders
+- Frontmatter fields defined in config.yml
+- CMS writes standard markdown files
+
+**TypeScript compatibility:** ✅ Excellent
+- CMS doesn't interfere with TypeScript
+- Content schema still defined in Astro config
+
+**GitHub Pages deployment:** ✅ Excellent (with PAT auth)
+- No build changes required
+- CMS is client-side SPA
+- Commits directly to GitHub repo
+- GitHub Actions still handles rebuild
+
+**CSS custom properties:** ✅ No conflict
+- CMS UI is isolated in /admin
+- Site styles unaffected
+
+## Authentication Setup (PAT Method)
+
+1. Generate GitHub Personal Access Token:
+   - Go to GitHub Settings → Developer settings → Personal access tokens → Tokens (classic)
+   - Generate new token with `repo` scope
+   - Save token securely
+
+2. Access CMS:
+   - Navigate to yoursite.com/admin
+   - Click arrow next to "Sign In" button
+   - Select "Use Personal Access Token"
+   - Paste your token
+   - Token stored in browser localStorage
+
+3. Security considerations:
+   - Token has full repo access (required for commits)
+   - Only use on trusted devices
+   - Rotate token periodically
+   - Consider token expiration settings
 
 ## Sources
 
-**Limitation:** External tools (WebSearch, Context7, official docs) were unavailable during research. All recommendations based on training data (cutoff: January 2025).
+### High Confidence (Official Documentation)
+- [Decap CMS & Astro Official Guide](https://docs.astro.build/en/guides/cms/decap-cms/) — Integration patterns, configuration examples
+- [Decap CMS GitHub Releases](https://github.com/decaporg/decap-cms/releases) — Version 3.10.0 confirmed (Jan 8, 2026)
+- [Sveltia CMS GitHub Repository](https://github.com/sveltia/sveltia-cms) — Version 0.140.3 confirmed (Feb 12, 2026)
+- [Decap CMS GitHub Backend Documentation](https://decapcms.org/docs/github-backend/) — Backend configuration
+- [Decap CMS Configuration Options](https://decapcms.org/docs/configuration-options/) — Collection schema definitions
+- [Decap CMS Git Gateway Documentation](https://decapcms.org/docs/git-gateway-backend/) — Authentication options
 
-**Recommended verification sources:**
-- Astro official docs: https://docs.astro.build
-- Astro integrations: https://astro.build/integrations
-- Tailwind CSS docs: https://tailwindcss.com
-- GitHub Octokit: https://github.com/octokit/rest.js
-- Chart.js docs: https://www.chartjs.org
+### Medium Confidence (Community Projects & Discussions)
+- [astro-decap-cms Integration](https://github.com/advanced-astro/astro-decap-cms) — SSR requirement confirmed
+- [astro-decap-cms-oauth Integration](https://github.com/dorukgezici/astro-decap-cms-oauth) — SSR requirement confirmed
+- [astro-sveltia-cms Integration](https://github.com/majesticostudio/astro-sveltia-cms) — SSR requirement confirmed
+- [sveltia-cms-auth](https://github.com/sveltia/sveltia-cms-auth) — Cloudflare Workers OAuth proxy
+- [Netlify Identity Deprecation Discussion](https://github.com/decaporg/decap-cms/discussions/7419) — Deprecation confirmed
+- [Sveltia CMS PAT Authentication](https://github.com/sveltia/sveltia-cms/discussions/218) — Single-user PAT method
 
-**Research methodology:** Analysis of project requirements (Jekyll migration, academic content, portfolio embeds, GitHub Pages) combined with training data knowledge of Astro ecosystem best practices as of January 2025. Confidence levels reflect inability to verify current package versions and ecosystem state.
+### Medium Confidence (Third-Party Articles & Resources)
+- [Hugo CMS Setup Journey on GitHub Pages](https://0deepresearch.com/posts/2025-05-08-hugo-cms-setup-journey-decap-cms-sveltia-cms-on-github-pages/) — Real-world static site setup
+- [Pages CMS Overview](https://pagescms.org/) — Alternative CMS comparison
+- [Decap CMS Alternatives in 2026](https://sitepins.com/blog/decapcms-alternatives) — Market landscape, Netlify maintenance status
+- [GitHub Pages CMS Options](https://www.jekyllpad.com/blog/cms-for-github-pages) — Static hosting authentication patterns
 
 ---
-
-**Next steps for roadmap creation:**
-1. Verify package versions before roadmap milestone creation
-2. Consider separating "Core Migration" from "Portfolio Enhancements" into distinct phases
-3. Flag portfolio embed packages for deeper research during implementation phase
-4. Plan content migration scripts for bulk frontmatter conversion
+*Stack research for: Decap CMS integration with Astro on GitHub Pages*
+*Researched: 2026-02-13*

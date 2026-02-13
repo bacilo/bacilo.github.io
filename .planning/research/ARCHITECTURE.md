@@ -1,626 +1,620 @@
-# Architecture Patterns
+# Architecture Research: Decap CMS Integration with Astro
 
-**Domain:** Personal Academic Website with Astro
-**Researched:** 2026-02-11
-**Confidence:** HIGH (Astro patterns well-established as of Jan 2025)
+**Domain:** CMS Integration for Static Astro Site
+**Researched:** 2026-02-13
+**Confidence:** HIGH
 
-## Recommended Architecture
+## Executive Summary
 
-```
-Personal Academic Website (Astro Static Site)
+Decap CMS integrates with Astro sites as a client-side Single Page Application (SPA) that commits directly to GitHub repositories. The architecture consists of three independent systems: (1) Decap CMS admin interface (static files), (2) OAuth authentication server (serverless functions), and (3) Astro static site (existing). The key architectural constraint for GitHub Pages hosting is that OAuth authentication requires an external serverless component (Cloudflare Workers, Vercel Functions, or similar), as GitHub's OAuth flow cannot be completed purely client-side.
 
-┌─────────────────────────────────────────────────────────┐
-│                    Public Assets                        │
-│  /public/images/, /public/files/ (PDFs, profile photo) │
-└─────────────────────────────────────────────────────────┘
-                            ↓
-┌─────────────────────────────────────────────────────────┐
-│                   Content Layer                         │
-│  src/content/                                           │
-│    ├── publications/ (markdown + frontmatter)           │
-│    ├── talks/ (markdown + frontmatter)                  │
-│    ├── blog/ (markdown + frontmatter)                   │
-│    └── portfolio/ (markdown + frontmatter)              │
-│                                                          │
-│  config.ts (Zod schemas for type safety)                │
-└─────────────────────────────────────────────────────────┘
-                            ↓
-┌─────────────────────────────────────────────────────────┐
-│                   Pages Layer                           │
-│  src/pages/                                             │
-│    ├── index.astro (home/about)                         │
-│    ├── publications/ (collection listing + details)     │
-│    ├── talks/ (collection listing + details)            │
-│    ├── blog/ (collection listing + details)             │
-│    ├── portfolio/ (collection listing + details)        │
-│    └── cv.astro (static page)                           │
-└─────────────────────────────────────────────────────────┘
-                            ↓
-┌─────────────────────────────────────────────────────────┐
-│                 Components Layer                        │
-│  src/components/                                        │
-│    ├── layouts/                                         │
-│    │   ├── BaseLayout.astro (HTML shell)               │
-│    │   └── ContentLayout.astro (with sidebar)          │
-│    ├── AuthorSidebar.astro (static profile)            │
-│    ├── Navigation.astro (site nav)                      │
-│    ├── PublicationCard.astro (list item)               │
-│    ├── TalkCard.astro (list item)                       │
-│    ├── BlogCard.astro (list item)                       │
-│    └── portfolio/                                       │
-│        ├── PortfolioCard.astro (static)                │
-│        ├── GitHubCard.tsx (React island, interactive)  │
-│        ├── DemoEmbed.astro (iframe wrapper)            │
-│        └── DataViz.tsx (React island, Chart.js)        │
-└─────────────────────────────────────────────────────────┘
-                            ↓
-┌─────────────────────────────────────────────────────────┐
-│                  Build Output                           │
-│  dist/ (static HTML + minimal JS for islands)          │
-└─────────────────────────────────────────────────────────┘
-                            ↓
-┌─────────────────────────────────────────────────────────┐
-│                  GitHub Pages                           │
-│  Serves dist/ as static site                            │
-└─────────────────────────────────────────────────────────┘
-```
+**Critical Finding:** GitHub Pages can serve the static Decap CMS admin interface, but GitHub OAuth requires a separate serverless authentication proxy. The site remains fully static - Astro does NOT need SSR.
 
-### Key Architectural Decisions
-
-1. **Island Architecture**: Academic content (publications, talks, blog) is pure static HTML. Interactive components (GitHub cards, charts) are React "islands" that hydrate client-side only where needed.
-
-2. **Content Collections**: Use Astro's Content Collections API for type-safe frontmatter. Prevents build errors from invalid metadata.
-
-3. **No Database**: All content is markdown files in git. Perfect for infrequent updates and version control.
-
-4. **Static-First**: Everything builds to static HTML at deploy time. GitHub API calls happen at build time (GitHub cards), not client-side.
-
-5. **Component Composition**: Layouts wrap pages, pages query content, components render data. Clear separation of concerns.
-
-## Component Boundaries
-
-| Component | Responsibility | Communicates With | Data Flow |
-|-----------|---------------|-------------------|-----------|
-| BaseLayout | HTML shell, head tags, global styles | All pages | Receives: page metadata. Provides: consistent structure |
-| ContentLayout | Page layout with author sidebar | Content pages | Extends BaseLayout. Receives: page content |
-| AuthorSidebar | Static profile info | ContentLayout | Hardcoded author data from config |
-| Navigation | Site navigation links | BaseLayout | Hardcoded routes, active state from page |
-| PublicationCard | Single publication display | Publications pages | Receives: publication data from collection |
-| TalkCard | Single talk display | Talks pages | Receives: talk data from collection |
-| BlogCard | Single blog post preview | Blog listing | Receives: blog post data from collection |
-| PortfolioCard | Static project card | Portfolio listing | Receives: portfolio data from collection |
-| GitHubCard (island) | Live GitHub repo stats | Portfolio pages | Fetches GitHub API at build time, displays stats |
-| DemoEmbed | Iframe embed wrapper | Portfolio detail pages | Receives: demo URL, renders iframe with lazy load |
-| DataViz (island) | Interactive chart | Portfolio detail pages | Receives: chart config, renders with Chart.js |
-
-### Component Communication Patterns
-
-**Content → Page → Component (Data Down)**
-```typescript
-// src/pages/publications/index.astro
-import { getCollection } from 'astro:content';
-import PublicationCard from '@components/PublicationCard.astro';
-
-const publications = await getCollection('publications');
-// Sort by date descending
-const sorted = publications.sort((a, b) =>
-  b.data.date.valueOf() - a.data.date.valueOf()
-);
-
-// Pass each publication to component
-{sorted.map(pub => <PublicationCard publication={pub} />)}
-```
-
-**Layout Hierarchy (Composition)**
-```
-BaseLayout (HTML shell, styles, navigation)
-  └── ContentLayout (sidebar + main content area)
-        └── Page Content (markdown or component tree)
-```
-
-**Islands (Selective Hydration)**
-```astro
-<!-- Static content, no JS -->
-<PortfolioCard title="Project" description="..." />
-
-<!-- Interactive island, hydrates on load -->
-<GitHubCard client:load repo="username/repo" />
-
-<!-- Interactive island, hydrates when visible -->
-<DataViz client:visible chartData={data} />
-```
-
-## Data Flow
-
-### Build-Time Flow (Static Content)
+## System Overview
 
 ```
-1. Content Authoring
-   └── Author writes markdown in src/content/publications/paper.md
-   └── Frontmatter provides metadata (title, date, venue, etc.)
-
-2. Schema Validation
-   └── astro build reads src/content/config.ts
-   └── Zod schema validates frontmatter
-   └── Type errors fail build (prevents bad metadata)
-
-3. Collection Query
-   └── Page uses getCollection('publications')
-   └── Returns typed array of publication entries
-   └── Each entry has .data (frontmatter) and .render() (content)
-
-4. Component Rendering
-   └── Page passes data to PublicationCard component
-   └── Component renders static HTML
-   └── No JavaScript in final output
-
-5. Static HTML Output
-   └── dist/publications/index.html generated
-   └── Pure HTML + CSS, no client-side JS
+┌─────────────────────────────────────────────────────────────────┐
+│                    User Layer (Browser)                          │
+├─────────────────────────────────────────────────────────────────┤
+│  ┌──────────────┐      ┌──────────────┐      ┌──────────────┐  │
+│  │ Public Site  │      │ /admin Route │      │ OAuth Popup  │  │
+│  │ (Astro)      │      │ (Decap CMS)  │      │ (External)   │  │
+│  └──────┬───────┘      └──────┬───────┘      └──────┬───────┘  │
+│         │                     │                     │           │
+├─────────┴─────────────────────┴─────────────────────┴───────────┤
+│                    Content & Auth Layer                          │
+├─────────────────────────────────────────────────────────────────┤
+│  ┌─────────────────────────────────────────────────────────┐    │
+│  │              GitHub Repository (Source)                  │    │
+│  │  - src/content/* (markdown files)                       │    │
+│  │  - Stores all content, receives commits from CMS        │    │
+│  └──────────────────────┬──────────────────────────────────┘    │
+│                         │                                        │
+│  ┌──────────────────────┴──────────────────────────────────┐    │
+│  │         OAuth Serverless Proxy (External)                │    │
+│  │  - Cloudflare Worker / Vercel Function                  │    │
+│  │  - Handles GitHub OAuth handshake                       │    │
+│  └──────────────────────┬──────────────────────────────────┘    │
+│                         │                                        │
+├─────────────────────────┴───────────────────────────────────────┤
+│                    Build & Deploy Layer                          │
+├─────────────────────────────────────────────────────────────────┤
+│  ┌──────────────┐      ┌──────────────┐      ┌──────────────┐  │
+│  │ GitHub       │      │ Astro Build  │      │ GitHub       │  │
+│  │ Actions      │ ───> │ Process      │ ───> │ Pages        │  │
+│  │ (Trigger)    │      │ (CI)         │      │ (Static)     │  │
+│  └──────────────┘      └──────────────┘      └──────────────┘  │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
-### Build-Time Flow (Interactive Components)
+## Component Responsibilities
+
+| Component | Responsibility | Implementation |
+|-----------|----------------|----------------|
+| Decap CMS Admin Interface | React-based SPA for content editing, served as static files from `public/admin/` | `index.html` + `config.yml` loaded via CDN or npm |
+| OAuth Serverless Proxy | Handles GitHub OAuth handshake (required by GitHub), returns JWT to CMS | Cloudflare Worker, Vercel Function, or AWS Lambda |
+| Astro Static Site | Renders content from `src/content/` collections, serves admin files | Remains static (output: 'static'), no SSR required |
+| GitHub Repository | Source of truth for all content, receives commits from CMS | Existing repo (bacilo.github.io) |
+| GitHub Actions | CI/CD pipeline triggered by commits to master | Existing deploy.yml workflow |
+| GitHub Pages | Static file hosting for both public site and admin interface | Existing hosting (pedropaf.com) |
+
+## Integration Architecture
+
+### Current State (Before CMS)
 
 ```
-1. Component Definition
-   └── GitHubCard.tsx defined as React component
-   └── Accepts repo prop
+src/content/
+├── posts/            # Blog posts (markdown)
+├── publications/     # Academic publications (markdown)
+├── talks/            # Talks (markdown)
+└── portfolio/        # Portfolio items (markdown)
 
-2. Build-Time Data Fetch (Optional)
-   └── Can fetch GitHub API during build
-   └── Cache results in component props
-   └── Reduces client-side API calls
-
-3. Island Hydration Directive
-   └── <GitHubCard client:load repo="..." />
-   └── Astro generates static HTML preview
-   └── Bundles minimal React + component code
-
-4. Client-Side Hydration
-   └── User loads page
-   └── Static HTML renders immediately
-   └── React island hydrates on load/visible/idle
-   └── Component becomes interactive
+GitHub Actions (deploy.yml)
+    ↓
+Astro Build (npm run build)
+    ↓
+GitHub Pages (dist/)
 ```
 
-## Patterns to Follow
-
-### Pattern 1: Content Collections for Structured Data
-
-**What:** Use Astro Content Collections for all structured content (publications, talks, blog, portfolio).
-
-**When:** Any content with consistent frontmatter schema.
-
-**Why:**
-- Type safety prevents metadata errors
-- Auto-generated TypeScript types
-- Content validation at build time
-- Better DX with autocomplete
-
-**Example:**
-```typescript
-// src/content/config.ts
-import { defineCollection, z } from 'astro:content';
-
-const publications = defineCollection({
-  type: 'content',
-  schema: z.object({
-    title: z.string(),
-    authors: z.string(),
-    venue: z.string(),
-    date: z.date(),
-    paperurl: z.string().url().optional(),
-    citation: z.string().optional(),
-  }),
-});
-
-export const collections = { publications };
-```
-
-```astro
----
-// src/pages/publications/index.astro
-import { getCollection } from 'astro:content';
-const pubs = await getCollection('publications');
-// pubs is fully typed!
----
-```
-
-### Pattern 2: Static-First, Islands for Interactivity
-
-**What:** Default to static Astro components. Use React islands only for interactive features.
-
-**When:**
-- Static: Publications, talks, blog content, about page
-- Islands: GitHub cards, charts, embed players, expandable sections
-
-**Why:**
-- Faster page loads (less JS)
-- Better SEO (static HTML)
-- Simpler debugging
-- Academic content doesn't need interactivity
-
-**Example:**
-```astro
----
-// src/components/portfolio/PortfolioDetail.astro
-import GitHubCard from './GitHubCard.tsx';
----
-<article>
-  <h1>{title}</h1>
-
-  <!-- Static description, no JS -->
-  <p>{description}</p>
-
-  <!-- Interactive island, hydrates on visibility -->
-  <GitHubCard client:visible repo={githubRepo} />
-</article>
-```
-
-### Pattern 3: Layout Composition
-
-**What:** Compose layouts in layers: BaseLayout → ContentLayout → Page.
-
-**When:** Consistent structure across pages, shared sidebar/navigation.
-
-**Why:**
-- DRY (don't repeat HTML shell)
-- Consistent metadata (SEO tags)
-- Easy to update global structure
-
-**Example:**
-```astro
----
-// src/layouts/BaseLayout.astro
-const { title, description } = Astro.props;
----
-<!DOCTYPE html>
-<html>
-<head>
-  <title>{title}</title>
-  <meta name="description" content={description} />
-</head>
-<body>
-  <Navigation />
-  <slot />
-</body>
-</html>
-```
-
-```astro
----
-// src/layouts/ContentLayout.astro
-import BaseLayout from './BaseLayout.astro';
-import AuthorSidebar from '@components/AuthorSidebar.astro';
----
-<BaseLayout {...Astro.props}>
-  <div class="layout-grid">
-    <AuthorSidebar />
-    <main>
-      <slot />
-    </main>
-  </div>
-</BaseLayout>
-```
-
-```astro
----
-// src/pages/publications/index.astro
-import ContentLayout from '@layouts/ContentLayout.astro';
----
-<ContentLayout title="Publications">
-  <!-- Page content here -->
-</ContentLayout>
-```
-
-### Pattern 4: Collection-Based Routing
-
-**What:** Generate pages dynamically from Content Collections.
-
-**When:** Detail pages for publications, talks, blog posts, portfolio.
-
-**Why:**
-- No manual page creation per content item
-- Automatic URL generation
-- Type-safe content access
-
-**Example:**
-```astro
----
-// src/pages/publications/[...slug].astro
-import { getCollection } from 'astro:content';
-
-export async function getStaticPaths() {
-  const pubs = await getCollection('publications');
-  return pubs.map(pub => ({
-    params: { slug: pub.slug },
-    props: { pub },
-  }));
-}
-
-const { pub } = Astro.props;
-const { Content } = await pub.render();
----
-<ContentLayout title={pub.data.title}>
-  <h1>{pub.data.title}</h1>
-  <p>{pub.data.authors} — {pub.data.venue}</p>
-  <Content />
-</ContentLayout>
-```
-
-### Pattern 5: Build-Time GitHub API Calls
-
-**What:** Fetch GitHub repo data during build, not client-side.
-
-**When:** GitHub cards showing repo stats.
-
-**Why:**
-- No client-side API key needed
-- Faster page loads (data is already rendered)
-- No GitHub API rate limits for users
-- GitHub Actions has higher rate limits
-
-**Example:**
-```typescript
-// src/utils/github.ts
-export async function getRepoData(repo: string) {
-  const token = import.meta.env.GITHUB_TOKEN; // From GitHub Actions
-  const res = await fetch(`https://api.github.com/repos/${repo}`, {
-    headers: { Authorization: `token ${token}` },
-  });
-  return res.json();
-}
-```
-
-```astro
----
-// src/components/portfolio/GitHubCard.astro
-import { getRepoData } from '@utils/github';
-const { repo } = Astro.props;
-const data = await getRepoData(repo); // Fetched at build time
----
-<div class="github-card">
-  <h3>{data.name}</h3>
-  <p>{data.description}</p>
-  <span>⭐ {data.stargazers_count}</span>
-  <span>🍴 {data.forks_count}</span>
-</div>
-```
-
-## Anti-Patterns to Avoid
-
-### Anti-Pattern 1: Client-Side Data Fetching for Static Content
-
-**What:** Fetching publications/talks from an API on page load.
-
-**Why bad:**
-- Slower page loads (spinner, then content)
-- SEO problems (content not in HTML)
-- Unnecessary complexity (data is static)
-
-**Instead:** Use Content Collections. Content is embedded in HTML at build time.
-
-### Anti-Pattern 2: React/Vue for Everything
-
-**What:** Using React components for static content like publication lists.
-
-**Why bad:**
-- Unnecessary JS bundle
-- Slower page loads
-- More complex debugging
-- No SEO benefit
-
-**Instead:** Use Astro components for static content. Only use React/Vue for truly interactive features.
-
-### Anti-Pattern 3: Shared State Between Islands
-
-**What:** Using a global store to sync state between GitHubCard islands.
-
-**Why bad:**
-- Islands are isolated by design
-- Shared state defeats the purpose (sends all JS)
-- Harder to debug
-
-**Instead:** Keep islands independent. If they need to share state, rethink if they should be separate islands.
-
-### Anti-Pattern 4: Over-Normalizing Content
-
-**What:** Splitting content into multiple collections unnecessarily (authors, venues, publications with references).
-
-**Why bad:**
-- Complexity explosion for small content set
-- Harder to query and render
-- Manual updates don't benefit from normalization
-
-**Instead:** Accept some duplication in frontmatter. Author name in every publication is fine for 10-50 papers.
-
-### Anti-Pattern 5: Client-Side Markdown Parsing
-
-**What:** Sending markdown to client and parsing it with JavaScript.
-
-**Why bad:**
-- Huge JS bundle (markdown parser)
-- Slower page loads
-- Astro already does this at build time
-
-**Instead:** Use `<Content />` component from `entry.render()`. Markdown becomes HTML at build time.
-
-## Scalability Considerations
-
-| Concern | At 10 Publications | At 100 Publications | At 1000+ Publications |
-|---------|-------------------|-------------------|---------------------|
-| **Build time** | <1s | 1-5s | 10-30s (still acceptable for static site) |
-| **Page load** | Instant (static HTML) | Instant | Instant (pagination may be needed) |
-| **Content management** | Manual markdown files | Manual files (slightly tedious) | Consider CMS or scripts |
-| **Search** | Not needed | Client-side search with Pagefind | Client-side or external search |
-| **Navigation** | Flat list | Group by year | Pagination or infinite scroll |
-
-**Current scope (10-20 publications, 5-10 talks, 5 blog posts):** No scalability concerns. Simple listing pages are sufficient.
-
-**Future considerations:**
-- If publication count >50, add year-based grouping or pagination
-- If blog post count >20, add tag-based filtering
-- Client-side search (Pagefind) is viable up to ~1000 pages
-
-## GitHub Pages Deployment Architecture
+### Future State (After CMS Integration)
 
 ```
-GitHub Repository (bacilo.github.io)
-  ↓
-GitHub Actions Workflow (.github/workflows/deploy.yml)
-  ↓
-├── Checkout code
-├── Install Node.js + dependencies
-├── Run astro build
-│   └── Generates dist/ folder
-├── Add .nojekyll file (tells GitHub Pages to serve as-is)
-└── Deploy dist/ to gh-pages branch or GitHub Pages
-  ↓
-GitHub Pages (pedropaf.com or bacilo.github.io)
-  └── Serves dist/ as static files
+public/admin/
+├── index.html        # NEW: Decap CMS admin interface
+└── config.yml        # NEW: CMS configuration
+
+src/content/
+├── posts/            # UNCHANGED: Managed via CMS
+├── publications/     # UNCHANGED: Managed via CMS
+├── talks/            # UNCHANGED: Managed via CMS
+└── portfolio/        # UNCHANGED: Managed via CMS
+
+External OAuth Server (Cloudflare Worker)
+    ↓ (handles authentication)
+Decap CMS Admin (/admin)
+    ↓ (commits to GitHub)
+GitHub Repository
+    ↓ (triggers on push to master)
+GitHub Actions (deploy.yml)
+    ↓ (builds Astro site)
+GitHub Pages (dist/)
 ```
 
-**Key configuration:**
-```typescript
-// astro.config.mjs
-export default defineConfig({
-  site: 'https://pedropaf.com', // or https://bacilo.github.io
-  base: '/', // User site, no subpath
-  output: 'static', // Static site generation
-});
+**Key Architectural Insight:** Content collections require NO changes. Decap CMS commits markdown files to the existing `src/content/` directories, which Astro's build process already handles.
+
+## Data Flow Diagrams
+
+### Editorial Flow: Creating/Editing Content
+
+```
+1. Editor navigates to https://pedropaf.com/admin
+      ↓
+2. Decap CMS loads (static React app from public/admin/)
+      ↓
+3. User clicks "Login with GitHub"
+      ↓
+4. OAuth popup opens to Cloudflare Worker endpoint
+      ↓
+5. Worker redirects to GitHub OAuth authorization
+      ↓
+6. User authorizes app on GitHub
+      ↓
+7. GitHub redirects to Worker callback with auth code
+      ↓
+8. Worker exchanges code for access token
+      ↓
+9. Worker returns token to Decap CMS via postMessage
+      ↓
+10. Decap CMS stores token, fetches content from GitHub API
+      ↓
+11. User edits content in CMS interface
+      ↓
+12. User clicks "Publish"
+      ↓
+13. Decap CMS commits directly to GitHub via API (using token)
 ```
 
-**GitHub Actions:**
-```yaml
-name: Deploy to GitHub Pages
+### Build & Deploy Flow: From Commit to Live Site
 
-on:
-  push:
-    branches: [main]
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - run: npm ci
-      - run: npm run build
-      - uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
+```
+1. Decap CMS commits to src/content/posts/new-post.md
+      ↓
+2. GitHub detects push to master branch
+      ↓
+3. GitHub Actions deploy.yml workflow triggered
+      ↓
+4. Workflow checks out code
+      ↓
+5. Workflow runs: npm ci && npm run build
+      ↓
+6. Astro builds site (reads src/content/*, generates dist/)
+      ↓
+7. Workflow uploads dist/ artifact
+      ↓
+8. GitHub Pages deploys artifact
+      ↓
+9. https://pedropaf.com reflects new content
 ```
 
-## File Structure
+**Time to live:** Typically 2-5 minutes from CMS publish to visible on site.
+
+### Authentication Flow: OAuth Handshake Detail
+
+```
+[Browser: pedropaf.com/admin]
+      ↓ (1) Click "Login with GitHub"
+      ↓
+[Decap CMS opens popup]
+      ↓ (2) Navigate to: https://oauth-proxy.workers.dev/auth
+      ↓
+[Cloudflare Worker]
+      ↓ (3) 302 Redirect to: https://github.com/login/oauth/authorize
+                              ?client_id=XXX
+                              &redirect_uri=https://oauth-proxy.workers.dev/callback
+      ↓
+[GitHub OAuth Authorization Page]
+      ↓ (4) User clicks "Authorize"
+      ↓ (5) 302 Redirect to: https://oauth-proxy.workers.dev/callback?code=XXX
+      ↓
+[Cloudflare Worker]
+      ↓ (6) POST to: https://github.com/login/oauth/access_token
+                      with client_id, client_secret, code
+      ↓ (7) GitHub returns: { access_token: "gho_XXX" }
+      ↓ (8) Worker sends message to opener window:
+                      window.opener.postMessage({
+                        token: "gho_XXX",
+                        provider: "github"
+                      }, "https://pedropaf.com")
+      ↓
+[Decap CMS in pedropaf.com/admin]
+      ↓ (9) Receives token, stores in memory/localStorage
+      ↓ (10) Makes GitHub API calls with: Authorization: token gho_XXX
+```
+
+## Recommended Project Structure
 
 ```
 bacilo.github.io/
-├── src/
-│   ├── content/
-│   │   ├── config.ts          # Collection schemas
-│   │   ├── publications/       # Publication markdown files
-│   │   ├── talks/              # Talk markdown files
-│   │   ├── blog/               # Blog post markdown files
-│   │   └── portfolio/          # Portfolio markdown files
-│   ├── layouts/
-│   │   ├── BaseLayout.astro
-│   │   └── ContentLayout.astro
-│   ├── components/
-│   │   ├── Navigation.astro
-│   │   ├── AuthorSidebar.astro
-│   │   ├── PublicationCard.astro
-│   │   ├── TalkCard.astro
-│   │   ├── BlogCard.astro
-│   │   └── portfolio/
-│   │       ├── PortfolioCard.astro
-│   │       ├── GitHubCard.tsx
-│   │       └── DataViz.tsx
-│   ├── pages/
-│   │   ├── index.astro         # Home/About
-│   │   ├── cv.astro            # CV page
-│   │   ├── publications/
-│   │   │   ├── index.astro     # Publications listing
-│   │   │   └── [...slug].astro # Individual publication
-│   │   ├── talks/
-│   │   │   ├── index.astro
-│   │   │   └── [...slug].astro
-│   │   ├── blog/
-│   │   │   ├── index.astro
-│   │   │   └── [...slug].astro
-│   │   └── portfolio/
-│   │       ├── index.astro
-│   │       └── [...slug].astro
-│   ├── utils/
-│   │   └── github.ts           # GitHub API helper
-│   └── styles/
-│       └── global.css          # Global styles (Tailwind)
 ├── public/
-│   ├── images/                 # Profile photo, assets
-│   └── files/                  # PDF files
-├── astro.config.mjs
-├── tailwind.config.mjs
-├── tsconfig.json
-└── package.json
+│   ├── admin/                    # NEW: Decap CMS files
+│   │   ├── index.html           # NEW: CMS admin interface
+│   │   └── config.yml           # NEW: Collections config
+│   └── [existing static files]
+├── src/
+│   ├── content/                 # UNCHANGED: Content collections
+│   │   ├── posts/              # UNCHANGED: Editable via CMS
+│   │   ├── publications/       # UNCHANGED: Editable via CMS
+│   │   ├── talks/              # UNCHANGED: Editable via CMS
+│   │   └── portfolio/          # UNCHANGED: Editable via CMS
+│   ├── layouts/                # UNCHANGED
+│   ├── components/             # UNCHANGED
+│   └── pages/                  # UNCHANGED
+├── .github/
+│   └── workflows/
+│       └── deploy.yml          # UNCHANGED: Existing build process
+├── astro.config.mjs            # UNCHANGED: Stays static
+└── package.json                # OPTIONAL: Add decap-cms-app if using npm
 ```
 
-## Migration Architecture
+### Structure Rationale
 
-### Jekyll → Astro Mapping
+- **public/admin/:** Static files served by GitHub Pages, no build step needed for CMS
+- **src/content/:** Zero changes required - Decap commits markdown here, Astro builds it
+- **No SSR needed:** Astro remains `output: 'static'`, entire site pre-rendered
+- **OAuth external:** Separate deployment (Cloudflare Worker) handles auth proxy
 
-| Jekyll | Astro |
-|--------|-------|
-| `_config.yml` | `astro.config.mjs` |
-| `_layouts/` | `src/layouts/` |
-| `_includes/` | `src/components/` |
-| `_publications/` | `src/content/publications/` |
-| `_talks/` | `src/content/talks/` |
-| `_posts/` | `src/content/blog/` |
-| `_portfolio/` | `src/content/portfolio/` |
-| `images/` | `public/images/` |
-| `files/` | `public/files/` |
-| `_site/` (build output) | `dist/` |
+## Architectural Patterns
 
-### Content Migration Strategy
+### Pattern 1: Git-Based CMS (Decap's Core Pattern)
 
-1. **Copy markdown files** from Jekyll collections to Astro content folders
-2. **Validate frontmatter** with Zod schemas (some field renaming may be needed)
-3. **Update image paths** if necessary (usually just copy to `public/`)
-4. **Update internal links** to match new route structure
-5. **Run build** and check for type errors
+**What:** Content management system that commits directly to Git repository instead of using a database.
+
+**When to use:** Static sites where content is already stored as files in version control.
+
+**Trade-offs:**
+- PRO: Content versioned automatically, no database to manage, works with existing static site generators
+- PRO: Content portable - not locked into a proprietary CMS database
+- CON: No real-time collaboration (changes require commits)
+- CON: Large media files problematic (Git LFS not supported with GitHub backend)
+- CON: Editorial workflow creates pull requests (can clutter repo)
+
+**Example:**
+```yaml
+# public/admin/config.yml
+backend:
+  name: github
+  repo: bacilo/bacilo.github.io
+  branch: master
+
+collections:
+  - name: "posts"
+    label: "Blog Posts"
+    folder: "src/content/posts"
+    create: true
+    fields:
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Date", name: "date", widget: "datetime"}
+      - {label: "Body", name: "body", widget: "markdown"}
+```
+
+### Pattern 2: OAuth Proxy for Static Sites
+
+**What:** Serverless function that handles OAuth handshake, enabling client-side apps to authenticate with services requiring server-side OAuth flows.
+
+**When to use:** When your static site needs GitHub authentication but can't run server-side code.
+
+**Trade-offs:**
+- PRO: Enables GitHub OAuth on static hosting (GitHub Pages, Netlify, etc.)
+- PRO: Lightweight (single serverless function)
+- PRO: Separate deployment from main site (can update independently)
+- CON: Requires managing GitHub OAuth app credentials
+- CON: Another deployment to maintain (though rarely changes)
+- CON: Users must authorize the OAuth app (one-time friction)
+
+**Example (Cloudflare Worker concept):**
+```javascript
+// Simplified - actual implementation more complex
+addEventListener('fetch', event => {
+  event.respondWith(handleRequest(event.request))
+})
+
+async function handleRequest(request) {
+  const url = new URL(request.url)
+
+  if (url.pathname === '/auth') {
+    // Redirect to GitHub OAuth
+    return Response.redirect(
+      `https://github.com/login/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${CALLBACK_URL}`,
+      302
+    )
+  }
+
+  if (url.pathname === '/callback') {
+    const code = url.searchParams.get('code')
+    // Exchange code for token
+    const tokenResponse = await fetch('https://github.com/login/oauth/access_token', {
+      method: 'POST',
+      headers: { 'Accept': 'application/json' },
+      body: JSON.stringify({ client_id: CLIENT_ID, client_secret: CLIENT_SECRET, code })
+    })
+    const { access_token } = await tokenResponse.json()
+
+    // Return token to opener window
+    return new Response(html`
+      <script>
+        window.opener.postMessage({ token: "${access_token}", provider: "github" }, "*")
+        window.close()
+      </script>
+    `)
+  }
+}
+```
+
+### Pattern 3: Content Collections Schema Mapping
+
+**What:** Decap CMS field configuration that mirrors Astro content collection schemas.
+
+**When to use:** When integrating Decap with Astro content collections.
+
+**Trade-offs:**
+- PRO: CMS UI automatically validates content structure
+- PRO: Prevents malformed frontmatter
+- PRO: Type-safe content editing
+- CON: Schema defined in two places (Astro schema + Decap config)
+- CON: Changes require updating both configs
+
+**Example:**
+```yaml
+# public/admin/config.yml - Decap schema
+collections:
+  - name: "publications"
+    label: "Publications"
+    folder: "src/content/publications"
+    create: true
+    fields:
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Authors", name: "authors", widget: "list"}
+      - {label: "Venue", name: "venue", widget: "string"}
+      - {label: "Year", name: "year", widget: "number"}
+      - {label: "PDF", name: "pdf", widget: "file"}
+      - {label: "Abstract", name: "body", widget: "markdown"}
+```
+
+Mirrors this Astro schema (hypothetical):
+```typescript
+// src/content/config.ts
+const publications = defineCollection({
+  schema: z.object({
+    title: z.string(),
+    authors: z.array(z.string()),
+    venue: z.string(),
+    year: z.number(),
+    pdf: z.string(),
+  }),
+})
+```
+
+## Anti-Patterns
+
+### Anti-Pattern 1: Enabling SSR for CMS Integration
+
+**What people do:** Add an Astro adapter (Node, Vercel, etc.) and enable `output: 'server'` or `output: 'hybrid'` to integrate Decap CMS.
+
+**Why it's wrong:**
+- Decap CMS admin interface is static HTML/JS - doesn't need SSR
+- Breaks GitHub Pages hosting (requires static output)
+- Adds unnecessary complexity and hosting requirements
+- Some Astro-Decap integrations wrongly require SSR for OAuth routes
+
+**Do this instead:**
+- Keep Astro fully static (`output: 'static'`)
+- Serve Decap admin from `public/admin/` (static files)
+- Deploy OAuth proxy separately (Cloudflare Worker, not in Astro)
+- GitHub Pages serves both public site AND admin interface as static files
+
+### Anti-Pattern 2: Using Netlify Identity with GitHub Pages
+
+**What people do:** Try to use Netlify Identity authentication while hosting on GitHub Pages.
+
+**Why it's wrong:**
+- Netlify Identity only works on Netlify-hosted sites
+- Requires Netlify's backend services (not available on GitHub Pages)
+- Git Gateway requires Netlify Identity (creates circular dependency)
+
+**Do this instead:**
+- Use GitHub backend directly (`backend: { name: github }` in config.yml)
+- Deploy a separate OAuth proxy (Cloudflare Worker, Vercel Function)
+- Configure Decap to use your OAuth proxy's base_url
+
+### Anti-Pattern 3: Committing Media to src/content/
+
+**What people do:** Configure media_folder to store uploads inside `src/content/` directories.
+
+**Why it's wrong:**
+- Bloats Git repository with binary files
+- Slows down cloning, CI/CD builds
+- GitHub has repository size limits
+- Images should be in `public/` for Astro to serve them
+
+**Do this instead:**
+```yaml
+# public/admin/config.yml
+media_folder: "public/images/uploads"
+public_folder: "/images/uploads"
+```
+- Media stored in `public/images/uploads/` (served as static files)
+- Markdown references images via `/images/uploads/filename.jpg`
+- Consider external media hosting (Cloudinary, etc.) for large sites
+
+### Anti-Pattern 4: Modifying Content Collections Structure for CMS
+
+**What people do:** Restructure existing content directories to match CMS expectations.
+
+**Why it's wrong:**
+- Breaks existing Astro pages that query content collections
+- Requires migrating all content
+- CMS should adapt to existing structure, not vice versa
+
+**Do this instead:**
+- Configure Decap collections to match existing `src/content/` folders
+- Use `folder: "src/content/posts"` in config.yml
+- Keep existing frontmatter fields, add new ones only if needed
+- Test CMS with a single test post before rolling out widely
+
+## Integration Points
+
+### External Services
+
+| Service | Integration Pattern | Notes |
+|---------|---------------------|-------|
+| GitHub API | OAuth + REST API | Decap uses GitHub API to read/write content files |
+| OAuth Proxy | HTTP redirect flow | Handles GitHub OAuth handshake, returns token to CMS |
+| GitHub Actions | Webhook trigger | Automatically triggered on commits from CMS |
+| GitHub Pages | Static file serving | Serves both public site and /admin interface |
+
+### Internal Boundaries
+
+| Boundary | Communication | Notes |
+|----------|---------------|-------|
+| Decap CMS ↔ GitHub API | REST API (authenticated) | CMS reads/writes markdown files via API |
+| OAuth Proxy ↔ GitHub OAuth | HTTP redirects + POST | Standard OAuth 2.0 flow |
+| Admin Interface ↔ Public Site | None (independent) | /admin route is separate SPA, no shared state |
+| Astro Build ↔ Content Collections | File system reads | Astro build process reads markdown files |
+
+## Deployment Architecture
+
+### Component Deployment Matrix
+
+| Component | Hosting | Build Process | Update Trigger |
+|-----------|---------|---------------|----------------|
+| Public Site (Astro) | GitHub Pages | GitHub Actions (npm run build) | Git push to master |
+| Admin Interface (Decap) | GitHub Pages (public/admin/) | None (static files) | Git push to master |
+| OAuth Proxy | Cloudflare Workers | Wrangler CLI | Manual deploy or CI |
+| Content (Markdown) | GitHub Repository | None (source files) | CMS commits or Git push |
+
+### Critical Deployment Consideration
+
+**The OAuth proxy is a separate deployment.** It does NOT live in the Astro project. This is a key architectural decision:
+
+**Option A: Cloudflare Worker (Recommended)**
+- Deploy: `wrangler deploy`
+- Hosting: Cloudflare's edge network (free tier available)
+- URL: `https://oauth-proxy.your-subdomain.workers.dev`
+- Config in Decap: `base_url: https://oauth-proxy.your-subdomain.workers.dev`
+
+**Option B: Vercel Serverless Function**
+- Deploy: Separate Vercel project with /api routes
+- Hosting: Vercel (free tier available)
+- URL: `https://oauth-proxy.vercel.app/api`
+- Config in Decap: `base_url: https://oauth-proxy.vercel.app/api`
+
+**Option C: AWS Lambda + API Gateway**
+- Deploy: SAM CLI or Serverless Framework
+- Hosting: AWS (free tier available)
+- URL: `https://xxx.execute-api.region.amazonaws.com/prod`
+- More complex setup, only if already using AWS
+
+## Authentication Architecture
+
+### GitHub OAuth App Setup
+
+Required in GitHub:
+1. Create OAuth App at https://github.com/settings/developers
+2. Set Authorization callback URL to OAuth proxy callback endpoint
+3. Store Client ID (public) and Client Secret (secret)
+
+### OAuth Proxy Configuration
+
+The proxy needs:
+- **Environment variables:**
+  - `GITHUB_CLIENT_ID` (from OAuth app)
+  - `GITHUB_CLIENT_SECRET` (from OAuth app - keep secure!)
+  - `REDIRECT_ORIGIN` (your site URL, e.g., `https://pedropaf.com`)
+
+### Security Considerations
+
+| Concern | Mitigation |
+|---------|------------|
+| Client Secret Exposure | Stored in Worker environment variables, never in repo |
+| Token Storage | Stored in browser localStorage (CMS handles this) |
+| CORS Issues | OAuth proxy validates redirect origin |
+| Man-in-the-Middle | All traffic over HTTPS (enforced by GitHub Pages & Cloudflare) |
+| Token Expiry | GitHub tokens don't expire, but can be revoked by user |
+
+## Build Order & Implementation Sequence
+
+Based on architectural dependencies, implement in this order:
+
+### Phase 1: OAuth Infrastructure (BLOCKING)
+1. Create GitHub OAuth App (get Client ID/Secret)
+2. Deploy OAuth proxy (Cloudflare Worker)
+3. Test OAuth flow with sample page
+**Blocker:** Cannot test Decap integration without working OAuth
+
+### Phase 2: Decap CMS Basic Setup
+1. Create `public/admin/index.html`
+2. Create `public/admin/config.yml` with ONE collection (posts)
+3. Configure backend + OAuth proxy base_url
+4. Test login and view existing posts
+**Blocker:** Requires Phase 1 complete
+
+### Phase 3: Content Collections Mapping
+1. Add remaining collections to config.yml (publications, talks, portfolio)
+2. Map fields to match existing frontmatter schemas
+3. Test creating/editing content in each collection
+**Blocker:** Requires Phase 2 working
+
+### Phase 4: Media Upload Configuration
+1. Configure media_folder and public_folder
+2. Test image uploads
+3. Verify images render on public site
+**Blocker:** None (can defer if not handling media initially)
+
+### Phase 5: Editorial Workflow (OPTIONAL)
+1. Enable `publish_mode: editorial_workflow` in config.yml
+2. Test draft → review → publish flow
+3. Verify pull requests created correctly
+**Blocker:** None (optional feature)
+
+## New vs. Modified Components
+
+### New Components (To Be Created)
+
+| File | Purpose | Estimated Lines |
+|------|---------|-----------------|
+| `public/admin/index.html` | Decap CMS admin interface entry point | ~30 |
+| `public/admin/config.yml` | CMS configuration (collections, fields) | ~150-200 |
+| OAuth Proxy (Cloudflare Worker) | GitHub OAuth handler | ~100-150 |
+
+### Modified Components (None)
+
+**Critical architectural finding:** NO existing Astro files need modification. The integration is additive:
+- `astro.config.mjs` - UNCHANGED
+- `src/content/*` - UNCHANGED (CMS writes here, but structure unchanged)
+- `.github/workflows/deploy.yml` - UNCHANGED
+- `package.json` - OPTIONAL (only if using npm package vs CDN)
+
+### Unmodified Components (Remain As-Is)
+
+- All Astro pages, layouts, components
+- Content collection schemas (if defined)
+- Build process and CI/CD
+- GitHub Pages configuration
+- Domain configuration
+
+## Risk Assessment
+
+| Risk | Likelihood | Impact | Mitigation |
+|------|------------|--------|------------|
+| OAuth proxy downtime | Low | High (blocks CMS access) | Use reliable hosting (Cloudflare Workers 99.9%+ uptime) |
+| GitHub API rate limits | Medium | Medium (CMS slow/fails) | Authenticate all requests (5000/hr vs 60/hr unauthenticated) |
+| Media files bloating repo | High | Medium (slow builds) | Configure media in `public/`, consider external hosting |
+| Accidental deletion via CMS | Medium | High (content loss) | Enable editorial workflow (creates PRs), Git history recovers deletions |
+| Schema drift (Astro vs Decap) | Medium | Low (build errors) | Document schema in both places, test after changes |
+| Client secret exposure | Low | High (security breach) | Store in Worker env vars, rotate if exposed |
+
+## Alternatives Considered
+
+### Alternative 1: Tina CMS
+**Rejected because:** Requires Next.js or similar for backend, more complex setup, not as mature for Astro
+
+### Alternative 2: Forestry/TinaCMS Cloud
+**Rejected because:** Paid service, vendor lock-in, Decap is open-source and self-hosted
+
+### Alternative 3: Contentlayer
+**Rejected because:** Not a CMS (just a content SDK), still need editing interface
+
+### Alternative 4: Sanity/Contentful
+**Rejected because:** Requires migrating content out of Git, loses version control benefits, monthly costs
+
+### Alternative 5: Build custom admin with Astro SSR
+**Rejected because:** Breaks GitHub Pages compatibility, significant development time, security concerns
 
 ## Sources
 
-**Architecture patterns based on:**
-- Astro official documentation (training data as of Jan 2025)
-- Astro Islands architecture (official pattern)
-- Static site generator best practices
-- Personal website architecture patterns
+### High Confidence (Official Documentation)
+- [Decap CMS Official Documentation](https://decapcms.org/docs/intro/)
+- [Decap CMS GitHub Backend](https://decapcms.org/docs/github-backend/)
+- [Decap CMS Git Gateway](https://decapcms.org/docs/git-gateway-backend/)
+- [Decap CMS Configuration Options](https://decapcms.org/docs/configuration-options/)
+- [Decap CMS Editorial Workflows](https://decapcms.org/docs/editorial-workflows/)
+- [Decap CMS Basic Steps](https://decapcms.org/docs/basic-steps/)
+- [Decap CMS Installation](https://decapcms.org/docs/install-decap-cms/)
+- [Decap CMS External OAuth Clients](https://decapcms.org/docs/external-oauth-clients/)
+- [Astro CMS Guide: Decap CMS](https://docs.astro.build/en/guides/cms/decap-cms/)
 
-**Confidence:** HIGH — These are standard Astro patterns, well-documented and widely used.
+### Medium Confidence (Community Resources)
+- [advanced-astro/astro-decap-cms](https://github.com/advanced-astro/astro-decap-cms) - Integration package
+- [dorukgezici/astro-decap-cms-oauth](https://github.com/dorukgezici/astro-decap-cms-oauth) - OAuth integration (requires SSR)
+- [sterlingwes/decap-proxy](https://github.com/sterlingwes/decap-proxy) - Cloudflare Worker OAuth proxy
+- [Cloudflare Workers OAuth Provider](https://github.com/cloudflare/workers-oauth-provider) - OAuth library
+- [Building a Blog CMS with Decap CMS (2026)](https://dasroot.net/posts/2026/01/building-blog-cms-decap-netlify-cms/)
+- [Decap CMS with Netlify: Git Gateway, Build Hooks Guide (2026)](https://dylanbochman.com/blog/2026-01-15-decap-cms-netlify-setup-guide/)
 
-**Verification needed:**
-- Current Astro 5.x API (assume minimal changes from 4.x)
-- GitHub Pages deployment best practices for Astro in 2026
-- Performance characteristics of build-time GitHub API calls
+### Low Confidence (Flagged for Validation)
+- None - all architectural findings verified through official documentation
 
 ---
 
-## Summary for Roadmap
-
-**Key architectural decisions:**
-1. Island architecture (static by default, interactive where needed)
-2. Content Collections for type safety
-3. No database (git-based content)
-4. Build-time GitHub API calls
-5. Layout composition (BaseLayout → ContentLayout → Page)
-
-**Component boundaries:** Clear separation between layouts, pages, components. Data flows down from Content Collections → Pages → Components.
-
-**Patterns to follow:** Content Collections, static-first, layout composition, collection-based routing, build-time data fetching.
-
-**Anti-patterns to avoid:** Client-side data fetching for static content, React for everything, shared state between islands, over-normalization.
-
-**Scalability:** Current scope (10-20 publications) has no concerns. Simple listing pages are sufficient.
+*Architecture research for: Decap CMS Integration with Astro on GitHub Pages*
+*Researched: 2026-02-13*

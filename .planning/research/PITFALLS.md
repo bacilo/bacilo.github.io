@@ -1,541 +1,484 @@
-# Domain Pitfalls
+# Pitfalls Research: Adding Decap CMS to Existing Astro Site
 
-**Domain:** Personal Academic Website with Astro
-**Researched:** 2026-02-11
-**Confidence:** HIGH (based on Astro ecosystem knowledge + Jekyll migration experience)
+**Domain:** CMS Integration (Decap CMS + Astro + GitHub Pages + Netlify Identity)
+**Researched:** 2026-02-13
+**Confidence:** MEDIUM
+
+**Context:** This research focuses on adding Decap CMS to an EXISTING Astro site with established content collections, using GitHub Pages for hosting and Netlify Identity for authentication. Pitfalls are specific to this integration pattern, not greenfield CMS setup.
+
+---
 
 ## Critical Pitfalls
 
-Mistakes that cause rewrites or major issues.
+### Pitfall 1: GitHub Pages + Netlify Identity OAuth Mismatch
 
-### Pitfall 1: Breaking Publication URLs During Migration
-
-**What goes wrong:** Publications have been cited in papers/CVs with current Jekyll URLs. Changing URL structure breaks these citations and incoming links.
+**What goes wrong:**
+Netlify Identity requires a server-side OAuth endpoint, but GitHub Pages only serves static files. Attempting to use Netlify's Identity Widget with GitHub Pages results in "Unable to access identity settings" errors. Invitation links send users to incorrect subdomains, and the authentication flow breaks completely.
 
 **Why it happens:**
-- Jekyll uses permalink customization in frontmatter
-- Astro's default routing is different (filename-based)
-- Easy to assume "URLs will just work"
+Developers assume that because Netlify provides Identity as a service, it "just works" everywhere. The documentation often shows Netlify-hosted examples, obscuring the requirement for OAuth callback routes that GitHub Pages cannot provide.
 
-**Consequences:**
-- Broken links in published papers
-- Lost Google Scholar indexing
-- Professional credibility hit
-- 404s from CVs/resumes pointing to old URLs
+**How to avoid:**
+Deploy an external OAuth server BEFORE attempting authentication setup. Options:
+- **Cloudflare Workers** (lightweight, free tier sufficient)
+- **Vercel Serverless Functions** (if already using Vercel)
+- **Astro API routes with adapter** (requires moving admin routes to SSR-enabled environment)
 
-**Prevention:**
-1. **Map Jekyll URL structure before migration**
-   - Document current permalink patterns from _config.yml
-   - Check each publication's frontmatter for custom permalinks
-   - Example: Jekyll `permalink: /publication/2020-paper-title` must map to Astro route
+Configure `base_url` in Decap's config.yml to point to your OAuth server endpoint, NOT to your GitHub Pages URL.
 
-2. **Configure Astro to match or redirect**
-   - Option A: Structure Astro content/pages to generate identical URLs
-   - Option B: Add redirects in astro.config.mjs or _redirects file
-   - Test every publication URL before going live
+**Warning signs:**
+- Testing authentication shows redirect to `api.netlify.com` instead of your OAuth endpoint
+- Browser console shows CORS errors during login
+- Identity Widget loads but login button does nothing
+- Error messages mention "Unable to access identity settings"
 
-3. **Validate with link checker**
-   - Run broken-link-checker on dist/ folder before deployment
-   - Test critical URLs from Google Scholar/citations
+**Phase to address:**
+**Phase 1: Authentication Infrastructure** - Must be completed BEFORE CMS configuration. Cannot be retrofitted easily.
 
-**Detection:**
-- Warning signs: "This will be easier if we just change the URL structure"
-- Red flag: Not documenting current URLs before starting migration
+**Sources:**
+- [Decap CMS External OAuth Clients](https://decapcms.org/docs/external-oauth-clients/) — MEDIUM confidence
+- [GitHub Issue #3164: Unable to access identity settings](https://github.com/netlify/netlify-cms/issues/3164) — HIGH confidence
+- [Netlify Identity Documentation](https://docs.netlify.com/manage/security/secure-access-to-sites/identity/overview/) — HIGH confidence
 
-**Migration-specific code:**
-```typescript
-// src/content/config.ts - Preserve Jekyll permalinks
-const publications = defineCollection({
-  schema: z.object({
-    title: z.string(),
-    date: z.date(),
-    permalink: z.string().optional(), // Keep Jekyll permalink for reference
-    // ... other fields
-  }),
-});
-```
-
-```astro
 ---
-// src/pages/publications/[slug].astro
-// Option: Use Jekyll permalink if it exists
-export async function getStaticPaths() {
-  const pubs = await getCollection('publications');
-  return pubs.map(pub => {
-    // Extract slug from Jekyll permalink if it exists
-    const slug = pub.data.permalink
-      ? pub.data.permalink.split('/').pop()
-      : pub.slug;
-    return {
-      params: { slug },
-      props: { pub },
-    };
-  });
-}
----
-```
 
-### Pitfall 2: GitHub Pages Base Path Misconfiguration
+### Pitfall 2: Image Upload Path on First Submission
 
-**What goes wrong:** Site deploys but all assets 404. CSS doesn't load. Links are broken. Site looks completely broken.
+**What goes wrong:**
+When creating new content with an image field, the image uploads to the root `media_folder` on first submission instead of the field-level `media_folder` path. The frontmatter contains the correct path, but the actual file ends up in the wrong location. Re-uploading fixes it, but this creates confusion and orphaned files.
 
 **Why it happens:**
-- GitHub Pages serves user sites at `username.github.io/` (no base path)
-- But project sites at `username.github.io/repo-name/` (with base path)
-- Astro needs `base` config set correctly for asset paths
-- Easy to test locally (where base isn't needed) and miss the issue
+Decap CMS evaluates templated media paths (like `media_folder: "{{media_folder}}/{{slug}}"`) only after the entry file exists. On first submission, the entry doesn't exist yet, so the CMS uses a temporary dummy path. The path re-evaluation happens before saving the frontmatter, but the file has already been uploaded to the wrong location.
 
-**Consequences:**
-- Site looks broken on GitHub Pages but works locally
-- All CSS/JS/images 404
-- Internal links point to wrong URLs
-- Wastes hours debugging "why does this work locally?"
-
-**Prevention:**
-1. **Understand your GitHub Pages type**
-   - User site: `bacilo.github.io` → No base path needed
-   - Project site: `bacilo.github.io/repo-name` → Base path = `/repo-name/`
-
-2. **Configure Astro correctly**
-   ```typescript
-   // astro.config.mjs
-   export default defineConfig({
-     site: 'https://bacilo.github.io', // or pedropaf.com
-     base: '/', // No subpath for user site
-     // If this were a project site:
-     // base: '/repo-name/',
-   });
-   ```
-
-3. **Test build output locally**
-   ```bash
-   npm run build
-   npx http-server dist/ -p 8080
-   # Visit http://localhost:8080 and verify assets load
-   ```
-
-4. **Add .nojekyll file**
-   ```bash
-   # Tell GitHub Pages not to process with Jekyll
-   touch public/.nojekyll
-   ```
-
-**Detection:**
-- Warning sign: "Works locally, broken on GitHub Pages"
-- Symptom: View source shows paths like `href="/assets/style.css"` but should be `/base/assets/style.css` (if base path needed)
-
-### Pitfall 3: Content Collections Schema Mismatch with Jekyll Frontmatter
-
-**What goes wrong:** Build fails with cryptic Zod validation errors. Existing Jekyll content won't build in Astro.
-
-**Why it happens:**
-- Jekyll is permissive with frontmatter (missing fields = undefined)
-- Astro Content Collections enforce schemas strictly
-- Jekyll uses inconsistent frontmatter across old content
-- Example: Some publications have `date`, others `published`, others missing dates
-
-**Consequences:**
-- Migration blocked until all content fixed
-- Can't identify which files are broken (Zod errors are cryptic)
-- Temptation to make everything `.optional()` defeats type safety purpose
-- Wastes hours fixing inconsistent metadata
-
-**Prevention:**
-1. **Audit Jekyll content before defining schemas**
-   ```bash
-   # Find all unique frontmatter keys in publications
-   grep -h "^[a-z]" _publications/*.md | sort | uniq
-   ```
-
-2. **Make strategic fields optional**
-   ```typescript
-   // src/content/config.ts
-   const publications = defineCollection({
-     schema: z.object({
-       title: z.string(), // Required - every publication has this
-       date: z.date(), // Required - critical for sorting
-       venue: z.string(), // Required - table stakes
-       authors: z.string().optional(), // Optional - some old posts missing
-       paperurl: z.string().url().optional(), // Optional - not all have PDFs
-       citation: z.string().optional(), // Optional - can be generated
-     }),
-   });
-   ```
-
-3. **Add transformation/coercion**
-   ```typescript
-   // Handle Jekyll's flexible date formats
-   const publications = defineCollection({
-     schema: z.object({
-       date: z.coerce.date(), // Converts strings to dates
-       // ...
-     }),
-   });
-   ```
-
-4. **Validate incrementally**
-   ```bash
-   # Test with one file first
-   mv _publications/* /tmp/
-   cp /tmp/2020-sample-paper.md src/content/publications/
-   npm run build # Check if schema works
-   ```
-
-**Detection:**
-- Warning sign: "Let's make everything optional"
-- Red flag: Build fails on first attempt, no idea which files are broken
-
-### Pitfall 4: Over-Engineering Portfolio Interactivity Too Early
-
-**What goes wrong:** Spend weeks building complex interactive embeds before core site is launched. Project stalls, never goes live.
-
-**Why it happens:**
-- Interactive portfolio is the "fun" part
-- Core migration is "boring" but critical
-- Perfectionism: "It needs fancy demos before launch"
-- Underestimate complexity of embeds (iframes, CORS, sandboxing, mobile)
-
-**Consequences:**
-- Core site (publications, talks, blog) not live for months
-- Interactive features take 5x longer than estimated
-- User frustrated, loses momentum
-- Perfect is enemy of done
-
-**Prevention:**
-1. **Launch in phases**
-   - Phase 1: Publications, talks, about page (parity with Jekyll) → SHIP
-   - Phase 2: Basic portfolio with static cards → SHIP
-   - Phase 3: Interactive GitHub cards → SHIP
-   - Phase 4: Complex embeds/playgrounds → SHIP
-
-2. **Static placeholder for portfolio**
-   ```astro
-   <!-- Phase 1: Simple portfolio card -->
-   <div class="portfolio-card">
-     <h3>{project.title}</h3>
-     <p>{project.description}</p>
-     <a href={project.githubUrl}>View on GitHub →</a>
-     <!-- No GitHub API, no embeds, just links -->
-   </div>
-   ```
-
-3. **Progressive enhancement mindset**
-   - Baseline: Portfolio works with just titles and links
-   - Enhancement 1: Add GitHub stars/forks (build-time API call)
-   - Enhancement 2: Add live demo iframe (lazy load)
-   - Enhancement 3: Add code playground embed
-
-**Detection:**
-- Warning sign: "I can't launch until the portfolio embeds are perfect"
-- Red flag: Week 3 and core site still not built
-
-## Moderate Pitfalls
-
-### Pitfall 5: Not Using Tailwind Typography Plugin
-
-**What goes wrong:** Academic content (long-form papers, blog posts) looks cramped and hard to read. Manually writing CSS for typography is tedious.
-
-**Why it happens:**
-- Tailwind utility classes are great for layouts
-- But long-form markdown content needs prose styles
-- Easy to forget Typography plugin exists
-- Default markdown rendering is unstyled
-
-**Prevention:**
-```bash
-npm install @tailwindcss/typography
-```
-
-```typescript
-// tailwind.config.mjs
-export default {
-  plugins: [
-    require('@tailwindcss/typography'),
-  ],
-}
-```
-
-```astro
-<article class="prose prose-lg max-w-none">
-  <Content />
-</article>
-```
-
-### Pitfall 6: Forgetting .nojekyll File
-
-**What goes wrong:** GitHub Pages tries to process Astro dist/ folder with Jekyll. Files starting with `_` are ignored. Site breaks in weird ways.
-
-**Why it happens:**
-- GitHub Pages defaults to Jekyll processing
-- Astro generates files that look like Jekyll internals
-- Not obvious this is needed
-
-**Prevention:**
-```bash
-# Add to public/ folder, will copy to dist/
-touch public/.nojekyll
-```
-
-Or in GitHub Actions:
+**How to avoid:**
+Strategy 1 (Recommended): Use static, non-templated media_folder paths:
 ```yaml
-- name: Add .nojekyll
-  run: touch dist/.nojekyll
+media_folder: "images/uploads"  # No dynamic variables
+public_folder: "/images/uploads"
 ```
 
-### Pitfall 7: Hardcoding Dates in Frontmatter as Strings
-
-**What goes wrong:** Content Collections expect Date objects. String dates work sometimes but break sorting/filtering.
-
-**Why it happens:**
-- Jekyll accepts date strings liberally
-- YAML `date: 2020-01-15` is a string in YAML spec
-- Zod can coerce but better to be explicit
-
-**Prevention:**
-```typescript
-// Use z.coerce.date() to handle both strings and dates
-const publications = defineCollection({
-  schema: z.object({
-    date: z.coerce.date(), // Converts "2020-01-15" → Date object
-  }),
-});
+Strategy 2: Use collection-level media_folder with relative paths:
+```yaml
+collections:
+  - name: "posts"
+    folder: "_posts"
+    media_folder: ""  # Same directory as entry
+    public_folder: ""
 ```
 
-### Pitfall 8: Missing alt Text on Images
+Strategy 3: Document the workaround - editors must re-upload images after initial save.
 
-**What goes wrong:** Academic sites need accessibility. Screen readers can't describe images without alt text. Institutional compliance fail.
+**Warning signs:**
+- Images appear in wrong folders after first submission
+- Orphaned image files accumulate in root media folder
+- Markdown image paths are correct but images 404 on site
+- Re-uploading the same image fixes the problem
 
-**Why it happens:**
-- Easy to forget when migrating image-heavy content
-- Jekyll doesn't enforce this
-- Astro doesn't either (but should)
+**Phase to address:**
+**Phase 2: CMS Configuration** - Set media_folder strategy during initial config.yml creation. Changing later requires migrating existing images.
 
-**Prevention:**
-- Audit images during migration
-- Add alt text to every `<img>` or Image component
-- Use meaningful descriptions, not "image1.png"
+**Recovery cost:** MEDIUM — Requires manual file moves or script to relocate images to match frontmatter paths.
 
-```astro
+**Sources:**
+- [Decap CMS Issue #4218: Image uploaded to wrong location on first submission](https://github.com/decaporg/decap-cms/issues/4218) — HIGH confidence
+- [Decap CMS Issue #5444: Incorrect path stored in front matter with dynamic media_folder](https://github.com/decaporg/decap-cms/issues/5444) — HIGH confidence
+
 ---
-import { Image } from 'astro:assets';
-import profilePhoto from '@assets/profile.png';
+
+### Pitfall 3: Astro Content Collections Schema vs. Decap CMS Schema Divergence
+
+**What goes wrong:**
+Astro content collections use Zod schemas for type validation. Decap CMS uses its own field schema in config.yml. These two schemas can silently drift apart: Astro requires a field that Decap marks optional, or vice versa. Content created through the CMS passes Decap validation but fails Astro's build with cryptic Zod errors.
+
+**Why it happens:**
+Two separate schema definitions for the same content, with no automatic sync. Developers update one without updating the other. Astro's schema is TypeScript/Zod (in `src/content/config.ts`), while Decap's is YAML (in `public/admin/config.yml`).
+
+**How to avoid:**
+Establish a "single source of truth" workflow:
+
+**Option A:** Astro schema as source of truth
+1. Define content schema in `src/content/config.ts` first
+2. Manually translate to Decap config.yml
+3. Add to PR checklist: "If content schema changes, update config.yml"
+
+**Option B:** Automated validation (advanced)
+1. Write a script that compares both schemas
+2. Run as pre-commit hook or CI check
+3. Block commits if schemas diverge
+
+**Critical rules:**
+- If Astro field is required → Decap field must have `required: true`
+- If Decap field is optional → Astro field must be `.optional()` in Zod
+- Default values must match exactly
+- Date formats must align (Astro uses ISO 8601, ensure Decap widget uses same)
+
+**Warning signs:**
+- Build works locally but fails in CI after CMS content creation
+- Zod validation errors mentioning missing required fields
+- Content saves successfully in CMS but doesn't appear on site
+- TypeScript errors when querying collections
+
+**Phase to address:**
+**Phase 2: CMS Configuration** - Establish schema sync process during initial setup.
+**Phase 4: Testing** - Verify schema alignment with end-to-end tests.
+
+**Sources:**
+- [Astro Content Collections Documentation](https://docs.astro.build/en/guides/content-collections/) — HIGH confidence
+- [How to Use Astro Content Collections](https://astrocourse.dev/blog/how-to-use-content-collections/) — MEDIUM confidence
+
 ---
-<Image src={profilePhoto} alt="Pedro Ferreira profile photo" />
-```
 
-### Pitfall 9: Not Testing Mobile Layout
+### Pitfall 4: Legacy Content Schema Mismatch
 
-**What goes wrong:** Site looks great on desktop, broken on mobile. Academic audiences often browse on phones.
-
-**Why it happens:**
-- Development happens on desktop
-- Easy to forget responsive testing
-- Tailwind helps but doesn't make it automatic
-
-**Prevention:**
-- Test with browser dev tools (responsive mode)
-- Check navigation works on mobile (hamburger menu?)
-- Check sidebar stacks on mobile
-- Check portfolio embeds don't overflow
-
-### Pitfall 10: GitHub API Rate Limiting (If Client-Side)
-
-**What goes wrong:** GitHub cards make API calls. Users hit rate limits. Cards stop loading.
+**What goes wrong:**
+Existing content files have varied frontmatter structure (inconsistent fields, different date formats, missing required fields). When Decap CMS loads these files, it either crashes, shows blank fields where data exists, or refuses to save edits. Legacy content that worked perfectly in Astro becomes uneditable through the CMS.
 
 **Why it happens:**
-- GitHub API has rate limits (60 req/hour unauthenticated)
-- Client-side requests use visitor's IP
-- Multiple GitHub cards = multiple API calls
+Decap CMS expects uniform frontmatter matching its config.yml schema. Legacy content written manually or generated by scripts doesn't conform. For example:
+- Old posts use `tags: ["tag1", "tag2"]`, new CMS expects `tags: tag1, tag2`
+- Some publications have `paperurl`, others don't (but Decap requires it)
+- Date formats vary: `2008-01-01` vs `2008-01-01T00:00:00Z`
 
-**Prevention:**
-- **Fetch at build time, not client-side**
-  ```typescript
-  // Good: Build-time fetch
-  // src/utils/github.ts
-  export async function getRepoData(repo: string) {
-    const token = import.meta.env.GITHUB_TOKEN;
-    const res = await fetch(`https://api.github.com/repos/${repo}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    return res.json();
-  }
-  ```
-
-  ```astro
-  ---
-  // src/components/GitHubCard.astro
-  import { getRepoData } from '@utils/github';
-  const data = await getRepoData(props.repo); // Build time
-  ---
-  <div class="github-card">
-    <p>⭐ {data.stargazers_count}</p>
-  </div>
-  ```
-
-- Use GitHub Actions secret for GITHUB_TOKEN (higher rate limit)
-- Cache results in HTML (no runtime API calls)
-
-## Minor Pitfalls
-
-### Pitfall 11: Inconsistent Component Naming
-
-**What goes wrong:** Confusion between `PublicationCard.astro` and `Publication-Card.astro` and `publicationCard.astro`.
-
-**Prevention:** Pick a convention and stick to it. Recommend: PascalCase for components (`PublicationCard.astro`).
-
-### Pitfall 12: Not Setting Up TypeScript Path Aliases
-
-**What goes wrong:** Deep relative imports: `import Layout from '../../../layouts/BaseLayout.astro'`
-
-**Prevention:**
-```json
-// tsconfig.json
-{
-  "extends": "astro/tsconfigs/strict",
-  "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@components/*": ["src/components/*"],
-      "@layouts/*": ["src/layouts/*"],
-      "@assets/*": ["src/assets/*"],
-      "@utils/*": ["src/utils/*"]
-    }
-  }
-}
-```
-
-### Pitfall 13: Committing dist/ Folder
-
-**What goes wrong:** Git tracks build artifacts. Merge conflicts on every build.
-
-**Prevention:**
+**How to avoid:**
+**Before adding CMS:**
+1. Audit existing content structure:
 ```bash
-# .gitignore
-dist/
-node_modules/
+# Find all unique frontmatter keys
+find _posts _publications _talks -name "*.md" -exec grep -h "^[a-z].*:" {} \; | sort | uniq
 ```
 
-### Pitfall 14: Not Documenting Frontmatter Schema
+2. Normalize legacy content to match planned CMS schema:
+   - Convert all dates to consistent format
+   - Add missing required fields with sensible defaults
+   - Standardize array formats
+   - Fix inconsistent field naming
 
-**What goes wrong:** Months later, forgot what fields are required. Add publication with wrong format, build breaks.
+3. Make ALL fields optional in initial CMS config, then selectively make them required after content audit.
 
-**Prevention:** Comment schemas or keep documentation
+**Warning signs:**
+- CMS shows "Error loading entry" for existing posts
+- Field values don't appear in CMS editor (data exists in file)
+- Editing old content through CMS wipes out existing fields
+- Save fails with validation errors on untouched legacy content
+
+**Phase to address:**
+**Phase 1: Content Audit & Normalization** - Complete BEFORE CMS configuration.
+**Phase 2: CMS Configuration** - Design schema to match normalized content.
+
+**Recovery cost:** HIGH — Requires manual review of each broken entry or complex migration script.
+
+**Sources:**
+- [Decap CMS Issue #658: Error loading existing content](https://github.com/decaporg/decap-cms/issues/658) — HIGH confidence
+- [Decap CMS Issue #1813: Schema and data migrations](https://github.com/decaporg/decap-cms/issues/1813) — HIGH confidence
+
+---
+
+### Pitfall 5: Required vs. Optional Field Validation Bugs
+
+**What goes wrong:**
+Decap CMS has documented bugs around required/optional field validation:
+1. Fields marked `required: false` with validation patterns reject empty values
+2. Required fields inside optional objects are enforced even when parent object is empty
+3. Optional fields that are left blank sometimes return `undefined`, sometimes empty string, causing inconsistent handling
+
+**Why it happens:**
+Known bugs in Decap CMS validation logic. The CMS attempts to validate empty optional fields instead of skipping validation when the field is blank.
+
+**How to avoid:**
+Workarounds until Decap fixes upstream:
+
+**For optional fields with patterns:**
+```yaml
+# BAD - will reject empty values
+- {label: "Phone", name: "phone", widget: "string", required: false, pattern: ['^\d{3}-\d{4}$', 'Format: 123-4567']}
+
+# GOOD - remove pattern from optional fields
+- {label: "Phone", name: "phone", widget: "string", required: false}
+```
+
+**For required fields in optional objects:**
+- Avoid this pattern entirely
+- Flatten structure or make parent object required
+
+**For consistent empty handling:**
+- Always check for both `undefined` and empty string in templates
+- Use default values in Astro queries:
 ```typescript
-// src/content/config.ts
-const publications = defineCollection({
-  schema: z.object({
-    title: z.string(), // Required: Paper title
-    authors: z.string(), // Required: Full author list
-    venue: z.string(), // Required: Conference/journal name
-    date: z.date(), // Required: Publication date (for sorting)
-    paperurl: z.string().url().optional(), // Optional: Link to PDF
-    citation: z.string().optional(), // Optional: Formatted citation
-  }),
-});
+const phone = entry.data.phone || 'N/A';
 ```
 
-### Pitfall 15: Overusing React Islands
+**Warning signs:**
+- Validation errors on empty optional fields
+- Can't save entries when optional fields are left blank
+- Template rendering breaks when optional fields missing
+- Inconsistent data types for same field across entries
 
-**What goes wrong:** Every component is `client:load`. Page ships 500KB of JS for a static academic site.
+**Phase to address:**
+**Phase 2: CMS Configuration** - Design schema avoiding known bug patterns.
+**Phase 3: Template Updates** - Add defensive checks for optional fields.
 
-**Prevention:** Default to static Astro components. Only use islands for actual interactivity.
+**Sources:**
+- [Decap CMS Issue #315: Fields marked optional are still required](https://github.com/decaporg/decap-cms/issues/315) — HIGH confidence
+- [Decap CMS Issue #1175: Don't validate optional field if empty](https://github.com/decaporg/decap-cms/issues/1175) — HIGH confidence
+- [Decap CMS Issue #2790: Optional object and required field widgets](https://github.com/decaporg/decap-cms/issues/2790) — HIGH confidence
 
-## Phase-Specific Warnings
+---
 
-| Phase Topic | Likely Pitfall | Mitigation |
-|-------------|---------------|------------|
-| Initial setup | Wrong base path config | Verify GitHub Pages type (user vs project site) |
-| Content migration | URL structure changes | Document current URLs, test redirects |
-| Content Collections | Schema too strict or too loose | Audit existing frontmatter first, use z.coerce.date() |
-| Styling | Unstyled markdown content | Install @tailwindcss/typography early |
-| Portfolio | Over-engineering too early | Ship static portfolio first, enhance later |
-| Deployment | Missing .nojekyll file | Add to public/ folder |
-| GitHub API | Client-side rate limits | Fetch at build time with GitHub token |
-| Mobile | Broken responsive layout | Test mobile layout regularly |
-| Accessibility | Missing alt text | Audit during migration |
+### Pitfall 6: Markdown Widget Rich Text Mode Corrupts Frontmatter
 
-## Preventive Checklist
+**What goes wrong:**
+The markdown widget's "rich text" mode (WYSIWYG editor) corrupts content in several ways:
+- Single-line strings in frontmatter split across multiple lines unexpectedly
+- Headers followed by newlines render incorrectly (backslash treated as part of header)
+- Lists don't work correctly
+- Pasting HTML produces empty blocks
+- Switching between "rich text" and "raw" modes alters formatting
 
-**Before starting:**
-- [ ] Document current Jekyll URL structure
-- [ ] Audit frontmatter inconsistencies across content
-- [ ] Verify GitHub Pages type (user vs project site)
-- [ ] Set expectations: Core site first, enhancements later
+**Why it happens:**
+Rich text editor uses different markdown parsing/serialization than raw mode. The editor tries to be "helpful" by reformatting content, but this introduces inconsistencies. String widgets in frontmatter aren't designed for multi-line handling, so long titles wrap incorrectly.
 
-**During migration:**
-- [ ] Test with one content item per collection first
-- [ ] Use z.coerce.date() for date fields
-- [ ] Add .nojekyll to public/ folder
-- [ ] Set up TypeScript path aliases early
-- [ ] Test build output with local server (not just dev mode)
+**How to avoid:**
+**Recommended:** Force raw markdown mode only:
+```yaml
+- label: "Body"
+  name: "body"
+  widget: "markdown"
+  modes: ['raw']  # Disable rich text mode entirely
+```
 
-**Before launch:**
-- [ ] Validate all publication URLs (broken link checker)
-- [ ] Test on mobile (navigation, layout, embeds)
-- [ ] Check alt text on all images
-- [ ] Verify GitHub Pages base path config
-- [ ] Test with `npm run build && npx http-server dist/`
+**Alternative:** Educate editors about mode limitations:
+- Use raw mode for precise control
+- Avoid rich text mode for content with complex formatting
+- Never paste HTML directly into rich text mode
 
-**Post-launch:**
-- [ ] Monitor for 404s (Google Search Console)
-- [ ] Verify Google Scholar still indexes publications
-- [ ] Test all external links from old CVs/papers
+**For frontmatter strings:** Use text widget instead of markdown:
+```yaml
+- {label: "Title", name: "title", widget: "string"}  # Not markdown
+```
 
-## Common Error Messages and Solutions
+**Warning signs:**
+- Titles appearing on multiple lines in saved files
+- Headers rendering with unexpected backslashes
+- Lists appearing as plain text with asterisks
+- Pasted content disappears after save
+- Content looks different after switching modes
 
-### "Failed to load module" in browser console
-**Cause:** Wrong base path in astro.config.mjs
-**Solution:** Check if site is user or project site, set base accordingly
+**Phase to address:**
+**Phase 2: CMS Configuration** - Configure markdown widget modes during setup.
+**Phase 5: Documentation** - Editor guidelines for markdown authoring.
 
-### "Cannot read property 'data' of undefined"
-**Cause:** Content Collections query returned nothing (wrong collection name or empty folder)
-**Solution:** Check collection name matches folder name in src/content/
+**Sources:**
+- [Decap CMS Issue #6444: String widget text splitting over 2 lines in error](https://github.com/decaporg/decap-cms/issues/6444) — HIGH confidence
+- [Decap CMS Issue #7501: Newline not behaving correctly with Headers](https://github.com/decaporg/decap-cms/issues/7501) — HIGH confidence
+- [Decap CMS Issue #3437: HTML pasting issues in markdown widget](https://github.com/decaporg/decap-cms/issues/3437) — HIGH confidence
 
-### "Expected date, received string"
-**Cause:** Zod schema expects Date but frontmatter has string
-**Solution:** Use `z.coerce.date()` instead of `z.date()`
+---
 
-### "404 Not Found" for /publications/slug on GitHub Pages
-**Cause:** GitHub Pages trying to use Jekyll routing
-**Solution:** Add .nojekyll file to dist/ (put in public/ folder)
+### Pitfall 7: Editorial Workflow Branch Conflicts with Manual Commits
 
-### "Module not found: Can't resolve '@components/...'"
-**Cause:** TypeScript path alias not configured
-**Solution:** Add paths to tsconfig.json
+**What goes wrong:**
+Editorial workflow creates branches like `cms/posts/my-new-post` and opens PRs. If developers make manual commits to these CMS-created branches, the CMS gets confused. Worse, if developers merge PRs manually (instead of clicking "Publish" in CMS), the CMS still shows entries as drafts. Content exists on site but CMS status is wrong.
+
+**Why it happens:**
+Decap CMS tracks editorial workflow state through PR metadata and branch names. Manual Git operations bypass this tracking. The CMS expects complete control over its branches and merge process.
+
+**How to avoid:**
+**Rule 1:** Never manually commit to `cms/*` branches
+**Rule 2:** Never manually merge CMS-created PRs — always use CMS "Publish" button
+**Rule 3:** If editorial workflow is enabled, establish clear ownership:
+- Content editors use CMS exclusively
+- Developers work on separate branches for code changes
+- Never mix CMS content changes with code changes in same PR
+
+**For teams mixing CMS and manual content:**
+- Disable editorial workflow (`publish_mode: simple`)
+- Accept that CMS commits directly to main branch
+- Use conventional Git workflow for developer changes
+
+**Warning signs:**
+- CMS shows "Draft" status for content that's already published
+- "Publish" button fails with merge conflict errors
+- CMS-created PRs show additional commits from other authors
+- Editorial workflow statuses out of sync with actual PR state
+
+**Phase to address:**
+**Phase 2: CMS Configuration** - Decide editorial workflow strategy (enable or disable).
+**Phase 5: Documentation** - Team workflow guidelines.
+
+**Recovery cost:** LOW to MEDIUM — Delete orphaned branches, manually update content status in CMS.
+
+**Sources:**
+- [Decap CMS Editorial Workflow Documentation](https://decapcms.org/docs/editorial-workflows/) — HIGH confidence
+- [Decap CMS Issue #7457: Stuck on old commit / changes not shown](https://github.com/decaporg/decap-cms/issues/7457) — MEDIUM confidence
+
+---
+
+## Technical Debt Patterns
+
+| Shortcut | Immediate Benefit | Long-term Cost | When Acceptable |
+|----------|-------------------|----------------|-----------------|
+| Using CDN script instead of npm package | Faster initial setup, no build step | No version control, cache issues, harder to customize | Never for production. Acceptable for rapid prototyping only. |
+| Making all fields optional to avoid legacy content issues | CMS loads all content immediately | Content quality degrades, missing critical fields, type safety lost | Only during initial migration phase. Make fields required after normalization. |
+| Disabling editorial workflow due to complexity | Simple commit flow, no branch management | No review process, mistakes go directly to production | Acceptable for single-editor sites. Never for teams. |
+| Using static OAuth server from GitHub template | Quick authentication setup | Security vulnerabilities if not updated, dependency on unmaintained code | Only for personal sites. Never for client work. |
+| Skipping Astro schema sync with CMS config | Faster iteration on CMS config | Silent build failures, content inconsistency | Never acceptable. Always sync schemas. |
+
+---
+
+## Integration Gotchas
+
+| Integration | Common Mistake | Correct Approach |
+|-------------|----------------|------------------|
+| Netlify Identity Widget | Adding widget globally across site | Set `disableIdentityWidgetInjection: true` and load only on /admin route to avoid performance impact |
+| OAuth Callback URLs | Using GitHub Pages URL as base_url | Use external OAuth server URL as base_url (Cloudflare Worker, Vercel, etc.) |
+| Media Folder Configuration | Using dynamic paths with slugs | Use static paths or test thoroughly with first-submission workaround documented |
+| Date Formats | Mixing ISO 8601 with other formats | Standardize on ISO 8601 (`2024-01-01T00:00:00Z`) across Astro schema, Decap widget, and legacy content |
+| Branch Configuration | Setting custom branch in config.yml with editorial workflow | Editorial workflow may not respect branch setting with Git Gateway ([Issue #2502](https://github.com/decaporg/decap-cms/issues/2502)) — verify behavior |
+| Local Development | Running CMS locally with `local_backend: true` | Editorial workflow NOT supported in local backend — connect to real Git provider for testing workflows |
+
+---
+
+## Performance Traps
+
+| Trap | Symptoms | Prevention | When It Breaks |
+|------|----------|------------|----------------|
+| Loading Identity Widget globally | Slow page loads, extra network requests on every page | Inject widget only on /admin route using `disableIdentityWidgetInjection: true` | Immediately on all page loads |
+| Large image uploads without optimization | CMS hangs during upload, Git repo bloats | Configure max file size, add image optimization pipeline, use external image host for large files | When image >5MB or repo >100MB |
+| Collection with 100+ entries | CMS admin slow to load, list view laggy | Use pagination, split into multiple collections by year/category | At ~100-200 entries depending on frontmatter complexity |
+| Deep nested object widgets | UI becomes unusable, saving times out | Flatten structure, use multiple collections instead of deep nesting | At 3-4 levels of nesting |
+
+---
+
+## Security Mistakes
+
+| Mistake | Risk | Prevention |
+|---------|------|------------|
+| Exposing OAuth client secret in frontend config | Anyone can authenticate as your app, modify content | Always keep secrets server-side in OAuth endpoint, never in config.yml |
+| Allowing public GitHub account registration through Identity | Spam accounts, unauthorized content modification | Use invite-only registration, manually approve users in Netlify dashboard |
+| Using HTTP instead of HTTPS for OAuth | Credentials intercepted, account takeover | Netlify Identity REQUIRES HTTPS — ensure custom domain has valid SSL |
+| Storing sensitive data in CMS-managed content | Secrets committed to public repo | Never store API keys, passwords in CMS content — use environment variables |
+| Not setting CORS properly on OAuth server | Authentication fails, or too permissive (allows any origin) | Restrict CORS to specific GitHub Pages domain |
+
+---
+
+## UX Pitfalls
+
+| Pitfall | User Impact | Better Approach |
+|---------|-------------|-----------------|
+| No confirmation on publish | Content goes live immediately, mistakes published instantly | Enable editorial workflow for review step, or add "Are you sure?" docs |
+| Unclear error messages on validation | "Validation failed" with no specifics — editor doesn't know what's wrong | Add `hint` to each field in config.yml explaining format requirements |
+| CMS doesn't reflect live site structure | Editor creates content in `/posts/` but site shows it at `/blog/` | Match collection folder structure to site URL structure, document permalink patterns |
+| Image preview shows wrong size | Image looks good in CMS but crops badly on site | Document expected image dimensions in field hints, add preview templates |
+| No draft preview | Can't see content before publishing | Set up deploy previews linked to CMS branches (Netlify, Vercel) |
+
+---
+
+## "Looks Done But Isn't" Checklist
+
+- [ ] **OAuth Setup:** Tested with REAL GitHub account, not just local development — verify login flow end-to-end
+- [ ] **Media Uploads:** Uploaded test image in NEW entry, verified file location matches expectation — check for first-submission bug
+- [ ] **Legacy Content:** Opened at least 5 existing posts in CMS editor, verified all fields load correctly — test before announcing to editors
+- [ ] **Schema Alignment:** Built site with CMS-created content, no Zod validation errors — run full build as CI check
+- [ ] **Editorial Workflow:** If enabled, tested full Draft → Review → Publish cycle, verified branch cleanup — don't assume it works
+- [ ] **Cross-browser:** Tested CMS admin in Safari, Firefox, Chrome — not just development browser
+- [ ] **Mobile Admin:** Attempted to use CMS on tablet/phone — many editors work on mobile
+- [ ] **HTTPS on Custom Domain:** Identity auth tested on actual production domain, not localhost — HTTPS requirement only applies to production
+- [ ] **Backup Strategy:** Verified GitHub commits contain all CMS changes, tested restoration from Git history — CMS is not a database
+- [ ] **Date Handling:** Created content with dates in past, future, and present, verified site builds correctly handle all cases — timezone issues common
+
+---
+
+## Recovery Strategies
+
+| Pitfall | Recovery Cost | Recovery Steps |
+|---------|---------------|----------------|
+| OAuth misconfigured, Identity broken | LOW | 1. Fix OAuth endpoints in config.yml 2. Clear browser cache 3. Test login again — no data loss |
+| Images in wrong folders | MEDIUM | 1. Audit frontmatter paths vs. actual file locations 2. Write script to move files or update frontmatter 3. Re-commit corrected state |
+| CMS schema breaks existing content | HIGH | 1. Revert config.yml to last working state 2. Audit content structure 3. Normalize content OR adjust schema to match content 4. Careful re-deployment |
+| Editorial workflow branches out of sync | MEDIUM | 1. Close stale PRs in GitHub 2. Refresh CMS admin 3. Re-create drafts if needed — CMS will resync state |
+| Decap config breaks Astro build | LOW | 1. CMS config doesn't affect build — issue is content 2. Find problematic content file 3. Fix frontmatter or remove file temporarily |
+| Identity users locked out | MEDIUM | 1. Check Netlify Identity dashboard 2. Resend invites 3. Verify custom domain HTTPS 4. Check OAuth provider settings |
+
+---
+
+## Pitfall-to-Phase Mapping
+
+| Pitfall | Prevention Phase | Verification |
+|---------|------------------|--------------|
+| OAuth Mismatch (Pitfall 1) | Phase 1: Auth Infrastructure | Successfully login to /admin from production URL |
+| Image Upload Paths (Pitfall 2) | Phase 2: CMS Configuration | Create test post with image, verify file in correct folder |
+| Schema Divergence (Pitfall 3) | Phase 2: CMS Configuration + Phase 4: Testing | CI build passes with CMS-created content |
+| Legacy Content Mismatch (Pitfall 4) | Phase 1: Content Audit | Load 10 random existing posts in CMS without errors |
+| Required/Optional Bugs (Pitfall 5) | Phase 2: CMS Configuration | Save entries with blank optional fields without validation errors |
+| Markdown Corruption (Pitfall 6) | Phase 2: CMS Configuration | Content created in CMS renders identically to manual markdown |
+| Editorial Workflow Conflicts (Pitfall 7) | Phase 2: CMS Configuration + Phase 5: Documentation | Complete draft→publish cycle, branch auto-deleted after merge |
+
+---
+
+## Astro-Specific Considerations
+
+### SSR vs. SSG for Admin Route
+
+**Issue:** Astro defaults to SSG (static site generation). Decap CMS admin dashboard is a React SPA that needs to be served as a static HTML page, but OAuth callback routes need server-side logic.
+
+**Solution:**
+- Keep admin dashboard static: `src/pages/admin.astro` → builds to `/admin/index.html`
+- Use Astro adapter (Node, Vercel, Cloudflare) for OAuth routes: `src/pages/oauth/callback.ts`
+- OR deploy OAuth routes separately (Cloudflare Worker, external service)
+
+**Warning:** Don't enable adapter globally just for CMS unless you need SSR elsewhere. Maintain SSG for content pages.
+
+---
+
+### Content Collections Auto-Import
+
+**Issue:** Astro's content collections use `src/content/`, but some legacy sites use `_posts/`, `_publications/` in root. Decap CMS writes to these folders, but Astro doesn't auto-import them.
+
+**Solution:**
+- Migrate content to `src/content/` BEFORE adding CMS
+- Update Decap config.yml to write to `src/content/posts/`, etc.
+- Adjust `.gitignore` if content is in `src/` (Astro content should be committed)
+
+**Warning sign:** CMS saves successfully but new content doesn't appear in `getCollection()` queries.
+
+---
+
+### Astro Image Optimization
+
+**Issue:** Astro's `<Image>` component requires images in `src/` or imported, but CMS uploads to `public/`. Images work but don't get optimized.
+
+**Solution:**
+- Configure CMS media_folder to `src/assets/uploads/` instead of `public/`
+- Update public_folder to match
+- Import images in collection schema or use glob imports
+
+**Tradeoff:** Requires Astro build for every image upload. Consider external image host (Cloudinary, ImageKit) for high-volume image sites.
+
+---
 
 ## Sources
 
-**Pitfalls identified from:**
-- Astro migration documentation (common issues)
-- Jekyll to Astro migration experiences (training data)
-- GitHub Pages deployment gotchas
-- Content Collections validation issues
-- Island architecture anti-patterns
+### High Confidence Sources (Official Documentation & Direct Issues)
+- [Astro Decap CMS Integration Guide](https://docs.astro.build/en/guides/cms/decap-cms/)
+- [Decap CMS Configuration Options](https://decapcms.org/docs/configuration-options/)
+- [Decap CMS External OAuth Clients](https://decapcms.org/docs/external-oauth-clients/)
+- [Netlify Identity Documentation](https://docs.netlify.com/manage/security/secure-access-to-sites/identity/overview/)
+- [Decap CMS Editorial Workflow](https://decapcms.org/docs/editorial-workflows/)
+- [Astro Content Collections Documentation](https://docs.astro.build/en/guides/content-collections/)
+- [Decap CMS Issue #4218: Image uploaded to wrong location](https://github.com/decaporg/decap-cms/issues/4218)
+- [Decap CMS Issue #3164: Unable to access identity settings](https://github.com/netlify/netlify-cms/issues/3164)
+- [Decap CMS Issue #315: Fields marked optional are still required](https://github.com/decaporg/decap-cms/issues/315)
 
-**Confidence:** HIGH for migration and deployment pitfalls (well-documented), MEDIUM for portfolio-specific pitfalls (context-dependent).
+### Medium Confidence Sources (Community Examples & Guides)
+- [Simplifying Content Management on Astro with DecapCMS](https://nipunh.com/blog/modify-static-site-content-easily-from-your-browser/)
+- [Just 3 Steps: Adding Netlify CMS to GitHub Pages](https://cnly.github.io/2018/04/14/just-3-steps-adding-netlify-cms-to-existing-github-pages-site-within-10-minutes.html)
+- [How to Use Astro Content Collections](https://astrocourse.dev/blog/how-to-use-content-collections/)
+
+### Low Confidence Sources (Unverified Community Reports)
+- Various GitHub discussions and Stack Overflow threads referenced but not directly linked
 
 ---
 
-## Summary for Roadmap
-
-**Critical blockers to avoid:**
-1. Breaking publication URLs (damages citations)
-2. GitHub Pages base path misconfiguration (site looks broken)
-3. Schema mismatch with Jekyll frontmatter (migration blocked)
-4. Over-engineering portfolio (project never launches)
-
-**Moderate issues to watch:**
-- Missing .nojekyll file
-- GitHub API rate limiting
-- Typography styling
-- Mobile layout
-
-**Phase recommendations:**
-- Phase 1: Focus on URL preservation, schema validation
-- Phase 2: Test deployment early and often
-- Phase 3: Portfolio starts static, enhance progressively
-
-**Quality gates:**
-- Before starting: Document Jekyll URLs
-- Before deploying: Validate all links
-- Before interactive features: Core site must be live
+*Pitfalls research for: Adding Decap CMS to Existing Astro Site (GitHub Pages + Netlify Identity)*
+*Researched: 2026-02-13*
+*Context: Subsequent milestone to existing v1.0 site with established content collections*

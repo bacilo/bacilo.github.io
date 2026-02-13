@@ -1,272 +1,214 @@
-# Feature Landscape: Personal Academic Website
+# Feature Landscape: Decap CMS Integration
 
-**Domain:** Personal academic/researcher portfolio website
-**Researched:** 2026-02-11
-**Confidence:** MEDIUM (based on domain knowledge and existing site analysis; web research unavailable)
+**Domain:** Git-based headless CMS for static sites
+**Researched:** 2026-02-13
+**Confidence:** MEDIUM
 
-## Research Note
+## Overview
 
-Web search tools were unavailable during this research phase. Findings are based on:
-1. Analysis of existing Jekyll site structure and content
-2. Domain knowledge of academic website patterns (as of January 2025)
-3. Requirements specified in PROJECT.md
-
-Recommendations should be validated against current (2026) academic website examples before implementation.
-
----
+This document focuses exclusively on CMS-specific features being added to an existing Astro academic website. The site already has blog posts, publications, talks, portfolio, and author pages. The milestone adds Decap CMS with Netlify Identity to enable web-based content editing instead of manual markdown editing.
 
 ## Table Stakes
 
-Features users expect from a personal academic website. Missing any of these makes the site feel incomplete or unprofessional.
+Features users expect from any content management system. Missing = CMS feels incomplete.
 
-| Feature | Why Expected | Complexity | Notes |
-|---------|--------------|------------|-------|
-| **Publications listing** | Core credential for academics; visitors expect to see research output | Medium | Needs metadata (title, venue, date, authors, citation), sorting by date, links to paper/Google Scholar |
-| **Author profile/bio** | Establishes identity and credentials; first thing visitors look for | Low | Photo, affiliation, research interests, contact info |
-| **Navigation structure** | Users need to find content; standard academic site pattern | Low | Home, Publications, About/CV, Blog/News |
-| **Responsive design** | 50%+ traffic is mobile; non-responsive sites feel dated | Medium | Mobile-first or adaptive layout |
-| **Contact information** | Visitors need way to reach researcher | Low | Email (minimum), institutional profile link |
-| **Professional aesthetic** | Academic credibility requires clean, readable design | Medium | Typography, whitespace, no visual clutter |
-| **Fast load times** | Slow sites damage credibility; users leave | Low-Medium | Static generation helps; watch image sizes |
-| **Accessible HTML** | Academic institutions expect basic accessibility | Low-Medium | Semantic HTML, alt text, keyboard navigation |
-| **Link to institutional profile** | Establishes legitimacy; visitors verify affiliation | Low | Link to university/lab page |
-| **Social/academic profiles** | Expected linking: Google Scholar, ORCID, GitHub, LinkedIn | Low | Icon links in sidebar/footer |
-
-### Critical: Publication Metadata
-
-Academic publications require specific structured data:
-- Full author list (order matters)
-- Venue/journal name
-- Year/date
-- Citation string or BibTeX
-- Links: Paper PDF, Google Scholar, DOI
-- Publication type (conference, journal, workshop, poster, etc.)
-
-**Complexity driver:** Citation formatting is table stakes but surprisingly complex. Many academics hand-maintain citation strings to match field conventions (ACM, IEEE, APA, etc.).
-
----
+| Feature | Why Expected | Complexity | Notes | Dependencies |
+|---------|--------------|------------|-------|--------------|
+| **Rich text editor for blog posts** | Core value proposition - avoid editing raw markdown | Medium | Decap's markdown widget provides WYSIWYG + raw modes | Must map to existing `body` field in posts |
+| **Image upload capability** | Cannot ask user to manually place images in repo | Medium | Media library with drag-and-drop; requires `media_folder` config | Must integrate with existing `/images` or `/assets` structure |
+| **Edit all content types** | CMS should handle posts, publications, talks | Medium | Requires collection config for each content type | Must map to existing frontmatter schemas in `_posts/`, `_publications/`, `_talks/` |
+| **Authentication/access control** | Prevent unauthorized edits | Low | Netlify Identity provides this out-of-box | Netlify deployment required |
+| **Save without publishing** | Avoid accidental live changes | Low | Editorial workflow (draft → publish) via Git PR | Requires `publish_mode: editorial_workflow` config |
+| **Preview before publishing** | See how content looks before going live | Medium | Real-time preview pane in editor | May need custom preview templates to match site styling |
+| **Field validation** | Prevent broken content (missing titles, dates) | Low | Built-in `required` field option | Apply to critical fields like title, date, permalink |
 
 ## Differentiators
 
-Features that set sites apart. Not expected by default, but add significant value or memorability.
+Features that set this CMS implementation apart. Not expected, but add significant value.
 
-| Feature | Value Proposition | Complexity | Notes |
-|---------|-------------------|------------|-------|
-| **Interactive portfolio embeds** | Showcases technical work in action; lets visitors try demos | High | Requires iframe embeds, code playgrounds, data viz; bandwidth-heavy |
-| **Curated blog/writing** | Demonstrates thought leadership; builds audience beyond papers | Low-Medium | Needs regular content; quality over quantity |
-| **Project showcase with live demos** | Shows applied work, not just papers; appeals to industry/collaborators | Medium-High | GitHub cards (medium), live demos (high), requires hosting strategy |
-| **Talk recordings/slides** | Extends reach of presentations; useful for students/interested readers | Low-Medium | Embedding YouTube/Vimeo is easy; hosting own videos is harder |
-| **Research themes/groupings** | Helps visitors understand research trajectory; narrative over list | Medium | Requires manual curation; tags/categories help but need maintenance |
-| **Teaching materials** | Attracts students; demonstrates pedagogy for hiring | Low-Medium | Syllabi, lecture notes, course pages |
-| **Visual timeline** | Makes career progression/research evolution visually clear | Medium | Design-heavy; risk of feeling gimmicky |
-| **Search functionality** | Large publication lists benefit from filtering | Medium | Client-side search for static sites; adds complexity |
-| **RSS feed for blog** | Supports academic blogging community; easy subscription | Low | Astro has built-in RSS support |
-| **Multi-language content** | Accessibility for non-English speakers; institutional requirement in some regions | High | Content duplication; maintenance burden |
-| **Download CV button** | Convenience for visitors; common in hiring contexts | Low | PDF generation or static PDF link |
-
-### Standout: Interactive Portfolio
-
-The project requirements specifically call out interactive portfolio features:
-- **GitHub repo cards with stats** (Medium complexity) — Uses GitHub API or static generation to show stars/forks/activity
-- **Live demo embeds** (Medium-High complexity) — iframes of deployed projects
-- **Code playground embeds** (High complexity) — CodeSandbox, StackBlitz, or custom
-- **Data visualization embeds** (Medium-High complexity) — Observable, D3, custom charts
-
-**Value:** Most academic sites have static project lists. Interactive demos demonstrate technical depth and invite exploration. Particularly differentiating for HCI/interaction design researchers.
-
-**Risk:** Embeds can break; third-party dependencies; mobile performance issues.
-
----
+| Feature | Value Proposition | Complexity | Notes | Dependencies |
+|---------|-------------------|------------|-------|--------------|
+| **Custom preview templates** | Preview shows actual site styling, not generic markdown | High | Requires React components + CSS matching site theme | Must replicate Astro component styling in React |
+| **Relation widgets** | Link talks to publications, posts to related content | Medium | Built-in `relation` widget for cross-referencing | Requires understanding existing content relationships |
+| **Git-based workflow** | Full version history, rollback capability | Low (built-in) | Every edit = Git commit; editorial workflow = PR | Inherent to Decap architecture |
+| **Bulk image management** | Media library shows all uploaded images for reuse | Low | Built-in media library UI | Automatic with proper `media_folder` config |
+| **Custom widgets for metadata** | Specialized inputs for DOI, venue, citation formats | High | Custom widget development for publication-specific fields | Requires JavaScript/React widget creation |
+| **Tag management UI** | Add/edit tags without typing, prevent duplicates | Medium | List widget with predefined options or autocomplete | Must sync with existing tag system |
 
 ## Anti-Features
 
-Features to explicitly NOT build. Either add complexity without value or conflict with the site's purpose.
+Features to explicitly NOT build. Would add complexity without value for single-user academic site.
 
 | Anti-Feature | Why Avoid | What to Do Instead |
 |--------------|-----------|-------------------|
-| **Comments system** | Maintenance burden; spam; academic discourse happens via email/citations | Provide clear email contact; link to Twitter/Mastodon for discussion |
-| **Custom CMS/admin panel** | Over-engineering for monthly updates; Markdown+Git is simpler | Use markdown files + Git workflow (already familiar from Jekyll) |
-| **User accounts/login** | No use case for personal academic site; adds security surface | Keep everything public static content |
-| **Real-time features** | No need for live chat, notifications, etc.; academic content is evergreen | Static generation is sufficient |
-| **Social media feed embeds** | Performance cost; privacy concerns; breaks when APIs change | Link to profiles; don't embed timelines |
-| **Auto-updating publication lists** | Scraping Google Scholar/ORCID is brittle; academics want curation control | Manual updates ensure accuracy and selected publications |
-| **Complex filtering UI** | Over-engineering for small content sets (dozens of papers, not thousands) | Simple chronological list; maybe year-based grouping |
-| **Video backgrounds/animations** | Distracts from content; accessibility issues; feels unprofessional | Clean static design; subtle transitions at most |
-| **Newsletter/mailing list** | Maintenance burden; low engagement in academic context | RSS feed for blog; Twitter/Mastodon for announcements |
-| **Analytics dashboard** | Can add later if needed; GDPR/privacy concerns; slows initial launch | Simple plausible.io or GitHub Pages built-in stats later |
-| **Dark mode toggle** | Nice-to-have but not differentiating; doubles CSS maintenance | Focus on one excellent light theme; revisit later |
-
-### Critical Anti-Feature: Auto-Publication Import
-
-Many researchers are tempted to auto-import from Google Scholar, ORCID, or BibTeX files. **Avoid this.**
-
-**Why:**
-- Metadata quality varies wildly (misspellings, wrong venues, duplicates)
-- Academics want to curate what's visible (e.g., hide workshop papers, feature journal articles)
-- Citation formatting needs manual touch for field conventions
-- Build-time API calls are fragile
-
-**Instead:** Manual markdown files with frontmatter (current Jekyll approach works). One-time migration script is fine; continuous sync is not.
-
----
+| **Multi-user roles/permissions** | Single user only; permission system adds unnecessary complexity | Use basic Netlify Identity authentication (invited user only) |
+| **Complex approval workflows** | No editorial team; review/approval states unused | Use simple draft/publish via editorial workflow, or even skip workflow for immediate publish |
+| **Visual page builder** | Academic site has fixed layouts; content fills templates | Use markdown editor + field widgets for structured data |
+| **AI content generation** | Academic content requires accuracy, citations; AI inappropriate | Keep traditional manual authoring |
+| **Real-time collaborative editing** | Single author; no collaboration needed | Standard single-user editing experience |
+| **Scheduled publishing** | Academic posts don't need time-based publishing | Manual publish when ready |
+| **Multilingual content management** | Site is English-only | Skip i18n configuration |
 
 ## Feature Dependencies
 
+### Content Structure Dependencies
+
+Decap CMS must map to existing Astro content structure:
+
 ```
-Publications Page → Citation Metadata (must have structured data)
-Publications Page → Google Scholar Links (common pattern)
+Posts (_posts/*.md):
+  - title (string) → required
+  - date (datetime) → required
+  - permalink (string) → required for routing
+  - tags (list) → array of strings
+  - body (markdown) → main content
 
-Blog → RSS Feed (if building a blog audience)
-Blog → Tags/Categories (for >10 posts)
+Publications (_publications/*.md):
+  - title (string) → required
+  - collection (string) → must be "publications"
+  - permalink (string) → required
+  - date (date) → required
+  - venue (string) → required
+  - paperurl (string) → optional
+  - citation (text) → required
+  - body (markdown) → optional description
 
-Portfolio → GitHub Cards (baseline)
-Portfolio → Live Demos (optional enhancement, depends on GitHub Cards UI)
-
-Author Sidebar → Social Links (partial dependency)
-Author Sidebar → Profile Photo (required for credibility)
-
-Responsive Design → Navigation Component (mobile menu pattern)
-
-Search → Large Content Set (not worth it for <50 publications)
+Talks (_talks/*.md):
+  - title (string) → required
+  - collection (string) → must be "talks"
+  - type (string) → "Talk" or "Tutorial"
+  - permalink (string) → required
+  - venue (string) → required
+  - date (date) → required
+  - location (string) → optional
+  - body (markdown) → talk description
 ```
 
-**Phase Implication:** Build Publications and Author Profile first. Portfolio enhancements can layer on later.
+### Technical Dependencies
 
----
+- **Netlify Identity Widget**: Must load on both `/admin/index.html` and site homepage for auth flow
+- **Git Gateway**: Connects Netlify Identity to GitHub API for commits
+- **Editorial Workflow**: Requires Git backend that supports PRs (GitHub supported)
+- **Media Library**: Requires `media_folder` pointing to valid asset directory
+- **Field Widgets**: All fields must use appropriate Decap widgets (string, text, datetime, list, markdown, etc.)
 
-## Complexity Factors
+### Critical Constraints
 
-### High Complexity Features
-- **Interactive embeds** (code playgrounds, live demos) — Third-party integrations, fallback handling, mobile optimization
-- **Search functionality** — Client-side indexing, UI, maintaining search quality
-- **Citation formatting** — Field-specific conventions, proper escaping, BibTeX parsing
-
-### Medium Complexity Features
-- **Responsive design** — CSS grid/flexbox, mobile navigation, image optimization
-- **Publication metadata** — Structured data, consistent schema, migration from Jekyll
-- **GitHub repo cards** — API integration or build-time generation, rate limits, caching
-
-### Low Complexity Features
-- **Static pages** (About, CV) — Markdown to HTML
-- **Author sidebar** — Component with hardcoded data
-- **Navigation** — Link list with active state
-- **Social links** — Icon SVGs + URLs
-
----
+1. **Frontmatter compatibility**: Decap must preserve existing frontmatter structure; Astro pages depend on exact field names
+2. **Permalink generation**: Must maintain existing URL patterns (`/posts/YYYY/MM/slug/`, `/publication/slug`, `/talks/slug`)
+3. **Tag consistency**: Tag values must remain lowercase and URL-safe (existing site uses this for tag pages)
+4. **Collection field**: Publications and talks require `collection` field in frontmatter (Astro uses this for filtering)
 
 ## MVP Recommendation
 
-### Phase 1: Core Academic Site (Table Stakes)
-Prioritize these features to reach functional parity with existing Jekyll site:
+### Phase 1: Core Editing (Must-Have)
 
-1. **Author profile sidebar** — Bio, photo, affiliation, social links
-2. **Publications page** — Migrate existing publications with full metadata
-3. **About/Home page** — Landing page with research interests
-4. **Talks page** — Migrate existing talks with dates/venues
-5. **CV page** — Static markdown page
-6. **Responsive layout** — Mobile-friendly design
-7. **Navigation** — Links to all sections
+Prioritize:
+1. **Authentication setup** - Netlify Identity + Git Gateway
+2. **Blog post editing** - Rich text editor for posts with title, date, tags, body
+3. **Image uploads** - Media library configuration
+4. **Field validation** - Required fields to prevent broken content
 
-**Rationale:** These features make the site professionally viable. Missing any would be a regression from current Jekyll site.
+**Rationale**: Enables basic web-based editing; user can immediately stop editing markdown files directly.
 
-### Phase 2: Content & Engagement (Differentiators)
-After core site is live, add differentiating features:
+### Phase 2: Complete Content Coverage (Should-Have)
 
-1. **Blog section** — Migrate existing posts + RSS feed
-2. **Portfolio page with GitHub cards** — Showcase projects with stats
-3. **Download CV button** — PDF link for convenience
+5. **Publications collection** - Fields for venue, paperurl, citation
+6. **Talks collection** - Fields for type, venue, location
+7. **Editorial workflow** - Draft/publish via Git PRs
 
-**Rationale:** These features add value but aren't blocking launch. Blog posts can migrate gradually.
+**Rationale**: Full CMS coverage of all content types; workflow prevents accidental publishes.
 
-### Phase 3: Interactive Enhancements (Advanced Differentiators)
-Long-term enhancements for technical showcase:
+### Phase 3: Enhanced Experience (Nice-to-Have)
 
-1. **Live demo embeds** — Portfolio projects with interactive previews
-2. **Code playground embeds** — Runnable code examples
-3. **Data visualization embeds** — Interactive charts/demos
+8. **Custom preview templates** - Match site styling in preview pane
+9. **Tag management UI** - Autocomplete or dropdown for existing tags
+10. **Relation widgets** - Link related content
 
-**Rationale:** High complexity, high impact. Requires research on embed strategies, performance optimization, fallback handling. Not critical for initial launch.
+**Rationale**: Quality-of-life improvements; not blocking for core use case.
 
----
+## Defer to Future
 
-## Defer: Features Not Worth Building Now
+- **Custom widgets for citations** - High effort; manual editing acceptable initially
+- **Bulk operations** - Single user won't need mass edits
+- **Advanced media management** - Basic upload/select sufficient
+- **Custom validation logic** - Built-in `required` and `pattern` sufficient
 
-| Feature | Why Defer | Reconsider When |
-|---------|-----------|-----------------|
-| **Search functionality** | Content set is small (<50 publications); browse is sufficient | Publication count >100 or user feedback requests it |
-| **Teaching section** | Marked out-of-scope in requirements | Career focus shifts to teaching |
-| **Comments system** | Maintenance burden; marked out-of-scope | Building active blog community (>1000 monthly readers) |
-| **Dark mode** | Doubles CSS complexity; nice-to-have | Core site is stable and user feedback requests it |
-| **Custom domain** | Requirements specify keeping bacilo.github.io | Branding needs change |
-| **Analytics** | Can add later; privacy considerations | Want to measure traffic after 6 months |
-| **Multi-language** | No requirement; high maintenance | Institutional requirement or international audience |
+## Complexity Assessment
 
----
+| Feature Category | Complexity | Estimated Effort |
+|-----------------|------------|------------------|
+| Basic CMS setup (auth, config, one collection) | Low | 2-4 hours |
+| All three collections configured | Medium | 4-6 hours |
+| Image uploads + media library | Medium | 2-3 hours |
+| Editorial workflow | Low | 1 hour |
+| Custom preview templates | High | 6-8 hours |
+| Custom widgets | High | 4-8 hours per widget |
 
-## Migration-Specific Features
+**Total MVP (Phase 1-2):** 9-14 hours
+**Full implementation (Phase 1-3):** 17-29 hours
 
-Since this is a Jekyll → Astro rebuild, consider these migration features:
+## Known Pitfalls
 
-| Feature | Purpose | Complexity | Notes |
-|---------|---------|------------|-------|
-| **Frontmatter compatibility** | Preserve existing metadata schema | Low | Astro supports YAML frontmatter natively |
-| **Collection support** | Map Jekyll collections to Astro | Medium | Use `src/content/` with schemas |
-| **Redirect handling** | Maintain URL structure from Jekyll | Low-Medium | Astro can generate same URLs; add redirects if needed |
-| **Asset migration** | Move images/PDFs to Astro public folder | Low | Simple file copy |
-| **Markdown compatibility** | Ensure existing markdown renders correctly | Low | Astro uses same markdown parser ecosystem |
+Based on research, watch out for:
 
-**Critical for launch:** URL structure must match or redirect. Publications have been cited with current URLs.
+1. **Netlify Identity deprecation**: Netlify is deprecating Identity in favor of Auth0. For new projects, consider Auth0 setup instead. (Source: GitHub discussions on Decap repo)
 
----
+2. **Media folder must exist**: Image upload fails if `media_folder` directory doesn't exist in repo. Create directory first.
 
-## Feature Validation Checklist
+3. **Body field naming**: Field for markdown content MUST be named `body` or Decap won't save it correctly as file body vs frontmatter.
 
-Before building any feature, ask:
+4. **Collection field retention**: Ensure `collection: publications` and `collection: talks` fields are hidden but present; Astro depends on these.
 
-- [ ] **Table stakes?** Would visitors expect this on an academic site?
-- [ ] **Differentiating?** Does this make the site memorable or more useful?
-- [ ] **Complexity vs value?** Is the effort worth the benefit?
-- [ ] **Maintenance burden?** Will this require ongoing updates?
-- [ ] **Migration impact?** Does this affect content migration strategy?
-- [ ] **Mobile experience?** Does this work well on small screens?
-- [ ] **Performance cost?** Does this slow page loads?
+5. **Frontmatter field preservation**: Decap only saves fields defined in config. Unknown fields get stripped. Must define ALL existing frontmatter fields or data loss occurs.
 
----
+6. **Permalink format validation**: Must validate permalink format matches Astro routing expectations or pages become unreachable.
 
-## Sources & Confidence
+## Integration with Existing Features
 
-**Sources:**
-- Existing Jekyll site structure analysis (HIGH confidence for current features)
-- Project requirements in .planning/PROJECT.md (HIGH confidence for goals)
-- Domain knowledge of academic websites (MEDIUM confidence; training data as of Jan 2025)
-- HCI/academic community patterns (MEDIUM confidence; field-specific knowledge)
+### Existing Features (No CMS Changes Needed)
+- RSS feed generation (reads from content files)
+- Tag pages (reads from content files)
+- GitHub API portfolio cards (separate data source)
+- Author sidebar (static data)
+- About page (static page)
 
-**Validation needed:**
-- Current (2026) academic website examples — were unavailable during research
-- Astro-specific implementation patterns — should verify with Astro docs
-- GitHub Pages constraints with Astro — needs technical validation
-- Performance characteristics of interactive embeds — needs testing
+### Features Requiring CMS Integration
+- Blog posts (primary CMS focus)
+- Publications listing (CMS collection needed)
+- Talks listing (CMS collection needed)
 
-**Recommendation:** Before finalizing roadmap, validate the following with web research:
-1. Are there new academic website patterns in 2026 that should influence design?
-2. What are current best practices for Astro + GitHub Pages deployment?
-3. What embed strategies work well for portfolio demos in 2026?
+### No Impact on Existing Functionality
+The CMS adds a write interface but doesn't change how content is read/rendered. All existing Astro pages, components, and routing remain unchanged. Decap commits to Git → Astro rebuilds → site updates (same as manual editing).
 
----
+## Sources
 
-## Summary for Roadmap
+### Official Documentation
+- [Decap CMS Overview](https://decapcms.org/docs/intro/)
+- [Decap CMS Editor Features](https://decapcms.org/features/editor/)
+- [Decap CMS Widgets](https://decapcms.org/docs/widgets/)
+- [Decap CMS Editorial Workflows](https://decapcms.org/docs/editorial-workflows/)
+- [Decap CMS Configuration Options](https://decapcms.org/docs/configuration-options/)
+- [Decap CMS Collection Configuration](https://decapcms.org/docs/configure-decap-cms/)
+- [Decap CMS Folder Collections](https://decapcms.org/docs/collection-folder/)
+- [Decap CMS Custom Previews](https://decapcms.org/docs/customization/)
+- [Astro + Decap CMS Guide](https://docs.astro.build/en/guides/cms/decap-cms/)
+- [Netlify Identity Documentation](https://docs.netlify.com/manage/security/secure-access-to-sites/identity/overview/)
+- [Decap CMS Git Gateway](https://decapcms.org/docs/git-gateway-backend/)
 
-**Table stakes (must have):** Publications, talks, author profile, responsive design, professional aesthetic
+### Community Resources
+- [Building a Blog CMS with Decap CMS](https://dasroot.net/posts/2026/01/building-blog-cms-decap-netlify-cms/)
+- [Customizing Decap CMS Preview CSS](https://www.lucasyamamoto.com/customizing-the-css-of-your-preview-of-decap-cms)
+- [How To Customize Live-Previews With DecapCMS](https://biralo.studio/2024/11/25/how-to-customize-live-previews-with-decapcms)
+- [DecapCMS Review and Features - Bejamas](https://bejamas.com/hub/headless-cms/decapcms)
 
-**Differentiators (high value):** Interactive portfolio embeds, curated blog, GitHub cards, live demos
+### CMS Best Practices
+- [Content Editor UX: Why CMS Usability Is Tough](https://evolvingweb.com/blog/content-editor-ux-why-cms-usability-tough)
+- [What Makes A Great Content Editor Experience?](https://www.dotcms.com/blog/what-makes-a-great-content-editor-experience)
+- [Headless CMS Editing Experience Guide](https://www.netlify.com/guide-to-composable-architecture/content-editing/headless-editing-experiences/)
 
-**Anti-features (don't build):** Comments, auto-publication import, complex filtering, CMS, dark mode (defer)
-
-**Phase structure recommendation:**
-1. Core academic site (parity with Jekyll)
-2. Content & simple portfolio (GitHub cards)
-3. Interactive enhancements (live demos, playgrounds)
-
-**Complexity hotspots:** Citation formatting, responsive design, interactive embeds
-
-**Migration focus:** Preserve URL structure, validate frontmatter compatibility, migrate collections to Astro content layer
+### Known Issues & Discussions
+- [Netlify Identity deprecation discussion](https://github.com/decaporg/decap-cms/discussions/7419)
+- [Media folder upload issues](https://github.com/netlify/netlify-cms/issues/2264)
+- [Frontmatter field retention](https://github.com/decaporg/decap-cms/issues/1338)
+- [Better rich text editor discussion](https://github.com/decaporg/decap-cms/discussions/6905)
