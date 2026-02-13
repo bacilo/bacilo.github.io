@@ -2,7 +2,7 @@
 title: Pomodoro Menu Bar App for Mac
 excerpt: Pomodoro Menu Bar App for Mac with session tracking and templates for daily use.
 collection: portfolio
-repoUrl: ''
+repoUrl: https://github.com/bacilo/pomodoro-mac
 demoUrl: ''
 description: ''
 playgroundUrl: ''
@@ -12,7 +12,7 @@ playgroundUrl: ''
 
 [](https://github.com/bacilo/pomodoro-mac#pomodoroapp)
 
-A macOS menubar Pomodoro timer app built with SwiftUI. 
+A macOS menubar Pomodoro timer app built with SwiftUI.
 
 ## Features
 
