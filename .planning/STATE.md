@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 
 ## Current Position
 
-Phase: 12 of 13 (Complete Content Coverage)
-Plan: 2 of 2 in current phase
-Status: Complete
-Last activity: 2026-02-13 — Phase 12 complete, verified and approved
+Phase: 13 of 13 (Documentation & Testing)
+Plan: 1 of 2 in current phase
+Status: In Progress
+Last activity: 2026-02-13 — Completed 13-01: CMS documentation and testing artifacts
 
-Progress: [█████████████████████████░░] 95% (19/~20 estimated total plans for v2.0)
+Progress: [██████████████████████████░] 100% (20/~20 estimated total plans for v2.0)
 
 ## Performance Metrics
 
@@ -37,15 +37,16 @@ Progress: [███████████████████████
 | 10 | 2 | 11m | 5.5m |
 
 **v2.0 Progress:**
-- Phases 11-13: 4 plans completed
+- Phases 11-13: 5 plans completed
 - Trend: Building content management infrastructure
 
 | Phase    | Plans | Total | Avg/Plan |
 |----------|-------|-------|----------|
 | 11       | 2     | 18m   | 9.0m     |
 | 12       | 2     | 2m    | 1.3m     |
+| 13       | 1     | 3m    | 3.5m     |
 
-*Updated: 2026-02-13 after 12-02 completion*
+*Updated: 2026-02-13 after 13-01 completion*
 
 ## Accumulated Context
 
@@ -63,6 +64,9 @@ Recent decisions affecting current work:
 - **Media path configuration (11-02):** Set media_folder and public_folder as different values (repo path vs URL path)
 - **Per-collection reporting format (12-01):** Separate audit sections with individual summaries followed by overall summary for clearer diagnosis
 - **Widget choice for multi-line content (12-02):** Use widget "text" (not "string") for multi-line content like citations and descriptions
+- [Phase 13-01]: Combined frontmatter audit and Astro build into single validation script for user convenience
+- [Phase 13-01]: Structured test checklist per-browser to catch browser-specific issues
+- [Phase 13-01]: User guide organized by user tasks (task-oriented) not CMS features
 
 ### Pending Todos
 
@@ -82,9 +86,9 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-13 (Phase 12 execution)
-Stopped at: Phase 12 complete — verified and approved
-Resume file: Ready for Phase 13 planning
+Last session: 2026-02-13 (Phase 13 execution)
+Stopped at: Completed 13-01-PLAN.md - CMS documentation and testing artifacts
+Resume file: Ready for 13-02 or final verification
 
 ## Archives
 
