@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-13)
 
 **Core value:** A professional online presence that showcases work and is easy to maintain with monthly content updates
-**Current focus:** Phase 11: Content Audit & CMS Setup
+**Current focus:** Phase 12: Complete Content Coverage
 
 ## Current Position
 
-Phase: 11 of 13 (Content Audit & CMS Setup)
-Plan: 2 of 2 in current phase
-Status: Complete
-Last activity: 2026-02-13 — Completed 11-02-PLAN.md (CMS Installation & Configuration)
+Phase: 12 of 13 (Complete Content Coverage)
+Plan: 1 of 4 in current phase
+Status: In Progress
+Last activity: 2026-02-13 — Completed 12-01-PLAN.md (Multi-Collection Frontmatter Validation)
 
-Progress: [█████████████████████░░░░░░] 85% (17/~20 estimated total plans for v2.0)
+Progress: [██████████████████████░░░░░] 90% (18/~20 estimated total plans for v2.0)
 
 ## Performance Metrics
 
@@ -37,14 +37,15 @@ Progress: [█████████████████████░░
 | 10 | 2 | 11m | 5.5m |
 
 **v2.0 Progress:**
-- Phases 11-13: 2 plans completed
+- Phases 11-13: 3 plans completed
 - Trend: Building content management infrastructure
 
 | Phase    | Plans | Total | Avg/Plan |
 |----------|-------|-------|----------|
 | 11       | 2     | 18m   | 9.0m     |
+| 12       | 1     | 1m    | 1.3m     |
 
-*Updated: 2026-02-13 after 11-02 completion*
+*Updated: 2026-02-13 after 12-01 completion*
 
 ## Accumulated Context
 
@@ -60,6 +61,7 @@ Recent decisions affecting current work:
 - **Schema synchronization pattern (11-02):** CMS config.yml fields mirror Astro content.config.ts with comment linking files
 - **Body field naming (11-02):** Use exact name "body" per Decap/Sveltia convention to prevent markdown in frontmatter YAML
 - **Media path configuration (11-02):** Set media_folder and public_folder as different values (repo path vs URL path)
+- [Phase 12-01]: Per-collection reporting format: Separate audit sections with individual summaries followed by overall summary for clearer diagnosis
 
 ### Pending Todos
 
@@ -79,9 +81,9 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-13 (Phase 11 execution)
-Stopped at: Completed 11-02-PLAN.md (CMS Installation & Configuration) — Phase 11 complete
-Resume file: Ready for Phase 12 planning
+Last session: 2026-02-13 (Phase 12 execution)
+Stopped at: Completed 12-01-PLAN.md (Multi-Collection Frontmatter Validation)
+Resume file: Ready for Phase 12 Plan 02
 
 ## Archives
 
