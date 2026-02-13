@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 ## Current Position
 
 Phase: 11 of 13 (Content Audit & CMS Setup)
-Plan: 1 of 2 in current phase
-Status: In progress
-Last activity: 2026-02-13 — Completed 11-01-PLAN.md (Frontmatter Audit & Validation)
+Plan: 2 of 2 in current phase
+Status: Complete
+Last activity: 2026-02-13 — Completed 11-02-PLAN.md (CMS Installation & Configuration)
 
-Progress: [████████████████████░░░░░░░] 80% (16/~20 estimated total plans for v2.0)
+Progress: [█████████████████████░░░░░░] 85% (17/~20 estimated total plans for v2.0)
 
 ## Performance Metrics
 
@@ -37,14 +37,14 @@ Progress: [████████████████████░░░
 | 10 | 2 | 11m | 5.5m |
 
 **v2.0 Progress:**
-- Phases 11-13: 1 plan completed
-- Trend: Starting new milestone
+- Phases 11-13: 2 plans completed
+- Trend: Building content management infrastructure
 
 | Phase    | Plans | Total | Avg/Plan |
 |----------|-------|-------|----------|
-| 11       | 1     | 1m    | 1.0m     |
+| 11       | 2     | 18m   | 9.0m     |
 
-*Updated: 2026-02-13 after 11-01 completion*
+*Updated: 2026-02-13 after 11-02 completion*
 
 ## Accumulated Context
 
@@ -57,6 +57,9 @@ Recent decisions affecting current work:
 - **OAuth vs PAT authentication:** Use Personal Access Token (simplest for single user, no server needed)
 - **CMS hosting approach:** Serve as static files from public/admin/ (no SSR adapter required)
 - **Frontmatter parsing library (11-01):** Use gray-matter (industry-standard YAML parser, CI-ready with exit codes)
+- **Schema synchronization pattern (11-02):** CMS config.yml fields mirror Astro content.config.ts with comment linking files
+- **Body field naming (11-02):** Use exact name "body" per Decap/Sveltia convention to prevent markdown in frontmatter YAML
+- **Media path configuration (11-02):** Set media_folder and public_folder as different values (repo path vs URL path)
 
 ### Pending Todos
 
@@ -66,14 +69,19 @@ None yet.
 
 **From research (pre-Phase 11):**
 - ~~Legacy content may have inconsistent frontmatter structures requiring normalization before CMS setup~~ **RESOLVED:** All 5 blog posts validated and pass schema (11-01)
-- Schema synchronization between Astro content collections and CMS config.yml needs workflow
-- Image upload path configuration must use static paths to avoid first-submission bugs
+- ~~Schema synchronization between Astro content collections and CMS config.yml needs workflow~~ **RESOLVED:** Established pattern in 11-02 with comment linking files
+- ~~Image upload path configuration must use static paths to avoid first-submission bugs~~ **RESOLVED:** Configured in 11-02 (media_folder and public_folder)
+
+**New concerns (11-02):**
+- Schema drift: If content.config.ts changes, config.yml must be updated manually (consider documenting in PROJECT.md)
+- Media uploads: Public folder configuration set but not yet tested with actual uploads
+- Image optimization: CMS handles image uploads but not optimization (may need future plan)
 
 ## Session Continuity
 
 Last session: 2026-02-13 (Phase 11 execution)
-Stopped at: Completed 11-01-PLAN.md with frontmatter audit and validation
-Resume file: Ready for 11-02-PLAN.md (CMS Installation & Configuration)
+Stopped at: Completed 11-02-PLAN.md (CMS Installation & Configuration) — Phase 11 complete
+Resume file: Ready for Phase 12 planning
 
 ## Archives
 
