@@ -5,7 +5,7 @@ collection: portfolio
 repoUrl: https://github.com/bacilo/tagalog-to-english-dict-ereader
 demoUrl: ''
 description: Tagalog to English Dictionary for the Kindle
-playgroundUrl: https://codepen.io/team/codepen/pen/PNaGbb
+playgroundUrl: ''
 ---
 
 # Tagalog-to-English Dictionary for Kindle
