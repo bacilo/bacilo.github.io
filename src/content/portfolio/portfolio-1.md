@@ -1,7 +1,7 @@
 ---
 title: Tagalog -> English Dictionary for Kindle
-excerpt: Short description of portfolio item number 1<br/><img src='/images/uploads/icon_256x256.png'>
-image: /images/uploads/icon_256x256.png
+excerpt: A Tagalog-to-English dictionary optimized for Kindle e-readers. Look up Tagalog words while reading on your Kindle.
+image: ''
 collection: portfolio
 repoUrl: https://github.com/bacilo/tagalog-to-english-dict-ereader
 demoUrl: ''
