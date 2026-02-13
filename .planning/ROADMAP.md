@@ -59,8 +59,8 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 12-01-PLAN.md — Extend frontmatter audit to all collections and normalize violations (NORM-02, NORM-03, NORM-04)
-- [ ] 12-02-PLAN.md — Add publications, talks, portfolio collections to CMS config (PUB-01/02/03, TALK-01/02/03, PORT-01/02/03, MEDIA-01/02/03)
+- [x] 12-01-PLAN.md — Extend frontmatter audit to all collections and normalize violations (NORM-02, NORM-03, NORM-04)
+- [x] 12-02-PLAN.md — Add publications, talks, portfolio collections to CMS config (PUB-01/02/03, TALK-01/02/03, PORT-01/02/03, MEDIA-01/02/03)
 
 #### Phase 13: Documentation & Testing
 **Goal**: CMS validated as production-ready with editor documentation
@@ -95,5 +95,5 @@ Phases execute in numeric order: 1 → 2 → 3 → ... → 13
 | 9. Static Portfolio | v1.0 | 1/1 | Complete | 2026-02-12 |
 | 10. Interactive Portfolio | v1.0 | 2/2 | Complete | 2026-02-12 |
 | 11. Content Audit & CMS Setup | v2.0 | 2/2 | Complete | 2026-02-13 |
-| 12. Complete Content Coverage | v2.0 | 0/2 | Not started | - |
+| 12. Complete Content Coverage | v2.0 | 2/2 | Complete | 2026-02-13 |
 | 13. Documentation & Testing | v2.0 | 0/TBD | Not started | - |
