@@ -1,6 +1,6 @@
 ---
 title: Tagalog -> English Dictionary for Kindle
-excerpt: Short description of portfolio item number 1<br/><img src='/images/500x300.png'>
+excerpt: Short description of portfolio item number 1<br/><img src='/images/uploads/icon_256x256.png'>
 collection: portfolio
 repoUrl: https://github.com/bacilo/tagalog-to-english-dict-ereader
 demoUrl: ''
