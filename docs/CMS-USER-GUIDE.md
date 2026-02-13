@@ -324,6 +324,19 @@ This validates all content against Zod schemas defined in `src/content.config.ts
 
 ---
 
+### Saving Behavior
+
+**Problem:** After saving content, the CMS stays on "saving..." and doesn't navigate back to the collection list
+
+**Solution:**
+- The save **does work** — your content is committed to GitHub successfully
+- This is a known Sveltia CMS UI behavior, not a data loss issue
+- After seeing "saving..." for more than a few seconds, refresh the page (F5 or Cmd+R)
+- You'll find your content saved and listed in the collection
+- Alternatively, navigate back to the collection using the sidebar
+
+---
+
 ### CMS Access Issues
 
 **Problem:** `/admin/` returns 404 on local dev server
