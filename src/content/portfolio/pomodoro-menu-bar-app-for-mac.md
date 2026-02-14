@@ -1,6 +1,6 @@
 ---
 title: Pomodoro Menu Bar App for Mac
-excerpt: <img src='/images/uploads/icon_256x256.png'>Pomodoro Menu Bar App for Mac with session tracking and templates for daily use.
+excerpt: Pomodoro Menu Bar App for Mac with session tracking and templates for daily use.
 image: /images/uploads/icon_256x256.png
 collection: portfolio
 repoUrl: ''
