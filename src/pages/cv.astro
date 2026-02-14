@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import siteData from '../data/site.json';
 ---
 
 <BaseLayout title="CV - Pedro Ferreira">
@@ -8,6 +9,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     This page provides an overview of my academic background, professional experience, and contributions to research and teaching.
   </p>
 
+  {siteData.cv.showEducation && (
   <section class="cv-section">
     <h2>Education</h2>
     <div class="cv-entry">
@@ -25,7 +27,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <div class="cv-entry-details">University Name, 2013</div>
     </div>
   </section>
+  )}
 
+  {siteData.cv.showWorkExperience && (
   <section class="cv-section">
     <h2>Work Experience</h2>
     <div class="cv-entry">
@@ -55,7 +59,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       </ul>
     </div>
   </section>
+  )}
 
+  {siteData.cv.showSkills && (
   <section class="cv-section">
     <h2>Skills</h2>
     <div class="skills-category">
@@ -85,17 +91,23 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       </ul>
     </div>
   </section>
+  )}
 
+  {siteData.cv.showPublications && (
   <section class="cv-section">
     <h2>Publications</h2>
     <p>See my complete list of <a href="/publications/">publications</a>.</p>
   </section>
+  )}
 
+  {siteData.cv.showTalks && (
   <section class="cv-section">
     <h2>Talks</h2>
     <p>See my complete list of <a href="/talks/">talks</a>.</p>
   </section>
+  )}
 
+  {siteData.cv.showTeaching && (
   <section class="cv-section">
     <h2>Teaching</h2>
     <div class="cv-entry">
@@ -114,7 +126,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <p>Special topics workshop on digital nomadism and remote work technologies.</p>
     </div>
   </section>
+  )}
 
+  {siteData.cv.showService && (
   <section class="cv-section">
     <h2>Service and Leadership</h2>
     <ul>
@@ -125,6 +139,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <li><strong>Mentorship:</strong> Graduate student advising and undergraduate research supervision</li>
     </ul>
   </section>
+  )}
 </BaseLayout>
 
 <style>

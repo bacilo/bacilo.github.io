@@ -1,0 +1,30 @@
+{
+  "site": {
+    "title": "Pedro Ferreira",
+    "description": "Academic researcher - HCI, nomadic work, and digital technologies"
+  },
+  "author": {
+    "name": "Pedro Ferreira",
+    "bio": "Academic interested in leisure and the representation of users",
+    "avatar": "/images/profile.png",
+    "location": "Location"
+  },
+  "social": {
+    "twitter": "pedro2_0",
+    "github": "bacilo",
+    "linkedin": ""
+  },
+  "academic": {
+    "googleScholar": "http://yourfullgooglescholarurl.com",
+    "orcid": "http://orcid.org/yourorcidurl"
+  },
+  "cv": {
+    "showEducation": true,
+    "showWorkExperience": true,
+    "showSkills": true,
+    "showPublications": true,
+    "showTalks": true,
+    "showTeaching": true,
+    "showService": true
+  }
+}

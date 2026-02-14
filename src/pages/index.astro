@@ -1,9 +1,13 @@
 ---
+import { getEntry, render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import siteData from '../data/site.json';
+
+const home = await getEntry('pages', 'home');
+const { Content } = await render(home);
 ---
 
-<BaseLayout title="Pedro Ferreira - Academic Researcher">
-  <h1>Pedro Ferreira</h1>
-  <p>I am an Associate Professor at the <a href="https://tip.itu.dk" target="_blank" rel="noopener noreferrer">Technologies in Practice</a> group at the IT University of Copenhagen.</p>
-  <p>My research focuses on technology use and participation with a focus on leisure.</p>
+<BaseLayout title={`${home.data.title} - ${siteData.site.description}`}>
+  <h1>{home.data.title}</h1>
+  <Content />
 </BaseLayout>

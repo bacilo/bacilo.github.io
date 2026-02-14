@@ -9,7 +9,6 @@ description: ''
 playgroundUrl: ''
 ---
 
-```plain
 <div id="strava-stats"></div>
 <script src="https://bacilo.github.io/strava-widgets/stats-card.iife.js"></script>
 <script>
@@ -18,4 +17,3 @@ playgroundUrl: ''
     secondaryDataUrl: 'https://bacilo.github.io/strava-widgets/your-repo/advanced-stats.json'
   });
 </script>
-```

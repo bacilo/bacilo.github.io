@@ -7,6 +7,62 @@ media_folder: "public/images/uploads"
 public_folder: "/images/uploads"
 
 collections:
+  - name: settings
+    label: "Site Settings"
+    files:
+      - name: site
+        label: "Site Settings"
+        file: "src/data/site.json"
+        fields:
+          - label: "Site"
+            name: "site"
+            widget: "object"
+            fields:
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Description", name: "description", widget: "string" }
+          - label: "Author"
+            name: "author"
+            widget: "object"
+            fields:
+              - { label: "Name", name: "name", widget: "string" }
+              - { label: "Bio", name: "bio", widget: "string" }
+              - { label: "Avatar", name: "avatar", widget: "image" }
+              - { label: "Location", name: "location", widget: "string" }
+          - label: "Social"
+            name: "social"
+            widget: "object"
+            fields:
+              - { label: "Twitter", name: "twitter", widget: "string", required: false }
+              - { label: "GitHub", name: "github", widget: "string", required: false }
+              - { label: "LinkedIn", name: "linkedin", widget: "string", required: false }
+          - label: "Academic"
+            name: "academic"
+            widget: "object"
+            fields:
+              - { label: "Google Scholar URL", name: "googleScholar", widget: "string", required: false }
+              - { label: "ORCID URL", name: "orcid", widget: "string", required: false }
+          - label: "CV Sections"
+            name: "cv"
+            widget: "object"
+            fields:
+              - { label: "Show Education", name: "showEducation", widget: "boolean", default: true }
+              - { label: "Show Work Experience", name: "showWorkExperience", widget: "boolean", default: true }
+              - { label: "Show Skills", name: "showSkills", widget: "boolean", default: true }
+              - { label: "Show Publications", name: "showPublications", widget: "boolean", default: true }
+              - { label: "Show Talks", name: "showTalks", widget: "boolean", default: true }
+              - { label: "Show Teaching", name: "showTeaching", widget: "boolean", default: true }
+              - { label: "Show Service", name: "showService", widget: "boolean", default: true }
+
+  - name: pages
+    label: "Pages"
+    files:
+      - name: home
+        label: "Home Page"
+        file: "src/content/pages/home.md"
+        fields:
+          - { label: "Title", name: "title", widget: "string" }
+          - { label: "Body", name: "body", widget: "markdown" }
+
   - name: posts
     label: "Blog Posts"
     folder: "src/content/posts"

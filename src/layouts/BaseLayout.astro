@@ -3,7 +3,7 @@ import SkipLink from '../components/SkipLink.astro';
 import Navigation from '../components/Navigation.astro';
 import Footer from '../components/Footer.astro';
 import AuthorSidebar from '../components/AuthorSidebar.astro';
-import { SITE } from '../config/site';
+import siteData from '../data/site.json';
 import '../styles/global.css';
 
 interface Props {
@@ -13,8 +13,8 @@ interface Props {
 }
 
 const {
-  title = SITE.title,
-  description = SITE.description,
+  title = siteData.site.title,
+  description = siteData.site.description,
   showSidebar = true
 } = Astro.props;
 ---
@@ -29,7 +29,7 @@ const {
     <link
       rel="alternate"
       type="application/rss+xml"
-      title={`${SITE.title} - Blog`}
+      title={`${siteData.site.title} - Blog`}
       href={new URL('rss.xml', Astro.site)}
     />
     <title>{title}</title>
@@ -38,7 +38,7 @@ const {
     <SkipLink />
     <header class="site-header">
       <div class="header-content">
-        <a href="/" class="site-title">{SITE.title}</a>
+        <a href="/" class="site-title">{siteData.site.title}</a>
       </div>
     </header>
     <Navigation />

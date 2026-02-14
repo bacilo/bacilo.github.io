@@ -1,39 +1,37 @@
 ---
-import { Image } from 'astro:assets';
-import { AUTHOR } from '../config/site';
+import siteData from '../data/site.json';
 
-// Import profile image from public folder
-const profileImage = AUTHOR.avatar;
+const { author, social, academic } = siteData;
 ---
 
 <aside class="author-sidebar" aria-label="Author information">
   <div class="author-card">
     <img
-      src={profileImage}
-      alt={`${AUTHOR.name} profile photo`}
+      src={author.avatar}
+      alt={`${author.name} profile photo`}
       width="200"
       height="200"
       loading="eager"
       class="author-photo"
     />
 
-    <h2 class="author-name">{AUTHOR.name}</h2>
-    <p class="author-bio">{AUTHOR.bio}</p>
+    <h2 class="author-name">{author.name}</h2>
+    <p class="author-bio">{author.bio}</p>
 
-    {AUTHOR.location && (
-      <p class="author-location">{AUTHOR.location}</p>
+    {author.location && (
+      <p class="author-location">{author.location}</p>
     )}
   </div>
 
   {/* Social links section */}
-  {(AUTHOR.social.twitter || AUTHOR.social.github || AUTHOR.social.linkedin) && (
+  {(social.twitter || social.github || social.linkedin) && (
     <nav aria-label="Author social links" class="author-links">
       <h3 class="links-heading">Social</h3>
       <ul class="links-list">
-        {AUTHOR.social.twitter && (
+        {social.twitter && (
           <li>
             <a
-              href={`https://twitter.com/${AUTHOR.social.twitter}`}
+              href={`https://twitter.com/${social.twitter}`}
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -41,10 +39,10 @@ const profileImage = AUTHOR.avatar;
             </a>
           </li>
         )}
-        {AUTHOR.social.github && (
+        {social.github && (
           <li>
             <a
-              href={`https://github.com/${AUTHOR.social.github}`}
+              href={`https://github.com/${social.github}`}
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -52,10 +50,10 @@ const profileImage = AUTHOR.avatar;
             </a>
           </li>
         )}
-        {AUTHOR.social.linkedin && (
+        {social.linkedin && (
           <li>
             <a
-              href={`https://linkedin.com/in/${AUTHOR.social.linkedin}`}
+              href={`https://linkedin.com/in/${social.linkedin}`}
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -68,14 +66,14 @@ const profileImage = AUTHOR.avatar;
   )}
 
   {/* Academic links section */}
-  {(AUTHOR.academic.googleScholar || AUTHOR.academic.orcid) && (
+  {(academic.googleScholar || academic.orcid) && (
     <nav aria-label="Academic profile links" class="author-links">
       <h3 class="links-heading">Academic</h3>
       <ul class="links-list">
-        {AUTHOR.academic.googleScholar && (
+        {academic.googleScholar && (
           <li>
             <a
-              href={AUTHOR.academic.googleScholar}
+              href={academic.googleScholar}
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -83,10 +81,10 @@ const profileImage = AUTHOR.avatar;
             </a>
           </li>
         )}
-        {AUTHOR.academic.orcid && (
+        {academic.orcid && (
           <li>
             <a
-              href={AUTHOR.academic.orcid}
+              href={academic.orcid}
               target="_blank"
               rel="noopener noreferrer"
             >

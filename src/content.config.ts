@@ -56,4 +56,11 @@ const portfolio = defineCollection({
   })
 });
 
-export const collections = { publications, talks, posts, portfolio };
+const pages = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./src/content/pages" }),
+  schema: z.object({
+    title: z.string(),
+  })
+});
+
+export const collections = { publications, talks, posts, portfolio, pages };

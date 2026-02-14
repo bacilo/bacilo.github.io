@@ -1,9 +1,11 @@
 ---
+import siteData from '../data/site.json';
+
 const currentYear = new Date().getFullYear();
 ---
 
 <footer>
-  <p>&copy; {currentYear} Pedro Ferreira. Built with <a href="https://astro.build">Astro</a>.</p>
+  <p>&copy; {currentYear} {siteData.author.name}. Built with <a href="https://astro.build">Astro</a>.</p>
 </footer>
 
 <style>
