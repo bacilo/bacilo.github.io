@@ -23,8 +23,8 @@
     "showWorkExperience": true,
     "showSkills": true,
     "showPublications": true,
-    "showTalks": true,
+    "showTalks": false,
     "showTeaching": true,
-    "showService": true
+    "showService": false
   }
 }
