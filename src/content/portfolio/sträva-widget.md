@@ -1,5 +1,5 @@
 ---
-title: Sträva Widget
+title: Strava Widget
 excerpt: ''
 image: ''
 collection: portfolio
@@ -11,11 +11,11 @@ playgroundUrl: ''
 
 ```plain
 <div id="strava-stats"></div>
-<script src="https://your-username.github.io/your-repo/stats-card.iife.js"></script>
+<script src="https://bacilo.github.io/strava-widgets/stats-card.iife.js"></script>
 <script>
   new StravaStatsCard('#strava-stats', {
-    dataUrl: 'https://your-username.github.io/your-repo/weekly-stats.json',
-    secondaryDataUrl: 'https://your-username.github.io/your-repo/advanced-stats.json'
+    dataUrl: 'https://bacilo.github.io/strava-widgets/weekly-stats.json',
+    secondaryDataUrl: 'https://bacilo.github.io/strava-widgets/your-repo/advanced-stats.json'
   });
 </script>
 ```
