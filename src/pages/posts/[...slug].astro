@@ -54,7 +54,11 @@ const tags = post.data.tags || [];
     </header>
 
     <section class="content">
-      <Content />
+      {post.body?.includes('<script') ? (
+        <Fragment set:html={post.body} />
+      ) : (
+        <Content />
+      )}
     </section>
   </article>
 </BaseLayout>
