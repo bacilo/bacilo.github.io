@@ -1,13 +1,13 @@
 {
   "site": {
     "title": "Pedro Ferreira",
-    "description": "Academic researcher - HCI, nomadic work, and digital technologies"
+    "description": "Academic website and portfolio"
   },
   "author": {
     "name": "Pedro Ferreira",
-    "bio": "Academic interested in leisure and the representation of users",
-    "avatar": "/images/uploads/IMG_20141101_001530.jpg",
-    "location": "Location"
+    "bio": "Interested in digital erosion, AI and the effects of representation",
+    "avatar": "/images/uploads/IMG_9560.jpeg",
+    "location": "Copenhagen, Denmark"
   },
   "social": {
     "twitter": "",
@@ -15,8 +15,8 @@
     "linkedin": "pedro-ferreira-75291235"
   },
   "academic": {
-    "googleScholar": "http://yourfullgooglescholarurl.com",
-    "orcid": "http://orcid.org/yourorcidurl"
+    "googleScholar": "",
+    "orcid": "http://orcid.org/0000-0001-6603-6741"
   },
   "cv": {
     "showEducation": true,
