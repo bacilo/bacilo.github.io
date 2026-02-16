@@ -91,11 +91,11 @@ Plans:
   3. User can reload browser and see previously selected theme still active
   4. User can click copy button on code block and paste snippet successfully
   5. User switching themes sees code highlighting update to match new theme
-**Plans**: TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 16-01: TBD
-- [ ] 16-02: TBD
+- [ ] 16-01-PLAN.md — Theme switcher dropdown component with localStorage persistence
+- [ ] 16-02-PLAN.md — Copy-to-clipboard buttons for code blocks
 
 ### Phase 17: Portfolio Enhancements
 **Goal**: Portfolio cards display configurable GitHub stats and embedded code examples
