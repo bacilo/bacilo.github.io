@@ -94,3 +94,65 @@
   --color-border: #8c1eff;
   --color-header-bg: #1a0f2e;
 }
+
+/**
+ * Code Block Theme Coordination
+ *
+ * Shiki generates CSS variables (--shiki-light, --shiki-dark, --shiki-light-bg, --shiki-dark-bg)
+ * at build time. These rules coordinate code block colors with the active site theme.
+ *
+ * The !important declarations are required because Shiki generates inline style attributes
+ * on each <span> and <pre> element. Without !important, theme switching will not work.
+ */
+
+/* Default (light theme) - use light code colors */
+:root .astro-code,
+:root .astro-code span {
+  color: var(--shiki-light) !important;
+  background-color: var(--shiki-light-bg) !important;
+}
+
+/* Dark theme - switch to dark code colors */
+[data-theme="dark"] .astro-code,
+[data-theme="dark"] .astro-code span {
+  color: var(--shiki-dark) !important;
+  background-color: var(--shiki-dark-bg) !important;
+}
+
+/* Auto theme - respects system preference */
+@media (prefers-color-scheme: dark) {
+  [data-theme="auto"] .astro-code,
+  [data-theme="auto"] .astro-code span {
+    color: var(--shiki-dark) !important;
+    background-color: var(--shiki-dark-bg) !important;
+  }
+}
+
+/* Light-based novelty themes - use light code colors */
+[data-theme="sepia"] .astro-code,
+[data-theme="sepia"] .astro-code span,
+[data-theme="lego"] .astro-code,
+[data-theme="lego"] .astro-code span {
+  color: var(--shiki-light) !important;
+  background-color: var(--shiki-light-bg) !important;
+}
+
+/* Dark-based novelty themes - use dark code colors */
+[data-theme="terminal"] .astro-code,
+[data-theme="terminal"] .astro-code span,
+[data-theme="minecraft"] .astro-code,
+[data-theme="minecraft"] .astro-code span,
+[data-theme="synthwave"] .astro-code,
+[data-theme="synthwave"] .astro-code span {
+  color: var(--shiki-dark) !important;
+  background-color: var(--shiki-dark-bg) !important;
+}
+
+/* Base code block styling - uses existing CSS custom properties for borders */
+.astro-code {
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  padding: var(--space-sm);
+  margin: var(--space-sm) 0;
+  font-size: 0.9em;
+}

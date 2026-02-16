@@ -7,4 +7,13 @@ export default defineConfig({
   site: 'https://pedropaf.com',
   integrations: [mdx(), sitemap()],
   output: 'static',
+  markdown: {
+    shikiConfig: {
+      themes: {
+        light: 'github-light',
+        dark: 'github-dark',
+      },
+      wrap: true,
+    },
+  },
 });
