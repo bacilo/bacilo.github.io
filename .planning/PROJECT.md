@@ -58,9 +58,17 @@ A professional online presence that showcases work and is easy to maintain with 
 
 ### Active
 
-(None — define requirements with `/gsd:new-milestone`)
+## Current Milestone: v3.0 Teaching, Portfolio Enhancements & Themes
 
-### Future (v3.0 candidates)
+**Goal:** Add teaching section, enhance portfolio cards with code embeds and configurable stats/downloads, and build a multi-theme system with 6-8 diverse switchable themes.
+
+**Target features:**
+- Teaching section with course listings (title, institution, semester, description), extensible for materials
+- Portfolio code embeds: syntax-highlighted snippets and inline runnable widgets per card
+- Portfolio configurable stats: per-card choice of stars, release downloads, both, or neither
+- Theme system: 6-8 CSS variable themes (default, dark, minimal, academic, retro terminal, Minecraft/pixel, Lego/bold, synthwave) with switcher in footer/sidebar, preference persisted in localStorage
+
+### Future (v4.0 candidates)
 
 - [ ] CMS-04: Custom preview templates matching site styling
 - [ ] CMS-05: Editorial workflow (draft/publish via PRs)
@@ -68,9 +76,7 @@ A professional online presence that showcases work and is easy to maintain with 
 - [ ] CMS-07: Relation widgets for cross-referencing content
 - [ ] PORT-06: Data visualization embeds
 - [ ] PORT-07: Portfolio filtering/sorting
-- [ ] CONT-01: Dark mode toggle (currently auto via prefers-color-scheme)
 - [ ] CONT-02: Search functionality
-- [ ] TEACH-01: Teaching section
 
 ### Out of Scope
 
@@ -115,4 +121,4 @@ Known tech debt: manual schema sync between content.config.ts and config.yml.
 | Widget "text" for multi-line | Prevents truncation of citations/descriptions | ✓ Good |
 
 ---
-*Last updated: 2026-02-13 after v2.0 milestone*
+*Last updated: 2026-02-16 after v3.0 milestone start*
