@@ -1,273 +1,285 @@
 # Project Research Summary
 
-**Project:** Decap CMS Integration for Academic Website
-**Domain:** Git-based headless CMS for static Astro site
-**Researched:** 2026-02-13
-**Confidence:** HIGH
+**Project:** Academic Website v3.0 Enhancements
+**Domain:** Astro 5.x static site with academic portfolio features
+**Researched:** 2026-02-16
+**Confidence:** MEDIUM-HIGH
 
 ## Executive Summary
 
-Decap CMS can be integrated with the existing Astro academic website as a client-side admin interface for managing blog posts, publications, talks, and portfolio items. The research reveals a critical architectural decision: for a single-user site on GitHub Pages, the simplest and most maintainable approach is to use **Sveltia CMS (modern Decap successor) with Personal Access Token (PAT) authentication**, avoiding the complexity of OAuth proxy servers entirely.
+This milestone adds four feature enhancements to an existing Astro 5.x academic website: (1) Teaching section with content collections, (2) Portfolio code embeds with syntax highlighting, (3) Configurable GitHub stats (stars/downloads), and (4) Multi-theme CSS system (6-8 themes). Research reveals that all features can be implemented as architectural **additions** rather than **modifications**, preserving existing functionality while extending capabilities.
 
-The conflicting recommendations in research stem from different use cases. OAuth proxy patterns (Cloudflare Worker, Netlify Identity) are designed for multi-user scenarios where non-technical editors need web-based login. For a single-user academic site where the owner is the sole editor, PAT authentication eliminates server dependencies, reduces failure points, and works perfectly with static GitHub Pages hosting. Sveltia CMS provides a superior user experience to Decap CMS while maintaining 100% config compatibility.
+The recommended approach leverages existing patterns already proven in the codebase: content collections (5 collections already working), component composition (portfolio cards demonstrate pattern), CSS custom properties (dark mode via media query exists), and client-side API fetching with localStorage cache (GitHub API pattern established). No new npm packages required. The most significant finding is that Astro 5.x includes Shiki syntax highlighting built-in, eliminating the need for runtime JavaScript libraries.
 
-Key risks include schema synchronization between Astro content collections and CMS configuration, legacy content frontmatter inconsistencies, and image upload path bugs with dynamic folders. These are all preventable through proper configuration and content normalization before CMS setup. The integration requires zero changes to the existing Astro site structure - CMS files are added to public/admin/ as static assets.
+Key risks center on three integration points: (1) Theme system must not conflict with existing `prefers-color-scheme` media query, (2) GitHub API rate limits require careful cache management when adding Releases API, and (3) Content collection schema changes must maintain backward compatibility with 26 existing content files. All risks have clear mitigation strategies based on established patterns.
 
 ## Key Findings
 
 ### Recommended Stack
 
-For a single-user GitHub Pages site, the optimal stack avoids all OAuth complexity by using built-in PAT authentication.
+**Zero new dependencies required.** All features leverage built-in Astro capabilities and existing patterns:
 
 **Core technologies:**
-- **Sveltia CMS 0.140.3**: Modern successor to Decap CMS with better UX, performance, and active development. 100% compatible with Decap CMS config but with PAT auth built-in for single users. No npm dependencies required - loaded via CDN.
-- **Personal Access Token (PAT)**: Simplest GitHub authentication for single-user scenarios. No server component required, works with static GitHub Pages, built into Sveltia CMS. User generates token once, stores in browser localStorage.
-- **Static file serving**: CMS admin interface served from public/admin/ as static HTML/JS files. No Astro SSR required, no adapters needed.
+- **Shiki (built-in)**: Syntax highlighting — Already included in Astro 5.x, VSCode-quality highlighting, runs at build time (zero client JS)
+- **CSS Custom Properties**: Theme system — Site already uses custom properties for dark mode, extend with `[data-theme]` attribute selectors
+- **GitHub REST API v3**: Release download stats — Extend existing `github-api.ts` pattern with `/repos/{owner}/{repo}/releases/latest` endpoint
+- **Astro Content Collections**: Teaching section — Follow existing pattern from publications/talks/posts collections
 
-**Rejected alternatives:**
-- Decap CMS with OAuth proxy (Cloudflare Worker): Unnecessary complexity for single user. Adds external dependency, deployment overhead, and additional failure points. Only appropriate for multi-user teams.
-- Netlify Identity: Deprecated as of 2026, only works on Netlify hosting (not GitHub Pages).
-- astro-decap-cms integrations: Require SSR mode, incompatible with static GitHub Pages hosting.
-
-**Version requirements:**
-- Sveltia CMS: Latest via CDN (currently 0.140.3)
-- Astro: Remains at current version, no changes needed
-- No additional npm packages required
+**What NOT to add:**
+- Prism/highlight.js (Shiki is superior, build-time)
+- react-syntax-highlighter (introduces React for minimal benefit)
+- styled-components/theme-ui (CSS custom properties sufficient)
+- Octokit packages (native fetch matches existing pattern)
 
 ### Expected Features
 
 **Must have (table stakes):**
-- Rich text markdown editor for blog posts and content body fields
-- Edit capabilities for all four content types (posts, publications, talks, portfolio)
-- Image upload with media library for content images
-- Field validation to prevent missing required fields (title, date, etc.)
-- GitHub authentication to prevent unauthorized edits
+- Teaching content collection with CMS integration
+- Syntax-highlighted code blocks in portfolio
+- Configurable stats display per portfolio item (stars/downloads/both/none)
+- Basic theme switcher (light/dark/auto)
 
-**Should have (competitive):**
-- Collection configuration matching all existing frontmatter schemas exactly
-- Media folder organized in public/images/uploads/ with static paths (avoiding dynamic path bugs)
-- Preview pane showing content before publish (basic preview built into Sveltia)
-- Support for optional fields without validation errors on empty values
+**Should have (differentiators):**
+- 6-8 curated themes (Nord, Dracula, Solarized, Sepia, etc.)
+- Copy button for code blocks
+- Theme persistence via localStorage
+- Release download counts from GitHub API
 
 **Defer (v2+):**
-- Editorial workflow (draft/publish via PRs) - unnecessary complexity for single user, creates branch management overhead
-- Custom preview templates matching site styling - high effort, default preview sufficient initially
-- Custom widgets for specialized fields (DOI, citations) - manual editing acceptable initially
-- Relation widgets for cross-referencing content - can add later if needed
-
-**Critical anti-features (do NOT build):**
-- Multi-user roles/permissions - single user only, adds unnecessary complexity
-- Real-time collaboration - single author, not needed
-- OAuth proxy infrastructure - PAT auth eliminates this entirely
+- Runnable code widgets (interactive playgrounds)
+- Authenticated GitHub API (for higher rate limits)
+- Custom theme creator UI
+- Code diff view
 
 ### Architecture Approach
 
-Decap/Sveltia CMS integrates as a client-side React SPA that commits directly to the GitHub repository via the GitHub API. The architecture consists of three independent layers: (1) static CMS admin interface in public/admin/, (2) existing Astro static site (unchanged), and (3) GitHub repository as content source of truth. With PAT authentication, no OAuth server component is required.
+All features integrate as extensions of existing architectural patterns. The content layer gains a teaching collection (6th collection alongside existing 5). The component layer adds CodeEmbed and ThemeSwitcher components following the proven portfolio card composition pattern. The style layer extends CSS custom properties from 2 themes (light/dark via media query) to 8 themes (attribute-based). The script layer extends github-api.ts from repo stats to include release stats using the same cache pattern.
 
 **Major components:**
-1. **CMS Admin Interface** (public/admin/) - Static HTML + config.yml served by GitHub Pages, accessed at /admin route. User authenticates with GitHub PAT once, CMS uses token to make GitHub API calls.
-2. **Content Collections** (src/content/) - Zero changes required. CMS commits markdown files to existing folders, Astro build process handles them identically to manual edits.
-3. **GitHub Actions Build Pipeline** - Unchanged. CMS commits trigger existing deploy.yml workflow, Astro builds site, deploys to GitHub Pages.
-
-**Critical architectural decisions:**
-- Keep Astro fully static (output: 'static') - no SSR adapter needed
-- Serve CMS as static files from public/admin/ - no build step for CMS itself
-- Use PAT authentication - eliminates need for external OAuth server
-- Configure media_folder with static paths - avoids dynamic path bugs
-- Map CMS collections 1:1 to existing src/content/ folders - no content migration needed
-
-**Data flow:**
-1. User navigates to pedropaf.com/admin
-2. Sveltia CMS loads (static React app)
-3. User authenticates with GitHub PAT (stored in localStorage)
-4. CMS fetches content from GitHub API using token
-5. User edits content in CMS interface
-6. CMS commits directly to master branch via GitHub API
-7. GitHub Actions detects push, runs build, deploys to Pages (2-5 min to live)
+1. **Teaching Collection** — Content collection + pages following publications/talks pattern
+2. **CodeEmbed Component** — Shiki-highlighted code with copy button (build-time highlighting, minimal runtime JS)
+3. **Theme System** — CSS custom properties with `[data-theme]` selectors, localStorage persistence
+4. **Stats Configuration** — Portfolio schema extension with conditional rendering in GitHubCard
 
 ### Critical Pitfalls
 
-1. **Schema divergence between Astro and CMS** - Astro content collections use Zod schemas, CMS uses config.yml field definitions. These can silently drift apart, causing content created in CMS to fail Astro builds with cryptic Zod errors. Prevention: Establish schema sync workflow, update both configs together, add to PR checklist. Make Astro schema source of truth, manually translate to config.yml.
+1. **Theme system conflicting with prefers-color-scheme** — Existing media query at `src/styles/global.css:28` will override manual theme selection. Must use attribute selectors with higher specificity and provide fallback to media query only when theme is "auto". Test checklist required for all theme × system preference combinations.
 
-2. **Legacy content frontmatter inconsistencies** - Existing content has varied frontmatter (inconsistent fields, different date formats, missing fields). When CMS loads these files, it crashes, shows blank fields, or refuses to save edits. Prevention: Audit existing content structure BEFORE CMS setup, normalize all dates to ISO 8601, add missing required fields, standardize array formats. Make all CMS fields optional initially, selectively make required after normalization.
+2. **GitHub API rate limit exhaustion** — Adding Releases API doubles requests per portfolio card (repo + releases). With 10+ portfolio items, site hits 60 req/hour unauthenticated limit after 3 visitors. Increase cache from 1 hour to 24 hours immediately. Consider build-time pre-fetching for production.
 
-3. **Image upload path bugs with dynamic folders** - On first submission, images upload to wrong location when using templated paths like `{{slug}}/image.jpg`. Re-uploading fixes it but creates orphaned files. Prevention: Use static media_folder path without variables: `public/images/uploads` (not dynamic). Test image upload in new entry before rolling out to verify correct location.
+3. **Content collection schema breaking existing files** — Adding required fields to schemas causes build failures across all 26 content files. All new fields MUST be optional initially (`z.optional()`). CMS config and schema must stay synchronized (update both in same commit).
 
-4. **Required/optional field validation bugs** - Decap/Sveltia has known bugs where optional fields with validation patterns reject empty values, and required fields in optional objects are enforced even when parent is empty. Prevention: Remove validation patterns from optional fields, avoid nested required fields in optional objects, always check for both undefined and empty string in templates.
+4. **Code embed hydration breaking static build** — Adding interactive playgrounds naively introduces 500KB+ bundle size and hydration errors. Use build-time Shiki for syntax highlighting (zero client JS). Defer runnable widgets to v2 or use iframe embeds to external playgrounds.
 
-5. **Markdown widget rich text mode corruption** - Rich text mode corrupts content by splitting single-line frontmatter strings across multiple lines, adding unexpected backslashes, breaking lists. Prevention: Force raw markdown mode only with `modes: ['raw']` config, or educate editors to use raw mode exclusively.
+5. **Theme CSS and Shiki theme mismatch** — User switches to light theme, code blocks stay dark (Shiki theme set at build time). Use Shiki dual-theme config with `themes: { light, dark }` and coordinate with site theme system.
 
 ## Implications for Roadmap
 
-Based on research, the integration requires minimal changes to existing codebase and follows a clear dependency order. The single-user PAT approach eliminates an entire phase of OAuth infrastructure setup.
+Based on research, suggested phase structure:
 
-### Suggested Phase Structure (3 Phases)
-
-### Phase 1: Content Audit & CMS Setup
-**Rationale:** Must normalize legacy content before CMS can load it reliably. CMS configuration depends on understanding existing content structure.
+### Phase 1: Foundation (Theme Infrastructure + Teaching Schema)
+**Rationale:** CSS theme infrastructure must exist before theme switcher UI. Teaching schema must exist before pages that query it. Both are independent (no shared files), can be done in parallel.
 
 **Delivers:**
-- Audit of existing frontmatter schemas across all content types
-- Normalized content (consistent date formats, no missing required fields)
-- public/admin/index.html with Sveltia CMS loaded via CDN
-- public/admin/config.yml with GitHub backend and PAT auth configured
-- Initial collection for blog posts only (test before expanding)
+- `src/styles/themes.css` with 6-8 theme definitions using `[data-theme]` selectors
+- Teaching collection schema in `content.config.ts` + CMS config
+- 1-2 sample teaching entries for validation
 
-**Addresses features:**
-- GitHub authentication (PAT method)
-- Rich text editor setup
-- Field validation configuration
+**Addresses:** Base requirements for themes and teaching section
 
-**Avoids pitfalls:**
-- Legacy content mismatch (Pitfall 2) - audit catches issues early
-- Schema divergence (Pitfall 1) - establish sync process from start
-- Image path bugs (Pitfall 3) - configure static media folder correctly
+**Avoids:** Pitfall #1 (theme media query conflict) by establishing correct architecture before implementation. Pitfall #4 (schema breaking content) by using optional fields initially.
 
-**Research needs:** MINIMAL - well-documented pattern, standard configuration
+**Research flag:** SKIP — Patterns well-established in codebase
 
-### Phase 2: Complete Content Coverage
-**Rationale:** After proving CMS works with blog posts, expand to remaining content types. Each collection requires careful frontmatter mapping.
+**Estimated time:** 3-4 hours
+
+---
+
+### Phase 2: UI Components (Theme Switcher + Teaching Pages)
+**Rationale:** Both require Phase 1 infrastructure (themes.css, teaching schema). No dependencies between them, can parallelize.
 
 **Delivers:**
-- Publications collection with venue, paperurl, citation fields
-- Talks collection with event, location, type fields
-- Portfolio collection with image, URL fields
-- Media library configuration (public/images/uploads/)
-- Image upload testing across all collections
+- ThemeSwitcher.astro component + theme-switcher.ts script
+- `pages/teaching/index.astro` and `pages/teaching/[...slug].astro`
+- Teaching link in navigation
+- Inline script in BaseLayout to prevent FOUC
 
-**Uses stack elements:**
-- Sveltia CMS collection configuration
-- GitHub API for commits across all content types
-- Existing Astro content collection schemas as source of truth
+**Uses:** CSS custom properties from Phase 1, teaching collection from Phase 1
 
-**Implements architecture:**
-- Complete CMS-to-content-collections mapping
-- Media folder integration with existing image assets
+**Implements:** Theme persistence (localStorage), teaching content rendering
 
-**Avoids pitfalls:**
-- Required/optional validation bugs (Pitfall 4) - careful field config
-- Markdown corruption (Pitfall 5) - raw mode enforcement
+**Addresses:** Theme switcher UI, teaching section visibility
 
-**Research needs:** MINIMAL - repeats Phase 1 pattern for additional collections
+**Avoids:** Pitfall #11 (FOUC) by inlining theme script in `<head>`
 
-### Phase 3: Documentation & Testing
-**Rationale:** CMS is functional after Phase 2, but needs validation and editor documentation to be production-ready.
+**Research flag:** SKIP — Component patterns proven in existing portfolio components
+
+**Estimated time:** 5-7 hours
+
+---
+
+### Phase 3: Portfolio Enhancements (Configurable Stats + Code Highlighting)
+**Rationale:** Both extend existing portfolio functionality. Stats config independent of code highlighting, can parallelize. Code highlighting depends on Phase 1 themes for coordination.
 
 **Delivers:**
-- End-to-end testing: create content in each collection, verify build passes
-- Cross-browser testing (Safari, Firefox, Chrome)
-- Schema alignment verification (CMS content builds without Zod errors)
-- Editor documentation (how to use PAT auth, field requirements, markdown mode)
-- Backup/recovery validation (verify Git history contains all CMS commits)
+- Portfolio schema extensions (statsDisplay, npmPackage fields)
+- GitHubCard.astro modifications for conditional rendering
+- fetchReleaseStats() function in github-api.ts
+- Shiki configuration in astro.config.mjs
+- CodeEmbed.astro component (if advanced features needed)
 
-**Addresses:**
-- All pitfalls validated in real usage
-- Editor UX documented
-- Recovery strategies tested
+**Uses:** Theme system from Phase 1 (for code theme coordination), existing GitHub API pattern
 
-**Research needs:** NONE - testing and documentation phase
+**Implements:** Configurable portfolio stats, syntax highlighting
+
+**Addresses:** GitHub Releases API integration, code display with syntax highlighting
+
+**Avoids:** Pitfall #2 (hydration breaking static) by using build-time Shiki. Pitfall #3 (rate limits) by increasing cache to 24 hours and using existing cache pattern. Pitfall #5 (theme mismatch) by using dual-theme Shiki config.
+
+**Research flag:** REVIEW GITHUB API — Verify current Releases API response format and best practices for cache duration (24hr vs build-time). Estimated 30min validation against official docs.
+
+**Estimated time:** 5-8 hours
+
+---
+
+### Phase 4: Integration & Testing
+**Rationale:** All features complete, verify they work together correctly.
+
+**Delivers:**
+- Integration testing across all features
+- Theme switching verified with code blocks
+- CMS workflow tested for teaching + portfolio
+- GitHub/npm API fetching tested with cache
+- Accessibility audit (keyboard nav, screen readers)
+- Documentation updates
+
+**Addresses:** Quality assurance, documentation
+
+**Avoids:** Pitfall #13 (theme + code coordination issues) by testing all combinations. Pitfall #14 (CMS drift) by verifying CMS config matches schemas.
+
+**Research flag:** SKIP — Standard testing procedures
+
+**Estimated time:** 2-3 hours
+
+---
 
 ### Phase Ordering Rationale
 
-- **PAT eliminates OAuth phase entirely:** Traditional multi-user setup requires Phase 1 for OAuth infrastructure (Cloudflare Worker deployment, GitHub OAuth app setup, testing auth flow). Single-user PAT approach skips this, starting directly with CMS configuration.
-- **Content audit first prevents rework:** Attempting CMS setup with inconsistent legacy content causes immediate failures. Normalizing content upfront means CMS "just works" on first try.
-- **Incremental collection rollout reduces risk:** Starting with blog posts only (Phase 1) allows testing and refinement before expanding. Issues caught early don't affect other collections.
-- **Testing as separate phase ensures production-readiness:** Functional CMS != production-ready CMS. Dedicated testing phase catches cross-browser issues, schema drift, and edge cases.
+**Dependency-driven:**
+- Themes CSS → Theme switcher (Phase 1 → 2)
+- Teaching schema → Teaching pages (Phase 1 → 2)
+- Theme system → Code highlighting theme coordination (Phase 1 → 3)
+
+**Parallelization opportunities:**
+- Phase 1: Themes CSS + Teaching schema (different files, no conflicts)
+- Phase 2: Theme switcher + Teaching pages (different concerns)
+- Phase 3: Stats config + Code highlighting (different portfolio aspects)
+
+**Risk mitigation:**
+- Phase 1 establishes correct architecture patterns before building on them
+- Phase 2 adds user-facing features independently
+- Phase 3 extends existing portfolio without breaking it
+- Phase 4 catches integration issues before production
+
+**Build order prevents:**
+- Theme FOUC (Phase 1 architecture decision)
+- Schema breakage (Phase 1 optional fields)
+- Rate limit issues (Phase 3 cache strategy)
+- Hydration errors (Phase 3 build-time highlighting)
 
 ### Research Flags
 
-**Phases with standard patterns (skip /gsd:research-phase):**
-- **Phase 1:** Well-documented Sveltia setup, extensive examples in official docs and community
-- **Phase 2:** Repetitive collection configuration following established pattern
-- **Phase 3:** Testing and documentation, no research needed
+**Phases needing deeper research during planning:**
+- **Phase 3 (GitHub API):** 30min validation — Verify GitHub Releases API response format, confirm best practices for cache duration (24hr vs build-time pre-fetching), check current rate limit recommendations for academic sites
 
-**No phases need deeper research.** All patterns are well-established with official documentation and high-confidence community examples.
+**Phases with standard patterns (skip research):**
+- **Phase 1 (Foundation):** CSS custom properties well-established, content collection pattern proven in codebase
+- **Phase 2 (UI Components):** Component composition demonstrated in existing portfolio cards, theme persistence follows existing API cache pattern
+- **Phase 4 (Testing):** Standard QA procedures
 
 ## Confidence Assessment
 
 | Area | Confidence | Notes |
 |------|------------|-------|
-| Stack | HIGH | PAT authentication officially supported by Sveltia CMS, verified in GitHub releases and documentation. GitHub Pages static hosting confirmed compatible. |
-| Features | HIGH | All required features are table stakes for Git-based CMS, confirmed in official Decap/Sveltia feature docs. Anti-features validated through pitfall research. |
-| Architecture | HIGH | Architecture verified through official Astro + Decap guides, Sveltia documentation, and multiple working community examples. Static file pattern proven on GitHub Pages. |
-| Pitfalls | MEDIUM to HIGH | Critical pitfalls documented in GitHub issues with confirmed reproduction. Schema divergence and legacy content issues validated through multiple sources. Image upload bug officially tracked. |
+| Stack | HIGH | Zero new dependencies, all features use existing patterns. Shiki built-in to Astro verified in training data. |
+| Features | HIGH | Requirements clear, well-scoped. Teaching section mirrors existing collections. Code embeds and themes are standard web features. |
+| Architecture | HIGH | Five existing content collections prove pattern. Portfolio components demonstrate composition. CSS custom properties in active use. |
+| Pitfalls | MEDIUM-HIGH | Critical pitfalls identified from codebase analysis (media query conflict, API rate limits, schema validation). Some pitfalls (Shiki theme coordination) inferred from patterns, need testing validation. |
 
-**Overall confidence:** HIGH
-
-The single-user PAT approach is well-documented and battle-tested. It's explicitly recommended by Sveltia CMS documentation for single-user scenarios and eliminates the most complex part of traditional Decap setups (OAuth proxies). The main risks are operational (schema sync, content normalization) rather than technical unknowns.
+**Overall confidence:** MEDIUM-HIGH
 
 ### Gaps to Address
 
-**OAuth vs. PAT decision documentation:**
-- Research showed conflicting patterns because sources assume different use cases (multi-user vs. single-user)
-- For this specific project (single academic user, GitHub Pages hosting), PAT is unambiguously superior
-- If future requirement emerges for multiple editors, migration path exists: deploy OAuth proxy, switch backend config, same content structure
+**Gap 1: Shiki dual-theme configuration syntax**
+- **Issue:** Training data indicates `themes: { light, dark }` config exists, but exact API may have changed in Astro 5.x
+- **Impact:** Code highlighting theme coordination (Pitfall #5)
+- **Resolution:** Phase 3 planning — validate against official Astro docs, fallback to single theme if dual-theme unsupported
+- **Mitigation:** Start with single theme ("github-dark"), add dual-theme only if needed
 
-**Testing with actual legacy content:**
-- Research identified potential frontmatter inconsistencies but cannot predict exact issues without auditing actual files
-- Phase 1 must include comprehensive audit script or manual review of existing posts/publications/talks
-- Consider writing migration script to batch-normalize content if issues are widespread
+**Gap 2: GitHub Releases API download count aggregation**
+- **Issue:** Unclear if API returns total downloads or per-asset breakdown
+- **Impact:** Stats display logic complexity
+- **Resolution:** Phase 3 planning — test with real API response, implement sum-across-assets if needed
+- **Mitigation:** Use existing GitHub API pattern, add error handling for unexpected response shape
 
-**Astro content collection schema validation:**
-- Research assumes Astro content collections use Zod schemas, but actual project may have different validation approach
-- Phase 1 should verify how existing content validation works and document sync process accordingly
-- If no Astro schema exists, CMS config.yml becomes the de facto schema definition
+**Gap 3: Teaching collection field requirements**
+- **Issue:** Optimal fields for academic teaching section not fully defined
+- **Impact:** Schema completeness
+- **Resolution:** Phase 1 planning — start with minimal fields (title, date, course, institution), expand based on user feedback
+- **Mitigation:** All fields optional initially, easy to extend schema later
 
-**Image optimization strategy:**
-- CMS uploads to public/images/uploads/ which bypasses Astro's image optimization
-- Research notes this tradeoff but doesn't provide solution for optimized images
-- May need separate image processing step or external image host (Cloudinary) for production
-- Defer optimization to post-CMS milestone if file sizes acceptable
+**Gap 4: Theme count and naming**
+- **Issue:** Which 6-8 themes provide best coverage for academic audience?
+- **Impact:** User preference satisfaction
+- **Resolution:** Phase 1 implementation — start with 6 themes (light, dark, auto, sepia, nord, solarized-light), add 2 more based on testing feedback
+- **Mitigation:** Theme system designed for easy addition of new themes (just CSS)
 
-## Authentication Recommendation: PAT, Not OAuth
-
-### Reconciling Conflicting Research
-
-**STACK.md recommendation:** Personal Access Token (PAT) with Sveltia CMS - simplest for single user, no server needed
-
-**ARCHITECTURE.md recommendation:** OAuth proxy (Cloudflare Worker) with Decap CMS - standard pattern for multi-user scenarios
-
-**Why the conflict:** Research sources show both patterns because they serve different use cases. Multi-user teams (the common case in tutorials and guides) require OAuth for better UX and security. Single-user scenarios (like academic sites) have a simpler path.
-
-**Resolution for this project:** Use PAT authentication with Sveltia CMS.
-
-**Rationale:**
-1. **Single user requirement:** Site has one editor (the owner). OAuth's complexity is designed for teams with multiple non-technical editors.
-2. **GitHub Pages constraint:** OAuth proxy requires separate deployment (Cloudflare Worker, Vercel Function). This adds hosting dependency, deployment overhead, and potential failure point.
-3. **Security equivalence:** PAT provides same GitHub API access as OAuth token. Both require HTTPS, both stored in browser localStorage, both can be revoked.
-4. **Maintenance burden:** OAuth approach requires managing GitHub OAuth app credentials, monitoring proxy uptime, debugging CORS issues. PAT requires generating one token.
-5. **Sveltia advantage:** Built-in PAT support with polished UX. User clicks "Use Personal Access Token," pastes token, done. Decap CMS can use PAT too, but Sveltia optimizes for this workflow.
-
-**When to use OAuth instead:**
-- Multiple editors need access
-- Non-technical users who can't generate GitHub tokens
-- Team workflow where token management is centralized
-- Already deploying serverless functions for other purposes
-
-**Migration path if needs change:** If future requirement emerges for multiple users, the migration is straightforward: deploy OAuth proxy, update base_url in config.yml, existing content and config structure unchanged. The decision is reversible.
+**Gap 5: localStorage quota management**
+- **Issue:** Aggressive caching may hit 5-10MB localStorage limit
+- **Impact:** Cache writes fail silently, rate limiting resumes
+- **Resolution:** Phase 3 implementation — implement quota error handling, clear oldest entries on quota exceeded
+- **Mitigation:** Monitor cache size in development, add LRU eviction if needed
 
 ## Sources
 
-### Primary Sources (HIGH confidence)
-- [Sveltia CMS Official Repository](https://github.com/sveltia/sveltia-cms) - Version verification, PAT authentication documentation, feature comparison with Decap
-- [Sveltia CMS PAT Authentication Discussion](https://github.com/sveltia/sveltia-cms/discussions/218) - Single-user PAT workflow, official recommendation
-- [Decap CMS Official Documentation](https://decapcms.org/docs/intro/) - Architecture patterns, configuration options, collection schemas
-- [Decap CMS GitHub Backend Docs](https://decapcms.org/docs/github-backend/) - Backend configuration, authentication methods
-- [Astro + Decap CMS Official Guide](https://docs.astro.build/en/guides/cms/decap-cms/) - Integration patterns, content collection mapping
-- [Astro Content Collections Docs](https://docs.astro.build/en/guides/content-collections/) - Schema definition, validation approach
+### Primary (HIGH confidence)
 
-### Secondary Sources (MEDIUM confidence)
-- [Decap CMS Issue #4218: Image upload path bug](https://github.com/decaporg/decap-cms/issues/4218) - First-submission image location issue
-- [Decap CMS Issue #315: Optional field validation](https://github.com/decaporg/decap-cms/issues/315) - Required/optional field bugs
-- [Decap CMS Issue #6444: Markdown widget corruption](https://github.com/decaporg/decap-cms/issues/6444) - Rich text mode frontmatter splitting
-- [Hugo CMS Setup Journey on GitHub Pages](https://0deepresearch.com/posts/2025-05-08-hugo-cms-setup-journey-decap-cms-sveltia-cms-on-github-pages/) - Real-world static site PAT setup, single-user pattern validation
-- [Netlify Identity Deprecation Discussion](https://github.com/decaporg/decap-cms/discussions/7419) - Confirms Netlify Identity deprecated 2026
+**Codebase Analysis (Direct Verification):**
+- `/Users/pedf/workspace/bacilo.github.io/src/content.config.ts` — 5 existing content collections prove pattern for teaching section
+- `/Users/pedf/workspace/bacilo.github.io/src/styles/global.css` — CSS custom properties system, media query at line 28 identifies Pitfall #1
+- `/Users/pedf/workspace/bacilo.github.io/src/scripts/github-api.ts` — Client-side API fetching with localStorage cache (1hr TTL at line 14), pattern for Releases API
+- `/Users/pedf/workspace/bacilo.github.io/public/admin/config.yml` — CMS schema sync pattern, comments linking to content.config.ts
+- `/Users/pedf/workspace/bacilo.github.io/src/pages/portfolio/index.astro` — Component composition pattern for portfolio cards
+- `/Users/pedf/workspace/bacilo.github.io/astro.config.mjs` — Static output mode (line 9), integration configuration
 
-### Tertiary Sources (flagged for validation)
-- Community blog posts on Decap CMS setup - Various implementation patterns, need validation against official docs
-- Third-party integration packages (astro-decap-cms, etc.) - Confirmed SSR requirement, incompatible with GitHub Pages
+### Secondary (MEDIUM-HIGH confidence)
+
+**Training Data (January 2025 cutoff):**
+- Astro 5.x built-in Shiki support — Verified in Astro release notes, continued from v2.x implementation
+- GitHub REST API v3 `/repos/{owner}/{repo}/releases/latest` endpoint — Stable API, documented rate limits (60/hr unauthenticated)
+- CSS custom properties browser support — Universal support in modern browsers, standard theming pattern
+- localStorage API — Standard browser API, 5-10MB quota per domain
+- `[data-theme]` attribute pattern — Industry-standard approach used by GitHub, MDN, and major sites
+
+### Tertiary (MEDIUM confidence, needs verification)
+
+**Training Data (Requires Validation):**
+- Shiki dual-theme configuration in Astro — `themes: { light, dark }` syntax inferred from Shiki docs, exact Astro integration needs verification
+- GitHub Releases API response shape — Assumed to include `assets[]` with `download_count`, should verify with API call during Phase 3
+- npm downloads API — Public endpoint `api.npmjs.org/downloads/point/last-month/{package}`, assumed unchanged
+- Shiki `codeToHtml` API for custom components — API may have changed, verify if building custom CodeEmbed component
+
+### Recommended Verification
+
+Before Phase 3 implementation:
+1. Astro syntax highlighting config: https://docs.astro.build/en/guides/markdown-content/#syntax-highlighting
+2. GitHub Releases API: https://docs.github.com/en/rest/releases/releases#get-the-latest-release
+3. Shiki themes: https://shiki.style/themes
+4. GitHub API rate limits: https://docs.github.com/en/rest/overview/rate-limits-for-the-rest-api
 
 ---
-*Research completed: 2026-02-13*
-*Ready for roadmap: Yes*
-*Recommended approach: Sveltia CMS with PAT authentication (3-phase roadmap)*
+
+*Research completed: 2026-02-16*
+*Ready for roadmap: YES*
+*Total estimated time: 15-22 hours across 4 phases*
+*Critical dependencies: Phase 1 → Phase 2, Phase 1 → Phase 3*
