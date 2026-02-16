@@ -1,0 +1,121 @@
+---
+// Define available themes with descriptive labels
+const themes = [
+  { value: 'auto', label: 'Auto (System)' },
+  { value: 'light', label: 'Light' },
+  { value: 'dark', label: 'Dark' },
+  { value: 'sepia', label: 'Sepia' },
+  { value: 'terminal', label: 'Terminal' },
+  { value: 'minecraft', label: 'Minecraft' },
+  { value: 'lego', label: 'Lego' },
+  { value: 'synthwave', label: 'Synthwave' },
+];
+---
+
+<div class="theme-switcher">
+  <label for="theme-select">Theme:</label>
+  <select id="theme-select" class="theme-select">
+    {themes.map((theme) => (
+      <option value={theme.value}>{theme.label}</option>
+    ))}
+  </select>
+</div>
+
+<style>
+  .theme-switcher {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+  }
+
+  .theme-switcher label {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+  }
+
+  .theme-select {
+    padding: var(--space-xs) var(--space-sm);
+    background: var(--color-header-bg);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    font-size: 0.875rem;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  .theme-select:hover {
+    border-color: var(--color-link);
+  }
+
+  .theme-select:focus {
+    outline: 2px solid var(--color-link);
+    outline-offset: 2px;
+  }
+</style>
+
+<script>
+  type Theme = 'auto' | 'light' | 'dark' | 'sepia' | 'terminal' | 'minecraft' | 'lego' | 'synthwave';
+
+  const STORAGE_KEY = 'site-theme';
+
+  function getStoredTheme(): Theme {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored && isValidTheme(stored)) {
+        return stored as Theme;
+      }
+    } catch (e) {
+      // localStorage unavailable (private browsing, etc.)
+    }
+    return 'auto';
+  }
+
+  function isValidTheme(value: string): boolean {
+    return ['auto', 'light', 'dark', 'sepia', 'terminal', 'minecraft', 'lego', 'synthwave'].includes(value);
+  }
+
+  function applyTheme(theme: Theme): void {
+    const docEl = document.documentElement;
+
+    if (theme === 'light') {
+      // Light theme uses :root defaults (no attribute)
+      docEl.removeAttribute('data-theme');
+    } else if (theme === 'auto') {
+      // Auto mode: check system preference
+      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        docEl.setAttribute('data-theme', 'auto');
+      } else {
+        // System prefers light: use :root defaults
+        docEl.removeAttribute('data-theme');
+      }
+    } else {
+      // All other themes: set data-theme attribute
+      docEl.setAttribute('data-theme', theme);
+    }
+  }
+
+  function saveTheme(theme: Theme): void {
+    try {
+      localStorage.setItem(STORAGE_KEY, theme);
+    } catch (e) {
+      // localStorage unavailable
+    }
+  }
+
+  // Initialize on script load
+  const selectElement = document.getElementById('theme-select') as HTMLSelectElement;
+  if (selectElement) {
+    // Set initial value to match stored theme
+    const currentTheme = getStoredTheme();
+    selectElement.value = currentTheme;
+
+    // Listen for changes
+    selectElement.addEventListener('change', (event) => {
+      const target = event.target as HTMLSelectElement;
+      const newTheme = target.value as Theme;
+      applyTheme(newTheme);
+      saveTheme(newTheme);
+    });
+  }
+</script>
