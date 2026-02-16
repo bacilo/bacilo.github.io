@@ -47,7 +47,7 @@ Milestone v3.0 enhances the existing academic website with three major feature s
 
 - [x] **Phase 14: Theme System Foundation** - CSS themes infrastructure with 8 theme definitions and FOUC prevention (completed 2026-02-16)
 - [x] **Phase 15: Code Highlighting Infrastructure** - Shiki configuration and code display components (completed 2026-02-16)
-- [ ] **Phase 16: Interactive Features** - Theme switcher UI and code copy buttons
+- [x] **Phase 16: Interactive Features** - Theme switcher UI and code copy buttons (completed 2026-02-16)
 - [ ] **Phase 17: Portfolio Enhancements** - Configurable stats and code embeds in portfolio cards
 
 ## Phase Details
@@ -91,7 +91,7 @@ Plans:
   3. User can reload browser and see previously selected theme still active
   4. User can click copy button on code block and paste snippet successfully
   5. User switching themes sees code highlighting update to match new theme
-**Plans:** 2 plans
+**Plans:** 2/2 plans complete
 
 Plans:
 - [ ] 16-01-PLAN.md — Theme switcher dropdown component with localStorage persistence
@@ -135,7 +135,7 @@ Phases execute in numeric order: 14 → 15 → 16 → 17
 | 13. Documentation & Testing | v2.0 | 2/2 | Complete | 2026-02-13 |
 | 14. Theme System Foundation | v3.0 | Complete    | 2026-02-16 | - |
 | 15. Code Highlighting Infrastructure | v3.0 | Complete    | 2026-02-16 | - |
-| 16. Interactive Features | v3.0 | 0/2 | Not started | - |
+| 16. Interactive Features | v3.0 | Complete    | 2026-02-16 | - |
 | 17. Portfolio Enhancements | v3.0 | 0/2 | Not started | - |
 
 ---
