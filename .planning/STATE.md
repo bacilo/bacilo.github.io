@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-16)
 
 **Core value:** A professional online presence that showcases work and is easy to maintain with monthly content updates
-**Current focus:** v3.0 Portfolio Enhancements & Themes - Phase 15
+**Current focus:** v3.0 Portfolio Enhancements & Themes - Phase 16
 
 ## Current Position
 
-Phase: 15 of 17 (Code Highlighting Infrastructure)
-Plan: 1 of 1 complete
-Status: Phase 15 complete - ready for Phase 16
-Last activity: 2026-02-16 — Completed 15-01-PLAN.md (Code Highlighting Infrastructure)
+Phase: 16 of 17 (Interactive Features)
+Plan: 2 of 2 complete
+Status: Phase 16 complete - ready for Phase 17
+Last activity: 2026-02-16 — Completed 16-02-PLAN.md (Copy-to-Clipboard Buttons)
 
-Progress: [████████████████████████████████░░░░] 88% (15/17 phases complete)
+Progress: [████████████████████████████████████░] 94% (16/17 phases complete)
 
 ## Performance Metrics
 
@@ -29,9 +29,9 @@ Progress: [███████████████████████
 - Total execution time: 23 minutes
 
 **Velocity (v3.0):**
-- Total plans completed: 2
-- Average duration: 3.0 minutes
-- Total execution time: 6 minutes
+- Total plans completed: 4
+- Average duration: 2.0 minutes
+- Total execution time: 8 minutes
 
 **By Phase (v1.0):**
 
@@ -60,8 +60,9 @@ Progress: [███████████████████████
 |-------|-------|-------|----------|
 | 14 | 1 | 4m | 4.0m |
 | 15 | 1 | 2m | 2.0m |
+| 16 | 2 | 2m | 1.0m |
 
-*Updated: 2026-02-16 after Phase 15 Plan 01 completion*
+*Updated: 2026-02-16 after Phase 16 Plan 02 completion*
 
 ## Accumulated Context
 
@@ -78,6 +79,9 @@ Recent decisions affecting v3.0 work:
 - Phase 14-01: Inline script placed immediately after charset meta tag for earliest possible execution
 - [Phase 15]: Use github-light and github-dark themes for broad familiarity and neutral aesthetic
 - [Phase 15]: Map 8 site themes to 2 code themes based on brightness (light-based use light code, dark-based use dark code)
+- [Phase 16-02]: Copy buttons hidden by default (opacity: 0), shown on hover/focus for clean appearance
+- [Phase 16-02]: Uses existing CSS custom properties for theme compatibility; success/error colors hardcoded as universal semantic colors
+- [Phase 16-02]: Reads code text from pre.textContent at copy time (not cached) to ensure always current
 
 ### Pending Todos
 
@@ -89,9 +93,9 @@ No active blockers or concerns.
 
 ## Session Continuity
 
-Last session: 2026-02-16 (Phase 15 Plan 01 execution)
-Stopped at: Completed 15-01-PLAN.md - Code Highlighting Infrastructure
-Resume: Phase 15 complete (1 plan). Ready for Phase 16 or continue v3.0 milestone.
+Last session: 2026-02-16 (Phase 16 Plan 02 execution)
+Stopped at: Completed 16-02-PLAN.md - Copy-to-Clipboard Buttons
+Resume: Phase 16 complete (2 plans). Ready for Phase 17 (Stats Dashboard) or continue v3.0 milestone.
 
 ## Archives
 
