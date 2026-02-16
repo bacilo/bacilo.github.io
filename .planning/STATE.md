@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-16)
 
 **Core value:** A professional online presence that showcases work and is easy to maintain with monthly content updates
-**Current focus:** v3.0 Portfolio Enhancements & Themes - Phase 14
+**Current focus:** v3.0 Portfolio Enhancements & Themes - Phase 15
 
 ## Current Position
 
-Phase: 14 of 17 (Theme System Foundation)
+Phase: 15 of 17 (Code Highlighting Infrastructure)
 Plan: 1 of 1 complete
-Status: Phase 14 complete - ready for Phase 15
-Last activity: 2026-02-16 — Completed 14-01-PLAN.md (Theme System Foundation)
+Status: Phase 15 complete - ready for Phase 16
+Last activity: 2026-02-16 — Completed 15-01-PLAN.md (Code Highlighting Infrastructure)
 
-Progress: [██████████████████████████████░░░░░░] 82% (14/17 phases complete)
+Progress: [████████████████████████████████░░░░] 88% (15/17 phases complete)
 
 ## Performance Metrics
 
@@ -29,9 +29,9 @@ Progress: [███████████████████████
 - Total execution time: 23 minutes
 
 **Velocity (v3.0):**
-- Total plans completed: 1
-- Average duration: 4.0 minutes
-- Total execution time: 4 minutes
+- Total plans completed: 2
+- Average duration: 3.0 minutes
+- Total execution time: 6 minutes
 
 **By Phase (v1.0):**
 
@@ -59,8 +59,9 @@ Progress: [███████████████████████
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 14 | 1 | 4m | 4.0m |
+| 15 | 1 | 2m | 2.0m |
 
-*Updated: 2026-02-16 after Phase 14 Plan 01 completion*
+*Updated: 2026-02-16 after Phase 15 Plan 01 completion*
 
 ## Accumulated Context
 
@@ -75,6 +76,8 @@ Recent decisions affecting v3.0 work:
 - Phase 14-01: Auto mode uses nested media query inside [data-theme="auto"] for system preference detection
 - Phase 14-01: Light theme uses :root defaults (no data-theme attribute) for zero-overhead default
 - Phase 14-01: Inline script placed immediately after charset meta tag for earliest possible execution
+- [Phase 15]: Use github-light and github-dark themes for broad familiarity and neutral aesthetic
+- [Phase 15]: Map 8 site themes to 2 code themes based on brightness (light-based use light code, dark-based use dark code)
 
 ### Pending Todos
 
@@ -86,9 +89,9 @@ No active blockers or concerns.
 
 ## Session Continuity
 
-Last session: 2026-02-16 (Phase 14 Plan 01 execution)
-Stopped at: Completed 14-01-PLAN.md - Theme System Foundation
-Resume: Phase 14 complete (1 plan). Ready for Phase 15 or continue v3.0 milestone.
+Last session: 2026-02-16 (Phase 15 Plan 01 execution)
+Stopped at: Completed 15-01-PLAN.md - Code Highlighting Infrastructure
+Resume: Phase 15 complete (1 plan). Ready for Phase 16 or continue v3.0 milestone.
 
 ## Archives
 
