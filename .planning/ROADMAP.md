@@ -62,11 +62,10 @@ Milestone v3.0 enhances the existing academic website with three major feature s
   3. User with light mode system preference sees light theme by default (auto mode)
   4. User never sees flash of wrong theme on page load
   5. All 8 themes render text readably with sufficient contrast
-**Plans**: TBD
+**Plans:** 1 plan
 
 Plans:
-- [ ] 14-01: TBD
-- [ ] 14-02: TBD
+- [ ] 14-01-PLAN.md — CSS theme definitions (8 themes) and FOUC-prevention inline script
 
 ### Phase 15: Code Highlighting Infrastructure
 **Goal**: Site displays syntax-highlighted code snippets in portfolio with zero client-side JavaScript
@@ -135,7 +134,7 @@ Phases execute in numeric order: 14 → 15 → 16 → 17
 | 11. Content Audit & CMS Setup | v2.0 | 2/2 | Complete | 2026-02-13 |
 | 12. Complete Content Coverage | v2.0 | 2/2 | Complete | 2026-02-13 |
 | 13. Documentation & Testing | v2.0 | 2/2 | Complete | 2026-02-13 |
-| 14. Theme System Foundation | v3.0 | 0/2 | Not started | - |
+| 14. Theme System Foundation | v3.0 | 0/1 | Not started | - |
 | 15. Code Highlighting Infrastructure | v3.0 | 0/2 | Not started | - |
 | 16. Interactive Features | v3.0 | 0/2 | Not started | - |
 | 17. Portfolio Enhancements | v3.0 | 0/2 | Not started | - |
