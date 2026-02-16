@@ -76,11 +76,10 @@ Plans:
   2. Code highlighting theme coordinates with site theme (light code blocks in light theme, dark in dark theme)
   3. Code highlighting works in markdown code fences across entire site
   4. Code blocks render with no client-side JavaScript execution
-**Plans**: TBD
+**Plans:** 1 plan
 
 Plans:
-- [ ] 15-01: TBD
-- [ ] 15-02: TBD
+- [ ] 15-01-PLAN.md — Shiki dual-theme config, theme-coordination CSS, and page style updates
 
 ### Phase 16: Interactive Features
 **Goal**: User can switch themes manually and copy code snippets with one click
@@ -135,7 +134,7 @@ Phases execute in numeric order: 14 → 15 → 16 → 17
 | 12. Complete Content Coverage | v2.0 | 2/2 | Complete | 2026-02-13 |
 | 13. Documentation & Testing | v2.0 | 2/2 | Complete | 2026-02-13 |
 | 14. Theme System Foundation | v3.0 | Complete    | 2026-02-16 | - |
-| 15. Code Highlighting Infrastructure | v3.0 | 0/2 | Not started | - |
+| 15. Code Highlighting Infrastructure | v3.0 | 0/1 | Not started | - |
 | 16. Interactive Features | v3.0 | 0/2 | Not started | - |
 | 17. Portfolio Enhancements | v3.0 | 0/2 | Not started | - |
 
