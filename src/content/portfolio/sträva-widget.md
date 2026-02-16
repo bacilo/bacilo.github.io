@@ -1,44 +1,26 @@
 ---
 title: Strava Widget
-excerpt: |-
-  <div id="strava-stats"></div>
-  <script src="https://bacilo.github.io/strava-widgets/stats-card.iife.js"></script>
-  <script>
-    window.StatsCard.init('strava-stats', {
-      dataUrl: 'https://bacilo.github.io/strava-widgets/data/stats/all-time-totals.json',
-      options: {
-        showTitle: true,
-        secondaryDataUrl: 'https://bacilo.github.io/strava-widgets/data/stats/year-over-year.json'
-      }
-    });
-  </script>
+excerpt: ''
 image: ''
 collection: portfolio
 repoUrl: ''
 demoUrl: ''
-description: |-
-  <div id="strava-stats"></div>
-  <script src="https://bacilo.github.io/strava-widgets/stats-card.iife.js"></script>
-  <script>
-    window.StatsCard.init('strava-stats', {
-      dataUrl: 'https://bacilo.github.io/strava-widgets/data/stats/all-time-totals.json',
-      options: {
-        showTitle: true,
-        secondaryDataUrl: 'https://bacilo.github.io/strava-widgets/data/stats/year-over-year.json'
-      }
-    });
-  </script>
+description: ''
 playgroundUrl: ''
 ---
 
-<div id="strava-stats"></div>
-<script src="https://bacilo.github.io/strava-widgets/stats-card.iife.js"></script>
-<script>
-  window.StatsCard.init('strava-stats', {
-    dataUrl: 'https://bacilo.github.io/strava-widgets/data/stats/all-time-totals.json',
-    options: {
-      showTitle: true,
-      secondaryDataUrl: 'https://bacilo.github.io/strava-widgets/data/stats/year-over-year.json'
-    }
-  });
-</script>
+<script src="https://bacilo.github.io/strava-widgets/geo-stats-widget.iife.js"></script>
+
+<strava-geo-stats
+
+  data-url="https://bacilo.github.io/strava-widgets/data/geo/countries.json"
+
+  data-secondary-url="https://bacilo.github.io/strava-widgets/data/geo/cities.json"
+
+  data-metadata-url="https://bacilo.github.io/strava-widgets/data/geo/geo-metadata.json"
+
+  data-title="Where I've Run"
+
+  data-show-export="true">
+
+</strava-geo-stats>
