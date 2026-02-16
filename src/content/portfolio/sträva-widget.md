@@ -24,3 +24,15 @@ playgroundUrl: ''
   data-show-export="true">
 
 </strava-geo-stats>
+
+
+<script src="https://bacilo.github.io/strava-widgets/geo-table-widget.iife.js"></script>
+
+<strava-geo-table
+  data-url="https://bacilo.github.io/strava-widgets/data/geo/countries.json"
+  data-dataset="countries"
+  data-title="Countries I've Run In"
+  data-rows-per-page="20"
+  data-default-sort="distance"
+  data-default-sort-direction="desc">
+</strava-geo-table>
