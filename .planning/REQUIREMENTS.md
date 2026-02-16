@@ -66,24 +66,24 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| CODE-01 | — | Pending |
-| CODE-02 | — | Pending |
-| CODE-03 | — | Pending |
-| CODE-04 | — | Pending |
-| STAT-01 | — | Pending |
-| STAT-02 | — | Pending |
-| STAT-03 | — | Pending |
-| THEME-01 | — | Pending |
-| THEME-02 | — | Pending |
-| THEME-03 | — | Pending |
-| THEME-04 | — | Pending |
-| THEME-05 | — | Pending |
+| CODE-01 | Phase 15 | Pending |
+| CODE-02 | Phase 16 | Pending |
+| CODE-03 | Phase 17 | Pending |
+| CODE-04 | Phase 15 | Pending |
+| STAT-01 | Phase 17 | Pending |
+| STAT-02 | Phase 17 | Pending |
+| STAT-03 | Phase 17 | Pending |
+| THEME-01 | Phase 14 | Pending |
+| THEME-02 | Phase 16 | Pending |
+| THEME-03 | Phase 16 | Pending |
+| THEME-04 | Phase 14 | Pending |
+| THEME-05 | Phase 14 | Pending |
 
 **Coverage:**
 - v3.0 requirements: 12 total
-- Mapped to phases: 0
-- Unmapped: 12 ⚠️
+- Mapped to phases: 12
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-02-16*
-*Last updated: 2026-02-16 after initial definition*
+*Last updated: 2026-02-16 after roadmap creation*
