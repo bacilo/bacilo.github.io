@@ -1,0 +1,96 @@
+/**
+ * Theme System - Color Palette Overrides
+ *
+ * This file defines 8 theme options via [data-theme] attribute selectors.
+ * These selectors override the :root defaults defined in global.css.
+ *
+ * How it works:
+ * - Light theme: No data-theme attribute needed (uses :root defaults from global.css)
+ * - Other themes: Inline script in BaseLayout.astro sets data-theme attribute before first paint
+ * - Specificity: [data-theme] attribute selector beats :root, ensuring manual selection overrides system preferences
+ *
+ * Available themes: auto, light (default), dark, sepia, terminal, minecraft, lego, synthwave
+ */
+
+/* Auto Mode - Respects system preference when explicitly selected */
+[data-theme="auto"] {
+  /* Light colors are already the :root defaults, so only define dark colors in media query */
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-theme="auto"] {
+    --color-bg: #1a1a1a;
+    --color-text: #e0e0e0;
+    --color-text-muted: #a0a0a0;
+    --color-link: #6699ff;
+    --color-link-hover: #99bbff;
+    --color-border: #404040;
+    --color-header-bg: #252525;
+  }
+}
+
+/* Dark Theme */
+[data-theme="dark"] {
+  --color-bg: #1a1a1a;
+  --color-text: #e0e0e0;
+  --color-text-muted: #a0a0a0;
+  --color-link: #6699ff;
+  --color-link-hover: #99bbff;
+  --color-border: #404040;
+  --color-header-bg: #252525;
+}
+
+/* Sepia Theme - Warm, paper-like reading experience */
+[data-theme="sepia"] {
+  --color-bg: #f4ecd8;
+  --color-text: #5c4a2e;
+  --color-text-muted: #8b7355;
+  --color-link: #8b4513;
+  --color-link-hover: #654321;
+  --color-border: #d4c4a8;
+  --color-header-bg: #eae0cc;
+}
+
+/* Terminal Theme - Classic green-on-black hacker aesthetic */
+[data-theme="terminal"] {
+  --color-bg: #0a0a0a;
+  --color-text: #33ff66;
+  --color-text-muted: #22cc44;
+  --color-link: #00ff00;
+  --color-link-hover: #66ff66;
+  --color-border: #1a3a1a;
+  --color-header-bg: #111111;
+}
+
+/* Minecraft Theme - Grass block inspired palette */
+[data-theme="minecraft"] {
+  --color-bg: #3c8527;
+  --color-text: #f5f5dc;
+  --color-text-muted: #d4d4a8;
+  --color-link: #a5d152;
+  --color-link-hover: #c0e070;
+  --color-border: #7b5734;
+  --color-header-bg: #2d6a1f;
+}
+
+/* Lego Theme - Bold primary colors */
+[data-theme="lego"] {
+  --color-bg: #ffffff;
+  --color-text: #000000;
+  --color-text-muted: #555555;
+  --color-link: #d11013;
+  --color-link-hover: #a00d10;
+  --color-border: #f6ec35;
+  --color-header-bg: #f6ec35;
+}
+
+/* Synthwave Theme - Neon 80s retrowave aesthetic */
+[data-theme="synthwave"] {
+  --color-bg: #0f0a1f;
+  --color-text: #ffd319;
+  --color-text-muted: #ff901f;
+  --color-link: #ff2975;
+  --color-link-hover: #f222ff;
+  --color-border: #8c1eff;
+  --color-header-bg: #1a0f2e;
+}
