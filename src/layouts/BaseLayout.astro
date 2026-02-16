@@ -3,6 +3,7 @@ import SkipLink from '../components/SkipLink.astro';
 import Navigation from '../components/Navigation.astro';
 import Footer from '../components/Footer.astro';
 import AuthorSidebar from '../components/AuthorSidebar.astro';
+import ThemeSwitcher from '../components/ThemeSwitcher.astro';
 import siteData from '../data/site.json';
 import '../styles/global.css';
 import '../styles/themes.css';
@@ -54,6 +55,7 @@ const {
     <header class="site-header">
       <div class="header-content">
         <a href="/" class="site-title">{siteData.site.title}</a>
+        <ThemeSwitcher />
       </div>
     </header>
     <Navigation />
@@ -64,6 +66,10 @@ const {
       </main>
     </div>
     <Footer />
+    <script>
+      import { initCopyButtons } from '../scripts/copy-code';
+      initCopyButtons();
+    </script>
   </body>
 </html>
 
@@ -77,6 +83,9 @@ const {
     max-width: var(--max-width);
     margin: 0 auto;
     padding: var(--space-sm);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
 
   .site-title {
