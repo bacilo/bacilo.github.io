@@ -46,7 +46,7 @@ Milestone v3.0 enhances the existing academic website with three major feature s
 **Milestone Goal:** Add multi-theme CSS system with 8 switchable themes, portfolio code embeds with syntax highlighting, and configurable GitHub stats display.
 
 - [x] **Phase 14: Theme System Foundation** - CSS themes infrastructure with 8 theme definitions and FOUC prevention (completed 2026-02-16)
-- [ ] **Phase 15: Code Highlighting Infrastructure** - Shiki configuration and code display components
+- [x] **Phase 15: Code Highlighting Infrastructure** - Shiki configuration and code display components (completed 2026-02-16)
 - [ ] **Phase 16: Interactive Features** - Theme switcher UI and code copy buttons
 - [ ] **Phase 17: Portfolio Enhancements** - Configurable stats and code embeds in portfolio cards
 
@@ -76,7 +76,7 @@ Plans:
   2. Code highlighting theme coordinates with site theme (light code blocks in light theme, dark in dark theme)
   3. Code highlighting works in markdown code fences across entire site
   4. Code blocks render with no client-side JavaScript execution
-**Plans:** 1 plan
+**Plans:** 1/1 plans complete
 
 Plans:
 - [ ] 15-01-PLAN.md — Shiki dual-theme config, theme-coordination CSS, and page style updates
@@ -134,7 +134,7 @@ Phases execute in numeric order: 14 → 15 → 16 → 17
 | 12. Complete Content Coverage | v2.0 | 2/2 | Complete | 2026-02-13 |
 | 13. Documentation & Testing | v2.0 | 2/2 | Complete | 2026-02-13 |
 | 14. Theme System Foundation | v3.0 | Complete    | 2026-02-16 | - |
-| 15. Code Highlighting Infrastructure | v3.0 | 0/1 | Not started | - |
+| 15. Code Highlighting Infrastructure | v3.0 | Complete    | 2026-02-16 | - |
 | 16. Interactive Features | v3.0 | 0/2 | Not started | - |
 | 17. Portfolio Enhancements | v3.0 | 0/2 | Not started | - |
 
