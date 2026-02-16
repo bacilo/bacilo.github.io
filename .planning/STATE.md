@@ -30,8 +30,8 @@ Progress: [███████████████████████
 
 **Velocity (v3.0):**
 - Total plans completed: 4
-- Average duration: 2.0 minutes
-- Total execution time: 8 minutes
+- Average duration: 2.3 minutes
+- Total execution time: 9 minutes
 
 **By Phase (v1.0):**
 
@@ -60,9 +60,9 @@ Progress: [███████████████████████
 |-------|-------|-------|----------|
 | 14 | 1 | 4m | 4.0m |
 | 15 | 1 | 2m | 2.0m |
-| 16 | 2 | 2m | 1.0m |
+| 16 | 2 | 3m | 1.5m |
 
-*Updated: 2026-02-16 after Phase 16 Plan 02 completion*
+*Updated: 2026-02-16 after Phase 16 Plan 01 completion*
 
 ## Accumulated Context
 
@@ -82,6 +82,8 @@ Recent decisions affecting v3.0 work:
 - [Phase 16-02]: Copy buttons hidden by default (opacity: 0), shown on hover/focus for clean appearance
 - [Phase 16-02]: Uses existing CSS custom properties for theme compatibility; success/error colors hardcoded as universal semantic colors
 - [Phase 16-02]: Reads code text from pre.textContent at copy time (not cached) to ensure always current
+- [Phase 16]: ThemeSwitcher uses bundled script (not is:inline) for deferred interaction after FOUC prevention
+- [Phase 16]: Light theme removes data-theme attribute for zero-overhead default; auto checks system preference
 
 ### Pending Todos
 
@@ -93,9 +95,9 @@ No active blockers or concerns.
 
 ## Session Continuity
 
-Last session: 2026-02-16 (Phase 16 Plan 02 execution)
-Stopped at: Completed 16-02-PLAN.md - Copy-to-Clipboard Buttons
-Resume: Phase 16 complete (2 plans). Ready for Phase 17 (Stats Dashboard) or continue v3.0 milestone.
+Last session: 2026-02-16 (Phase 16 Plan 01 execution)
+Stopped at: Completed 16-01-PLAN.md - Theme Switcher UI
+Resume: Phase 16 complete (2 plans, executed out of order). Ready for Phase 17 (Stats Dashboard) or continue v3.0 milestone.
 
 ## Archives
 
