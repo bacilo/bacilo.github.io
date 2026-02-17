@@ -137,16 +137,55 @@
   color: #ffffff;
   font-weight: 600;
   border-bottom-color: transparent;
+  position: relative;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: 4px;
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.15),
+    0 0 0 2px var(--color-lego-yellow);
+  transition: transform 34ms ease-out, box-shadow 34ms ease-out, color 0.2s ease;
+}
+
+[data-theme="lego"] nav a::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 8px;
+  background-image: radial-gradient(
+    circle at center,
+    rgba(255, 255, 255, 0.3) 2px,
+    transparent 2px
+  );
+  background-size: 12px 12px;
+  background-repeat: round;
+  pointer-events: none;
 }
 
 [data-theme="lego"] nav a:hover {
   color: var(--color-lego-yellow);
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.2),
+    0 0 0 2px var(--color-lego-yellow);
+}
+
+[data-theme="lego"] nav a:active,
+[data-theme="lego"] nav a:focus:active {
+  transform: translateY(2px);
+  box-shadow:
+    0 0 2px rgba(0, 0, 0, 0.1),
+    0 0 0 2px var(--color-lego-yellow);
 }
 
 [data-theme="lego"] nav a.active,
 [data-theme="lego"] nav a[aria-current="page"] {
   color: var(--color-lego-yellow);
   border-bottom-color: var(--color-lego-yellow);
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.15),
+    0 0 0 2px var(--color-lego-yellow);
 }
 
 [data-theme="lego"] .author-sidebar {
@@ -235,6 +274,17 @@
     box-shadow:
       0 2px 6px rgba(0, 0, 0, 0.15),
       0 4px 12px rgba(0, 0, 0, 0.12);
+  }
+}
+
+/* LEGO accessibility - reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  [data-theme="lego"] nav a,
+  [data-theme="lego"] .github-card {
+    transition: none !important;
+  }
+  [data-theme="lego"] nav a:active {
+    transform: translateY(2px);
   }
 }
 
