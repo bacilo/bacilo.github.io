@@ -114,7 +114,10 @@ Plans:
   3. All LEGO features work correctly in Chrome, Firefox, and Safari latest versions
   4. Theme switching between LEGO and all other 7 themes works without visual glitches
   5. Mobile experience (iPhone SE viewport) displays all LEGO features without layout breaks
-**Plans**: TBD
+**Plans**: 2 plans
+Plans:
+- [ ] 21-01-PLAN.md — Automated validation: build verification, CSS requirement audit, contrast ratios, Lighthouse performance
+- [ ] 21-02-PLAN.md — Visual verification: cross-browser testing, theme switching, mobile responsive, accessibility
 
 ## Progress
 
@@ -140,7 +143,7 @@ Plans:
 | 18. CSS Foundation & Visual Transform | v4.0 | Complete    | 2026-02-17 | - |
 | 19. Brick Elements & Studs | v4.0 | Complete    | 2026-02-17 | - |
 | 20. Typography & Animations | v4.0 | Complete    | 2026-02-17 | - |
-| 21. Integration Validation | v4.0 | 0/? | Not started | - |
+| 21. Integration Validation | v4.0 | 0/2 | Not started | - |
 
 ---
 *Roadmap created: 2026-02-16*
