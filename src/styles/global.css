@@ -73,3 +73,17 @@ a:hover {
   white-space: nowrap;
   border: 0;
 }
+
+/* Mobile sidebar visibility (RESP-01)
+ * Hide sidebar on mobile for all pages except Home.
+ * Sidebar is always visible on desktop (>768px).
+ */
+@media (max-width: 768px) {
+  .author-sidebar {
+    display: none;
+  }
+
+  body.page-home .author-sidebar {
+    display: block;
+  }
+}

@@ -50,7 +50,7 @@ const {
     />
     <title>{title}</title>
   </head>
-  <body>
+  <body class:list={[{ 'page-home': Astro.url.pathname === '/' }]}>
     <SkipLink />
     <header class="site-header">
       <div class="header-content">
