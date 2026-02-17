@@ -7,7 +7,7 @@ repoUrl: https://github.com/bacilo/pomodoro-mac
 demoUrl: ''
 description: ''
 playgroundUrl: ''
-statsDisplay: ''
+statsDisplay: 'none'
 npmPackage: ''
 codepenId: ''
 stackblitzId: ''
