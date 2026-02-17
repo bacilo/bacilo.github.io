@@ -1,5 +1,5 @@
 ---
-title: Strava Widget
+title: Strava Widgets
 excerpt: ''
 image: ''
 collection: portfolio
