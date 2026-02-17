@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-17)
 
 **Core value:** A professional online presence that showcases work and is easy to maintain with monthly content updates
-**Current focus:** Phase 19 - Brick Elements & Studs (v4.0 Immersive LEGO Theme)
+**Current focus:** Phase 20 - Typography & Animations (v4.0 Immersive LEGO Theme)
 
 ## Current Position
 
-Phase: 19 of 21 (Brick Elements & Studs)
+Phase: 20 of 21 (Typography & Animations)
 Plan: 1 of 1 in current phase
-Status: Phase 19 complete
-Last activity: 2026-02-17 — Phase 19 Plan 01 complete
+Status: Phase 20 complete
+Last activity: 2026-02-17 — Phase 20 Plan 01 complete
 
-Progress: [██████████████████░░] 90% (19/21 phases complete)
+Progress: [███████████████████░] 95% (20/21 phases complete)
 
 ## Performance Metrics
 
@@ -34,16 +34,16 @@ Progress: [██████████████████░░] 90% (19
 - Total execution time: 14 minutes
 
 **Velocity (v4.0):**
-- Total plans completed: 2
-- Average duration: 2.3 minutes
-- Total execution time: 4.5 minutes
+- Total plans completed: 3
+- Average duration: 2.4 minutes
+- Total execution time: 7.1 minutes
 
 **Overall:**
-- Total plans: 29 (across 19 completed phases)
-- Cumulative time: ~2.2 hours
-- Average: ~4.5 minutes per plan
+- Total plans: 30 (across 20 completed phases)
+- Cumulative time: ~2.3 hours
+- Average: ~4.6 minutes per plan
 
-*Updated: 2026-02-17 after Phase 19 Plan 01 complete*
+*Updated: 2026-02-17 after Phase 20 Plan 01 complete*
 
 ## Accumulated Context
 
@@ -60,6 +60,8 @@ Recent decisions affecting current work:
 - [Phase 18-01]: Mobile sidebar rules in global.css (all themes) vs LEGO overrides in themes.css
 - [Phase 19-01]: Multi-layer box-shadow (3 desktop, 2 mobile) for tactile brick depth without performance cost
 - [Phase 19-01]: 34ms nav button transition timing matches physical LEGO brick press duration
+- [Phase 20]: Static fonts (Fredoka 700, Baloo 2 400+600) chosen over variable fonts to minimize file size (170KB vs 240KB)
+- [Phase 20]: cubic-bezier bounce easing used instead of CSS linear() for 99% browser support vs 75%
 
 ### Pending Todos
 
@@ -72,8 +74,8 @@ No active blockers. Research comprehensive, all techniques use standard CSS with
 ## Session Continuity
 
 Last session: 2026-02-17
-Stopped at: Completed 19-01-PLAN.md
-Resume: Phase 19 complete. Ready for Phase 20 or additional v4.0 tasks.
+Stopped at: Completed 20-01-PLAN.md
+Resume: Phase 20 complete. Ready for Phase 21 (deployment) or additional v4.0 tasks.
 
 ## Archives
 
