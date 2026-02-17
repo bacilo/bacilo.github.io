@@ -74,7 +74,16 @@ A professional online presence that showcases work and is easy to maintain with 
 
 ### Active
 
-(No active milestone — use `/gsd:new-milestone` to start next)
+## Current Milestone: v4.0 Immersive LEGO Theme
+
+**Goal:** Transform the LEGO theme from a color-palette swap into a fully immersive visual experience with brick-shaped elements, studs, playful fonts, and snap/bounce interactions — plus fix mobile sidebar visibility.
+
+**Target features:**
+- Full LEGO visual transformation: studs, brick shapes, baseplate background across all page elements
+- 3-tier LEGO font hierarchy: logo-style titles, brick-built headers, playful body text
+- Snap/bounce hover interactions on cards, links, and buttons
+- Classic primary color palette (red, blue, yellow, green on light gray)
+- Mobile sidebar: hide on non-home pages for better content visibility
 
 ### Future (v4.0 candidates)
 
@@ -115,6 +124,7 @@ Shipped v3.0 with multi-theme system and portfolio enhancements. Total codebase 
 Tech stack: Astro 5.x, TypeScript, Sveltia CMS, Shiki, GitHub Pages, CSS custom properties.
 26 content files across 4 collections, all validated against Zod schemas.
 Known tech debt: manual schema sync between content.config.ts and config.yml.
+v4.0 direction: Evolve novelty themes from color-only to fully immersive. Starting with LEGO as proof of concept — if successful, pattern is repeatable for Minecraft, Synthwave, Retro Terminal.
 
 ## Key Decisions
 
@@ -140,4 +150,4 @@ Known tech debt: manual schema sync between content.config.ts and config.yml.
 | Copy buttons via opacity transition | Clean appearance, progressive enhancement | ✓ Good |
 
 ---
-*Last updated: 2026-02-17 after v3.0 milestone*
+*Last updated: 2026-02-17 after v4.0 milestone start*
