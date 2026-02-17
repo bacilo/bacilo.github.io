@@ -93,7 +93,22 @@ A professional online presence that showcases work and is easy to maintain with 
 
 ### Active
 
-(None — define with `/gsd:new-milestone`)
+## Current Milestone: v5.0 Immersive Minecraft Theme
+
+**Goal:** Transform the Minecraft theme into a fully immersive experience with pixel typography, game-UI navigation, inventory-style cards, SVG assets, and authentic textures across every page element.
+
+**Target features:**
+- Minecraft pixel typography hierarchy via Fontsource
+- Hotbar-style navigation with slot borders and selected-item highlight
+- Inventory/crafting-style content cards with slot aesthetics
+- Creeper face motif as recurring subtle design element
+- Dirt/grass/stone/wood texture backgrounds via SVG patterns
+- Stone button UI elements with game-authentic hover/press states
+- Tooltip-style hover effects matching in-game tooltips
+- Mob silhouettes, tool icons, block borders as decorative SVG assets
+- XP bar accents and progress-style elements
+- WCAG AA contrast compliance across all themed elements
+- Full mobile responsiveness with no overlapping elements
 
 ### Future (candidates)
 
@@ -111,7 +126,7 @@ A professional online presence that showcases work and is easy to maintain with 
 - [ ] CONT-02: Search functionality
 - [ ] BRICK-05-07: Advanced LEGO brick elements (sidebar panel, footer, varied stud patterns)
 - [ ] ANIM-03-04: LEGO building animation and instruction manual styling
-- [ ] IMMERSIVE-01: Minecraft theme immersive transform
+- [x] IMMERSIVE-01: Minecraft theme immersive transform (→ v5.0)
 - [ ] IMMERSIVE-02: Synthwave theme immersive transform
 
 ### Out of Scope
@@ -142,6 +157,7 @@ Tech stack: Astro 5.x, TypeScript, Sveltia CMS, Shiki, Fontsource, GitHub Pages,
 Known tech debt: manual schema sync between content.config.ts and config.yml.
 LEGO immersive theme pattern proven successful — repeatable for Minecraft, Synthwave, Retro Terminal if desired.
 Font payload (170KB Fontsource) is the primary performance cost; Lighthouse 89/100 with all Core Web Vitals green.
+v5.0 scope: Immersive Minecraft theme with pixel fonts, SVG textures/assets, hotbar nav, inventory cards, Creeper motif. Go-all-out creative direction with WCAG compliance.
 
 ## Key Decisions
 
@@ -174,4 +190,4 @@ Font payload (170KB Fontsource) is the primary performance cost; Lighthouse 89/1
 | Accept Lighthouse 89/100 | All Core Web Vitals green, font payload justified | ✓ Good |
 
 ---
-*Last updated: 2026-02-18 after v4.0 milestone*
+*Last updated: 2026-02-18 after v5.0 milestone started*
