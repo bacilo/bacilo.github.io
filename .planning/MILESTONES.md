@@ -46,3 +46,20 @@
 
 ---
 
+
+## v4.0 Immersive LEGO Theme (Shipped: 2026-02-18)
+
+**Phases completed:** 4 phases, 5 plans, 11 tasks
+**Git range:** 24ff92e → f39174f (40 commits)
+**Files modified:** 28 (+7,984/-122 lines)
+
+**Key accomplishments:**
+- Classic LEGO primary color palette (red/blue/yellow/green) with 24px baseplate grid environment across all page elements
+- Brick-shaped cards with multi-layer box-shadow depth and circular stud patterns via CSS pseudo-elements
+- Navigation styled as tactile brick buttons with 34ms pressed-state feedback and stud overlays
+- Three-tier LEGO typography (Fredoka H1, Slackey H2-H3, Baloo 2 body) via self-hosted Fontsource fonts
+- Spring-physics bounce hover animations with prefers-reduced-motion accessibility fallback
+- Full validation: 13/13 requirements verified, WCAG AA contrast pass, Lighthouse 89/100, cross-browser confirmed
+
+---
+

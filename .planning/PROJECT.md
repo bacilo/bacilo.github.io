@@ -2,13 +2,27 @@
 
 ## What This Is
 
-A personal academic website built with Astro showcasing publications, talks, blog posts, and an interactive portfolio. Deployed to GitHub Pages at bacilo.github.io with 8 switchable CSS themes, syntax-highlighted code embeds, configurable GitHub stats, and a web-based CMS for effortless content management.
+A personal academic website built with Astro showcasing publications, talks, blog posts, and an interactive portfolio. Deployed to GitHub Pages at bacilo.github.io with 8 switchable CSS themes including an immersive LEGO experience (brick shapes, studs, playful fonts, bounce animations), syntax-highlighted code embeds, configurable GitHub stats, and a web-based CMS for effortless content management.
 
 ## Core Value
 
 A professional online presence that showcases work and is easy to maintain with monthly content updates.
 
 ## Shipped
+
+### v4.0 Immersive LEGO Theme (2026-02-18)
+
+**Tech stack:** CSS custom properties (scoped theme overrides), Fontsource (self-hosted fonts), CSS pseudo-elements
+**Files modified:** 28 (+7,984/-122 lines)
+
+**Features delivered:**
+- LEGO theme with classic primary color palette (red/blue/yellow/green) and 24px baseplate grid
+- Brick-shaped cards with multi-layer box-shadow depth and circular stud patterns via CSS pseudo-elements
+- Navigation styled as tactile brick buttons with 34ms pressed-state feedback and stud overlays
+- Three-tier LEGO typography: Fredoka (H1), Slackey (H2-H3), Baloo 2 (body) via Fontsource
+- Spring-physics bounce hover animations with prefers-reduced-motion accessibility fallback
+- Mobile sidebar hidden on non-Home pages for better content visibility
+- Full validation: 13/13 requirements, WCAG AA contrast, Lighthouse 89/100, cross-browser confirmed
 
 ### v3.0 Portfolio Enhancements & Themes (2026-02-17)
 
@@ -71,21 +85,17 @@ A professional online presence that showcases work and is easy to maintain with 
 - ✓ **v3.0 CODE-01-04**: Syntax-highlighted code embeds, copy buttons, widget iframes, site-wide Shiki — v3.0
 - ✓ **v3.0 STAT-01-03**: Configurable stats display (stars/downloads), Releases API, CMS editability — v3.0
 - ✓ **v3.0 THEME-01-05**: 8 CSS themes, switcher dropdown, localStorage persistence, FOUC prevention, auto mode — v3.0
+- ✓ **v4.0 VIS-01-03**: LEGO color palette, baseplate grid, component visual transform — v4.0
+- ✓ **v4.0 BRICK-01-04**: Brick depth, stud patterns, nav brick buttons, code block treatment — v4.0
+- ✓ **v4.0 TYPE-01-03**: LEGO typography hierarchy (Fredoka, Slackey, Baloo 2) — v4.0
+- ✓ **v4.0 ANIM-01-02**: Bounce hover animations with reduced-motion fallback — v4.0
+- ✓ **v4.0 RESP-01**: Mobile sidebar hidden on non-Home pages — v4.0
 
 ### Active
 
-## Current Milestone: v4.0 Immersive LEGO Theme
+(None — define with `/gsd:new-milestone`)
 
-**Goal:** Transform the LEGO theme from a color-palette swap into a fully immersive visual experience with brick-shaped elements, studs, playful fonts, and snap/bounce interactions — plus fix mobile sidebar visibility.
-
-**Target features:**
-- Full LEGO visual transformation: studs, brick shapes, baseplate background across all page elements
-- 3-tier LEGO font hierarchy: logo-style titles, brick-built headers, playful body text
-- Snap/bounce hover interactions on cards, links, and buttons
-- Classic primary color palette (red, blue, yellow, green on light gray)
-- Mobile sidebar: hide on non-home pages for better content visibility
-
-### Future (v4.0 candidates)
+### Future (candidates)
 
 - [ ] TEACH-01-04: Teaching section with course listings and CMS integration
 - [ ] CMS-04: Custom preview templates matching site styling
@@ -99,6 +109,10 @@ A professional online presence that showcases work and is easy to maintain with 
 - [ ] PORT-06: Data visualization embeds
 - [ ] PORT-07: Portfolio filtering/sorting
 - [ ] CONT-02: Search functionality
+- [ ] BRICK-05-07: Advanced LEGO brick elements (sidebar panel, footer, varied stud patterns)
+- [ ] ANIM-03-04: LEGO building animation and instruction manual styling
+- [ ] IMMERSIVE-01: Minecraft theme immersive transform
+- [ ] IMMERSIVE-02: Synthwave theme immersive transform
 
 ### Out of Scope
 
@@ -108,6 +122,8 @@ A professional online presence that showcases work and is easy to maintain with 
 - Multi-user roles/permissions — single user only
 - OAuth proxy infrastructure — PAT auth is simpler for single user
 - Netlify Identity — deprecated as of 2026
+- Animated studs / physical brick textures / sound effects — accessibility and performance concerns
+- LEGO theme dark mode variant — requires research, low demand
 
 ## Constraints
 
@@ -120,11 +136,12 @@ A professional online presence that showcases work and is easy to maintain with 
 
 ## Context
 
-Shipped v3.0 with multi-theme system and portfolio enhancements. Total codebase ~3,800 LOC TypeScript/Astro/CSS.
-Tech stack: Astro 5.x, TypeScript, Sveltia CMS, Shiki, GitHub Pages, CSS custom properties.
+Shipped v4.0 with immersive LEGO theme. Total codebase ~4,200 LOC TypeScript/Astro/CSS.
+Tech stack: Astro 5.x, TypeScript, Sveltia CMS, Shiki, Fontsource, GitHub Pages, CSS custom properties.
 26 content files across 4 collections, all validated against Zod schemas.
 Known tech debt: manual schema sync between content.config.ts and config.yml.
-v4.0 direction: Evolve novelty themes from color-only to fully immersive. Starting with LEGO as proof of concept — if successful, pattern is repeatable for Minecraft, Synthwave, Retro Terminal.
+LEGO immersive theme pattern proven successful — repeatable for Minecraft, Synthwave, Retro Terminal if desired.
+Font payload (170KB Fontsource) is the primary performance cost; Lighthouse 89/100 with all Core Web Vitals green.
 
 ## Key Decisions
 
@@ -148,6 +165,13 @@ v4.0 direction: Evolve novelty themes from color-only to fully immersive. Starti
 | Reuse PlaygroundEmbed for widgets | No new components, consistent embed behavior | ✓ Good |
 | Default statsDisplay to 'stars' | Backward compatible with existing portfolio items | ✓ Good |
 | Copy buttons via opacity transition | Clean appearance, progressive enhancement | ✓ Good |
+| 24px LEGO baseplate grid | 3x research suggestion for subtle, professional look | ✓ Good |
+| Component-scoped [data-theme] overrides | Zero style leakage between themes | ✓ Good |
+| Multi-layer box-shadow (3 desktop, 2 mobile) | Tactile brick depth without performance cost | ✓ Good |
+| 34ms nav button transition | Matches physical LEGO brick press duration | ✓ Good |
+| Static fonts over variable (170KB vs 240KB) | Only specific weights needed, smaller payload | ✓ Good |
+| cubic-bezier bounce over CSS linear() | 99% browser support vs 75%, perceptually equivalent | ✓ Good |
+| Accept Lighthouse 89/100 | All Core Web Vitals green, font payload justified | ✓ Good |
 
 ---
-*Last updated: 2026-02-17 after v4.0 milestone start*
+*Last updated: 2026-02-18 after v4.0 milestone*
