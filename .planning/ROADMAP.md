@@ -107,11 +107,11 @@ Plans:
   3. Portfolio card author can configure stats display per card (stars, downloads, both, or none) via CMS
   4. User viewing portfolio card with code embed sees syntax-highlighted snippet
   5. User viewing portfolio card with widget embed sees runnable code demo in iframe
-**Plans**: TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 17-01: TBD
-- [ ] 17-02: TBD
+- [ ] 17-01-PLAN.md — Configurable GitHub stats (schema, CMS, Releases API, GitHubCard)
+- [ ] 17-02-PLAN.md — Widget embed integration (CodePen/StackBlitz fields and rendering)
 
 ## Progress
 
