@@ -75,13 +75,43 @@
 
 /* Lego Theme - Bold primary colors */
 [data-theme="lego"] {
-  --color-bg: #ffffff;
+  /* LEGO primary color custom properties */
+  --color-lego-red: #d11013;
+  --color-lego-blue: #0055bf;
+  --color-lego-yellow: #f6ec35;
+  --color-lego-green: #00852b;
+  --color-lego-gray: #e4e4e4;
+
+  /* Semantic color mappings */
+  --color-bg: var(--color-lego-gray);
   --color-text: #000000;
   --color-text-muted: #555555;
   --color-link: #d11013;
   --color-link-hover: #a00d10;
-  --color-border: #f6ec35;
-  --color-header-bg: #f6ec35;
+  --color-border: #c4c4c4;
+  --color-header-bg: var(--color-lego-red);
+}
+
+/* LEGO baseplate grid pattern */
+[data-theme="lego"] body {
+  background-color: var(--color-bg);
+  background-image:
+    repeating-linear-gradient(
+      to right,
+      transparent,
+      transparent 23px,
+      rgba(0, 0, 0, 0.06) 23px,
+      rgba(0, 0, 0, 0.06) 24px
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      transparent,
+      transparent 23px,
+      rgba(0, 0, 0, 0.06) 23px,
+      rgba(0, 0, 0, 0.06) 24px
+    );
+  background-size: 24px 24px;
+  background-attachment: fixed;
 }
 
 /* Synthwave Theme - Neon 80s retrowave aesthetic */
