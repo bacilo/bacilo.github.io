@@ -9,31 +9,31 @@ Requirements for v4.0 milestone. Each maps to roadmap phases.
 
 ### Visual Foundation
 
-- [ ] **VIS-01**: LEGO theme applies classic primary color palette (red, blue, yellow, green on light gray) across all page elements
-- [ ] **VIS-02**: Page background displays LEGO baseplate grid pattern when theme is active
-- [ ] **VIS-03**: All page elements (nav, cards, sidebar, footer, code blocks) visually transform under LEGO theme
+- [x] **VIS-01**: LEGO theme applies classic primary color palette (red, blue, yellow, green on light gray) across all page elements
+- [x] **VIS-02**: Page background displays LEGO baseplate grid pattern when theme is active
+- [x] **VIS-03**: All page elements (nav, cards, sidebar, footer, code blocks) visually transform under LEGO theme
 
 ### Brick Elements
 
-- [ ] **BRICK-01**: Content cards display brick-shaped appearance with multi-layer box-shadow depth effect
-- [ ] **BRICK-02**: Cards display circular LEGO studs on top surface via CSS pseudo-elements
-- [ ] **BRICK-03**: Navigation items styled as brick buttons with stud overlay and pressed-state feedback
-- [ ] **BRICK-04**: Code blocks display brick border treatment while preserving Shiki syntax highlighting
+- [x] **BRICK-01**: Content cards display brick-shaped appearance with multi-layer box-shadow depth effect
+- [x] **BRICK-02**: Cards display circular LEGO studs on top surface via CSS pseudo-elements
+- [x] **BRICK-03**: Navigation items styled as brick buttons with stud overlay and pressed-state feedback
+- [x] **BRICK-04**: Code blocks display brick border treatment while preserving Shiki syntax highlighting
 
 ### Typography
 
-- [ ] **TYPE-01**: H1 titles use bold logo-style font (Fredoka) for LEGO title appearance
-- [ ] **TYPE-02**: H2-H3 headers use brick-built style font (Slackey) for section structure
-- [ ] **TYPE-03**: Body text uses playful rounded font (Baloo 2) maintaining readability
+- [x] **TYPE-01**: H1 titles use bold logo-style font (Fredoka) for LEGO title appearance
+- [x] **TYPE-02**: H2-H3 headers use brick-built style font (Slackey) for section structure
+- [x] **TYPE-03**: Body text uses playful rounded font (Baloo 2) maintaining readability
 
 ### Interactions
 
-- [ ] **ANIM-01**: Cards and buttons display snap/bounce hover animation with spring physics easing
-- [ ] **ANIM-02**: Hover animations respect prefers-reduced-motion with graceful fallback
+- [x] **ANIM-01**: Cards and buttons display snap/bounce hover animation with spring physics easing
+- [x] **ANIM-02**: Hover animations respect prefers-reduced-motion with graceful fallback
 
 ### Responsive
 
-- [ ] **RESP-01**: Author sidebar is hidden on mobile (≤768px) for all pages except Home
+- [x] **RESP-01**: Author sidebar is hidden on mobile (≤768px) for all pages except Home
 
 ## v2 Requirements
 
@@ -71,19 +71,19 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| VIS-01 | Phase 18 | Pending |
-| VIS-02 | Phase 18 | Pending |
-| VIS-03 | Phase 18 | Pending |
-| RESP-01 | Phase 18 | Pending |
-| BRICK-01 | Phase 19 | Pending |
-| BRICK-02 | Phase 19 | Pending |
-| BRICK-03 | Phase 19 | Pending |
-| BRICK-04 | Phase 19 | Pending |
-| TYPE-01 | Phase 20 | Pending |
-| TYPE-02 | Phase 20 | Pending |
-| TYPE-03 | Phase 20 | Pending |
-| ANIM-01 | Phase 20 | Pending |
-| ANIM-02 | Phase 20 | Pending |
+| VIS-01 | Phase 18 | Complete |
+| VIS-02 | Phase 18 | Complete |
+| VIS-03 | Phase 18 | Complete |
+| RESP-01 | Phase 18 | Complete |
+| BRICK-01 | Phase 19 | Complete |
+| BRICK-02 | Phase 19 | Complete |
+| BRICK-03 | Phase 19 | Complete |
+| BRICK-04 | Phase 19 | Complete |
+| TYPE-01 | Phase 20 | Complete |
+| TYPE-02 | Phase 20 | Complete |
+| TYPE-03 | Phase 20 | Complete |
+| ANIM-01 | Phase 20 | Complete |
+| ANIM-02 | Phase 20 | Complete |
 
 **Coverage:**
 - v1 requirements: 13 total

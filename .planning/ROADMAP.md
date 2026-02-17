@@ -5,7 +5,7 @@
 - ✅ **v1.0 Personal Website Rebuild** — Phases 1-10 (shipped 2026-02-12)
 - ✅ **v2.0 Content Management** — Phases 11-13 (shipped 2026-02-13)
 - ✅ **v3.0 Portfolio Enhancements & Themes** — Phases 14-17 (shipped 2026-02-17)
-- 🚧 **v4.0 Immersive LEGO Theme** — Phases 18-21 (in progress)
+- ✅ **v4.0 Immersive LEGO Theme** — Phases 18-21 (shipped 2026-02-18)
 
 ## Phases
 
@@ -50,14 +50,14 @@
 
 </details>
 
-### 🚧 v4.0 Immersive LEGO Theme (In Progress)
+### ✅ v4.0 Immersive LEGO Theme (SHIPPED 2026-02-18)
 
 **Milestone Goal:** Transform the LEGO theme from a color-palette swap into a fully immersive visual experience with brick-shaped elements, studs, playful fonts, and snap/bounce interactions — plus fix mobile sidebar visibility.
 
 - [x] **Phase 18: CSS Foundation & Visual Transform** - Establish theme architecture, baseplate background, color palette, mobile sidebar fix (completed 2026-02-17)
 - [x] **Phase 19: Brick Elements & Studs** - Brick-shaped cards, circular studs, navigation styling, code block treatment (completed 2026-02-17)
 - [x] **Phase 20: Typography & Animations** - 3-tier font system, snap/bounce interactions, accessibility support (completed 2026-02-17)
-- [ ] **Phase 21: Integration Validation** - Performance audit, cross-browser testing, WCAG compliance
+- [x] **Phase 21: Integration Validation** - Performance audit, cross-browser testing, WCAG compliance (completed 2026-02-18)
 
 ## Phase Details
 
@@ -143,8 +143,8 @@ Plans:
 | 18. CSS Foundation & Visual Transform | v4.0 | Complete    | 2026-02-17 | - |
 | 19. Brick Elements & Studs | v4.0 | Complete    | 2026-02-17 | - |
 | 20. Typography & Animations | v4.0 | Complete    | 2026-02-17 | - |
-| 21. Integration Validation | v4.0 | 0/2 | Not started | - |
+| 21. Integration Validation | v4.0 | 2/2 | Complete | 2026-02-18 |
 
 ---
 *Roadmap created: 2026-02-16*
-*Last updated: 2026-02-17 after v4.0 milestone start*
+*Last updated: 2026-02-18 after v4.0 milestone complete (all 21 phases done)*
