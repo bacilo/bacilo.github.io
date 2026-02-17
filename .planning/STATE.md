@@ -9,10 +9,10 @@ See: .planning/PROJECT.md (updated 2026-02-16)
 
 ## Current Position
 
-Phase: 16 of 17 (Interactive Features)
-Plan: 2 of 2 complete
-Status: Phase 16 complete - ready for Phase 17
-Last activity: 2026-02-16 — Completed 16-02-PLAN.md (Copy-to-Clipboard Buttons)
+Phase: 17 of 17 (Portfolio Enhancements)
+Plan: 1 of 2 complete
+Status: Executing Phase 17
+Last activity: 2026-02-17 — Completed 17-01-PLAN.md (Configurable GitHub Stats Display)
 
 Progress: [████████████████████████████████████░] 94% (16/17 phases complete)
 
@@ -29,9 +29,9 @@ Progress: [███████████████████████
 - Total execution time: 23 minutes
 
 **Velocity (v3.0):**
-- Total plans completed: 4
-- Average duration: 2.3 minutes
-- Total execution time: 9 minutes
+- Total plans completed: 5
+- Average duration: 2.4 minutes
+- Total execution time: 12 minutes
 
 **By Phase (v1.0):**
 
@@ -61,8 +61,9 @@ Progress: [███████████████████████
 | 14 | 1 | 4m | 4.0m |
 | 15 | 1 | 2m | 2.0m |
 | 16 | 2 | 3m | 1.5m |
+| 17 | 1 | 3m | 3.0m |
 
-*Updated: 2026-02-16 after Phase 16 Plan 01 completion*
+*Updated: 2026-02-17 after Phase 17 Plan 01 completion*
 
 ## Accumulated Context
 
@@ -84,6 +85,11 @@ Recent decisions affecting v3.0 work:
 - [Phase 16-02]: Reads code text from pre.textContent at copy time (not cached) to ensure always current
 - [Phase 16]: ThemeSwitcher uses bundled script (not is:inline) for deferred interaction after FOUC prevention
 - [Phase 16]: Light theme removes data-theme attribute for zero-overhead default; auto checks system preference
+- [Phase 17-01]: Default statsDisplay to 'stars' for backward compatibility with existing portfolio items
+- [Phase 17-01]: Use conditional rendering in Astro template for clean HTML output when stats are hidden
+- [Phase 17-01]: Follow fetchRepoData pattern exactly for fetchReleaseStats consistency
+- [Phase 17-01]: Sum all asset download_count values for total release downloads metric
+- [Phase 17-01]: Skip all API calls when statsDisplay is 'none' for performance
 
 ### Pending Todos
 
@@ -95,9 +101,9 @@ No active blockers or concerns.
 
 ## Session Continuity
 
-Last session: 2026-02-16 (Phase 16 Plan 01 execution)
-Stopped at: Completed 16-01-PLAN.md - Theme Switcher UI
-Resume: Phase 16 complete (2 plans, executed out of order). Ready for Phase 17 (Stats Dashboard) or continue v3.0 milestone.
+Last session: 2026-02-17 (Phase 17 Plan 01 execution)
+Stopped at: Completed 17-01-PLAN.md - Configurable GitHub Stats Display
+Resume: Phase 17 in progress (1 of 2 plans complete). Next: 17-02-PLAN.md or continue v3.0 milestone.
 
 ## Archives
 
