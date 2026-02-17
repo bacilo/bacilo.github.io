@@ -7,7 +7,7 @@ repoUrl: https://bacilo.github.io/strava-widgets
 demoUrl: ''
 description: ''
 playgroundUrl: ''
-statsDisplay: ''
+statsDisplay: none
 npmPackage: ''
 downloadUrl: ''
 downloadLabel: ''
