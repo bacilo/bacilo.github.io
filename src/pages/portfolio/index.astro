@@ -38,6 +38,18 @@ const sortedPortfolio = portfolio.sort((a, b) => a.data.title.localeCompare(b.da
               title={`${project.data.title} Playground`}
             />
           )}
+          {project.data.codepenId && (
+            <PlaygroundEmbed
+              url={`https://codepen.io/pen/${project.data.codepenId}`}
+              title={`${project.data.title} Demo`}
+            />
+          )}
+          {project.data.stackblitzId && (
+            <PlaygroundEmbed
+              url={`https://stackblitz.com/edit/${project.data.stackblitzId}`}
+              title={`${project.data.title} Editor`}
+            />
+          )}
         </li>
       ) : (
         <li class="portfolio-card">
