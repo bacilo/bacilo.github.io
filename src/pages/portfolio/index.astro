@@ -24,6 +24,7 @@ const sortedPortfolio = portfolio.sort((a, b) => a.data.title.localeCompare(b.da
             description={project.data.description || project.data.excerpt}
             image={project.data.image}
             slug={project.id}
+            statsDisplay={project.data.statsDisplay}
           />
           {project.data.demoUrl && (
             <DemoEmbed

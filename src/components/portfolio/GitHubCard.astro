@@ -7,9 +7,10 @@ interface Props {
   description?: string;
   image?: string;
   slug?: string;
+  statsDisplay?: 'stars' | 'downloads' | 'both' | 'none';
 }
 
-const { repoUrl, title, description, image, slug } = Astro.props;
+const { repoUrl, title, description, image, slug, statsDisplay = 'stars' } = Astro.props;
 
 // Parse owner and repo from GitHub URL
 const match = repoUrl.match(/github\.com\/([^/]+)\/([^/]+)/);
@@ -21,7 +22,7 @@ const [, owner, repo] = match;
 const detailUrl = slug ? `/portfolio/${slug}/` : undefined;
 ---
 
-<div class="github-card" data-owner={owner} data-repo={repo}>
+<div class="github-card" data-owner={owner} data-repo={repo} data-stats-display={statsDisplay}>
   <div class="skeleton-wrapper">
     <SkeletonCard />
   </div>
@@ -35,16 +36,23 @@ const detailUrl = slug ? `/portfolio/${slug}/` : undefined;
       ) : title}
     </h2>
     <p class="repo-desc">{description || 'No description'}</p>
-    <div class="repo-stats">
-      <span class="stars">Stars: <span class="star-count">-</span></span>
-      <span class="language">Language: <span class="lang-value">-</span></span>
-    </div>
+    {statsDisplay !== 'none' && (
+      <div class="repo-stats">
+        {(statsDisplay === 'stars' || statsDisplay === 'both') && (
+          <span class="stars">Stars: <span class="star-count">-</span></span>
+        )}
+        {(statsDisplay === 'downloads' || statsDisplay === 'both') && (
+          <span class="downloads">Downloads: <span class="download-count">-</span></span>
+        )}
+        <span class="language">Language: <span class="lang-value">-</span></span>
+      </div>
+    )}
     <a href={repoUrl} class="repo-link">View on GitHub</a>
   </div>
 </div>
 
 <script>
-  import { fetchRepoData } from '../../scripts/github-api';
+  import { fetchRepoData, fetchReleaseStats } from '../../scripts/github-api';
 
   // Initialize all GitHub cards when DOM is ready
   document.addEventListener('DOMContentLoaded', async () => {
@@ -53,38 +61,80 @@ const detailUrl = slug ? `/portfolio/${slug}/` : undefined;
     cards.forEach(async (card) => {
       const owner = card.getAttribute('data-owner');
       const repo = card.getAttribute('data-repo');
+      const statsDisplay = card.getAttribute('data-stats-display') as 'stars' | 'downloads' | 'both' | 'none';
 
       if (!owner || !repo) return;
 
       const skeletonWrapper = card.querySelector('.skeleton-wrapper') as HTMLElement;
       const content = card.querySelector('.content') as HTMLElement;
       const descElement = content.querySelector('.repo-desc') as HTMLParagraphElement;
-      const starsElement = content.querySelector('.star-count') as HTMLSpanElement;
-      const langElement = content.querySelector('.lang-value') as HTMLSpanElement;
+      const starsElement = content.querySelector('.star-count') as HTMLSpanElement | null;
+      const downloadsElement = content.querySelector('.download-count') as HTMLSpanElement | null;
+      const langElement = content.querySelector('.lang-value') as HTMLSpanElement | null;
 
       try {
-        const data = await fetchRepoData(owner, repo);
+        // Skip all API calls if statsDisplay is 'none'
+        if (statsDisplay === 'none') {
+          // Show content, hide skeleton
+          skeletonWrapper.style.display = 'none';
+          content.style.display = 'flex';
+          return;
+        }
 
-        if (data) {
-          // Update description if available from API
-          if (data.description) {
-            descElement.textContent = data.description;
+        // Fetch repo data if we need stars
+        if (statsDisplay === 'stars' || statsDisplay === 'both') {
+          const data = await fetchRepoData(owner, repo);
+
+          if (data) {
+            // Update description if available from API
+            if (data.description) {
+              descElement.textContent = data.description;
+            }
+
+            // Update stars
+            if (starsElement) {
+              starsElement.textContent = data.stargazers_count.toLocaleString();
+            }
+
+            // Update language
+            if (langElement) {
+              langElement.textContent = data.language || 'N/A';
+            }
+          } else {
+            // API failed - show fallback
+            const statsContainer = content.querySelector('.repo-stats') as HTMLElement | null;
+            if (statsContainer) {
+              statsContainer.innerHTML = '<span class="error">Unable to load stats</span>';
+            }
+          }
+        }
+
+        // Fetch release stats if we need downloads
+        if (statsDisplay === 'downloads' || statsDisplay === 'both') {
+          const releaseData = await fetchReleaseStats(owner, repo);
+
+          if (releaseData && downloadsElement) {
+            // Sum all asset download counts
+            const totalDownloads = releaseData.assets.reduce((sum, asset) => sum + asset.download_count, 0);
+            downloadsElement.textContent = totalDownloads.toLocaleString();
+          } else if (downloadsElement) {
+            downloadsElement.textContent = '0';
           }
 
-          // Update stars
-          starsElement.textContent = data.stargazers_count.toLocaleString();
-
-          // Update language
-          langElement.textContent = data.language || 'N/A';
-        } else {
-          // API failed - show fallback
-          const statsContainer = content.querySelector('.repo-stats') as HTMLElement;
-          statsContainer.innerHTML = '<span class="error">Unable to load stats</span>';
+          // If we didn't fetch repo data, still update language if possible
+          if (statsDisplay === 'downloads' && langElement) {
+            const data = await fetchRepoData(owner, repo);
+            if (data) {
+              langElement.textContent = data.language || 'N/A';
+            }
+          }
         }
       } catch (err) {
         console.error(`Failed to load data for ${owner}/${repo}:`, err);
-        const statsContainer = content.querySelector('.repo-stats') as HTMLElement;
-        statsContainer.innerHTML = '<span class="error">Unable to load stats</span>';
+        const statsContainer = content.querySelector('.repo-stats') as HTMLElement | null;
+        if (statsContainer) {
+          statsContainer.innerHTML = '<span class="error">Unable to load stats</span>';
+        }
       }
 
       // Show content, hide skeleton
@@ -150,11 +200,13 @@ const detailUrl = slug ? `/portfolio/${slug}/` : undefined;
   }
 
   .repo-stats .stars,
+  .repo-stats .downloads,
   .repo-stats .language {
     color: var(--color-text-muted);
   }
 
   .repo-stats .star-count,
+  .repo-stats .download-count,
   .repo-stats .lang-value {
     color: var(--color-text);
     font-weight: 500;
