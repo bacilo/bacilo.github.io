@@ -100,7 +100,9 @@ Plans:
   4. Cards and buttons display snap/bounce hover animation with spring physics easing
   5. Hover animations respect prefers-reduced-motion with graceful fallback to instant transitions
   6. Custom fonts load without FOUT/FOIT during theme switching
-**Plans**: TBD
+**Plans**: 1 plan
+Plans:
+- [ ] 20-01-PLAN.md — Install LEGO fonts (Fredoka, Slackey, Baloo 2), add typography hierarchy, hover animations, and reduced-motion support
 
 ### Phase 21: Integration Validation
 **Goal**: LEGO theme validated for performance, accessibility, and cross-browser compatibility
