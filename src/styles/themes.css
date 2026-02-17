@@ -114,6 +114,85 @@
   background-attachment: fixed;
 }
 
+/* LEGO component-scoped visual overrides */
+[data-theme="lego"] .site-header {
+  border-bottom: 3px solid var(--color-lego-yellow);
+}
+
+[data-theme="lego"] .site-title {
+  color: #ffffff;
+  font-weight: 800;
+}
+
+[data-theme="lego"] .site-title:hover {
+  color: var(--color-lego-yellow);
+}
+
+[data-theme="lego"] nav {
+  background: var(--color-lego-blue);
+  border-bottom: 3px solid var(--color-lego-yellow);
+}
+
+[data-theme="lego"] nav a {
+  color: #ffffff;
+  font-weight: 600;
+  border-bottom-color: transparent;
+}
+
+[data-theme="lego"] nav a:hover {
+  color: var(--color-lego-yellow);
+}
+
+[data-theme="lego"] nav a.active,
+[data-theme="lego"] nav a[aria-current="page"] {
+  color: var(--color-lego-yellow);
+  border-bottom-color: var(--color-lego-yellow);
+}
+
+[data-theme="lego"] .author-sidebar {
+  border: 3px solid var(--color-lego-blue);
+  border-radius: 4px;
+  background: #ffffff;
+}
+
+[data-theme="lego"] .github-card {
+  border: 3px solid var(--color-lego-yellow);
+  border-radius: 4px;
+  background: #ffffff;
+}
+
+[data-theme="lego"] .github-card:hover,
+[data-theme="lego"] .github-card:focus-within {
+  border-color: var(--color-lego-red);
+}
+
+[data-theme="lego"] .repo-link {
+  background: var(--color-lego-red);
+}
+
+[data-theme="lego"] .repo-link:hover {
+  background: var(--color-lego-blue);
+}
+
+[data-theme="lego"] .astro-code {
+  border: 3px solid var(--color-lego-blue);
+  border-radius: 2px;
+}
+
+[data-theme="lego"] footer {
+  border-top: 3px solid var(--color-lego-yellow);
+  background: var(--color-lego-blue);
+  color: #ffffff;
+}
+
+[data-theme="lego"] footer a {
+  color: var(--color-lego-yellow);
+}
+
+[data-theme="lego"] footer a:hover {
+  color: #ffffff;
+}
+
 /* Synthwave Theme - Neon 80s retrowave aesthetic */
 [data-theme="synthwave"] {
   --color-bg: #0f0a1f;
