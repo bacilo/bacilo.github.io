@@ -85,7 +85,9 @@ Plans:
   3. Navigation items styled as brick buttons with stud overlay and pressed-state visual feedback
   4. Code blocks display brick border treatment while preserving Shiki syntax highlighting colors
   5. Pseudo-element stud patterns maintain 60fps scroll performance on mobile devices
-**Plans**: TBD
+**Plans**: 1 plan
+Plans:
+- [ ] 19-01-PLAN.md -- Brick depth, stud patterns, nav brick buttons, code block border treatment
 
 ### Phase 20: Typography & Animations
 **Goal**: LEGO-themed typography hierarchy and playful interactions complete the immersive experience
