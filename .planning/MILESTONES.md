@@ -29,3 +29,20 @@
 
 ---
 
+
+## v3.0 Portfolio Enhancements & Themes (Shipped: 2026-02-17)
+
+**Phases completed:** 4 phases, 6 plans, ~30 tasks
+**Git range:** feat(14-01) → feat(17-02)
+**Files modified:** 16 (+779/-43 lines)
+
+**Key accomplishments:**
+- CSS theme infrastructure with 8 color palettes and FOUC-prevention via inline blocking script
+- Shiki dual-theme syntax highlighting coordinated across 8 site themes via CSS variables
+- Interactive theme switcher dropdown with localStorage persistence
+- Copy-to-clipboard buttons with visual feedback for all code blocks
+- Configurable GitHub stats (stars, downloads, both, none) with CMS editability
+- CodePen/StackBlitz widget embed fields using existing PlaygroundEmbed component
+
+---
+

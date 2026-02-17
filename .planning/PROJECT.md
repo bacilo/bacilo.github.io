@@ -2,13 +2,26 @@
 
 ## What This Is
 
-A personal academic website built with Astro showcasing publications, talks, blog posts, and an interactive portfolio. Deployed to GitHub Pages at bacilo.github.io with responsive design, dark mode support, and a web-based CMS for effortless content management.
+A personal academic website built with Astro showcasing publications, talks, blog posts, and an interactive portfolio. Deployed to GitHub Pages at bacilo.github.io with 8 switchable CSS themes, syntax-highlighted code embeds, configurable GitHub stats, and a web-based CMS for effortless content management.
 
 ## Core Value
 
 A professional online presence that showcases work and is easy to maintain with monthly content updates.
 
 ## Shipped
+
+### v3.0 Portfolio Enhancements & Themes (2026-02-17)
+
+**Tech stack:** CSS custom properties (themes), Shiki (syntax highlighting), Clipboard API
+**Files modified:** 16 (+779/-43 lines)
+
+**Features delivered:**
+- 8 switchable CSS themes (auto, light, dark, sepia, retro terminal, Minecraft, Lego, synthwave) with FOUC prevention
+- Shiki dual-theme syntax highlighting coordinated across all 8 site themes
+- Interactive theme switcher dropdown with localStorage persistence
+- Copy-to-clipboard buttons with visual feedback for all code blocks
+- Configurable GitHub stats per portfolio card (stars, downloads, both, none) via CMS
+- CodePen/StackBlitz widget embed fields for portfolio items
 
 ### v2.0 Content Management (2026-02-13)
 
@@ -55,25 +68,25 @@ A professional online presence that showcases work and is easy to maintain with 
 - ✓ **v2.0 PORT-01-03**: Portfolio CRUD via CMS — v2.0
 - ✓ **v2.0 MEDIA-01-03**: Image uploads, media library, image insertion — v2.0
 - ✓ **v2.0 NORM-01-04**: Frontmatter normalization for all 4 collections — v2.0
+- ✓ **v3.0 CODE-01-04**: Syntax-highlighted code embeds, copy buttons, widget iframes, site-wide Shiki — v3.0
+- ✓ **v3.0 STAT-01-03**: Configurable stats display (stars/downloads), Releases API, CMS editability — v3.0
+- ✓ **v3.0 THEME-01-05**: 8 CSS themes, switcher dropdown, localStorage persistence, FOUC prevention, auto mode — v3.0
 
 ### Active
 
-## Current Milestone: v3.0 Teaching, Portfolio Enhancements & Themes
-
-**Goal:** Add teaching section, enhance portfolio cards with code embeds and configurable stats/downloads, and build a multi-theme system with 6-8 diverse switchable themes.
-
-**Target features:**
-- Teaching section with course listings (title, institution, semester, description), extensible for materials
-- Portfolio code embeds: syntax-highlighted snippets and inline runnable widgets per card
-- Portfolio configurable stats: per-card choice of stars, release downloads, both, or neither
-- Theme system: 6-8 CSS variable themes (default, dark, minimal, academic, retro terminal, Minecraft/pixel, Lego/bold, synthwave) with switcher in footer/sidebar, preference persisted in localStorage
+(No active milestone — use `/gsd:new-milestone` to start next)
 
 ### Future (v4.0 candidates)
 
+- [ ] TEACH-01-04: Teaching section with course listings and CMS integration
 - [ ] CMS-04: Custom preview templates matching site styling
 - [ ] CMS-05: Editorial workflow (draft/publish via PRs)
 - [ ] CMS-06: Custom widgets for DOI/citation fields
 - [ ] CMS-07: Relation widgets for cross-referencing content
+- [ ] CODE-05: Code diff view for before/after snippets
+- [ ] STAT-04: Authenticated GitHub API for higher rate limits
+- [ ] THEME-06: Custom theme creator UI
+- [ ] THEME-07: Theme preview before switching
 - [ ] PORT-06: Data visualization embeds
 - [ ] PORT-07: Portfolio filtering/sorting
 - [ ] CONT-02: Search functionality
@@ -98,8 +111,8 @@ A professional online presence that showcases work and is easy to maintain with 
 
 ## Context
 
-Shipped v2.0 with Sveltia CMS integration. Total codebase ~2,400 LOC TypeScript/Astro + CMS config.
-Tech stack: Astro 5.x, TypeScript, Sveltia CMS, GitHub Pages, CSS custom properties.
+Shipped v3.0 with multi-theme system and portfolio enhancements. Total codebase ~3,800 LOC TypeScript/Astro/CSS.
+Tech stack: Astro 5.x, TypeScript, Sveltia CMS, Shiki, GitHub Pages, CSS custom properties.
 26 content files across 4 collections, all validated against Zod schemas.
 Known tech debt: manual schema sync between content.config.ts and config.yml.
 
@@ -119,6 +132,12 @@ Known tech debt: manual schema sync between content.config.ts and config.yml.
 | Schema sync via comments | Links config.yml to content.config.ts for maintenance | ✓ Good |
 | gray-matter for validation | Industry-standard, CI-ready with exit codes | ✓ Good |
 | Widget "text" for multi-line | Prevents truncation of citations/descriptions | ✓ Good |
+| 8 CSS themes via custom properties | Zero dependencies, builds on existing pattern | ✓ Good |
+| Inline FOUC-prevention script | Earliest execution, no layout shift | ✓ Good |
+| Shiki dual-theme (github-light/dark) | Broad familiarity, maps cleanly to 8 site themes | ✓ Good |
+| Reuse PlaygroundEmbed for widgets | No new components, consistent embed behavior | ✓ Good |
+| Default statsDisplay to 'stars' | Backward compatible with existing portfolio items | ✓ Good |
+| Copy buttons via opacity transition | Clean appearance, progressive enhancement | ✓ Good |
 
 ---
-*Last updated: 2026-02-16 after v3.0 milestone start*
+*Last updated: 2026-02-17 after v3.0 milestone*
