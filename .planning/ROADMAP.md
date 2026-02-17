@@ -71,7 +71,9 @@
   3. All major page elements (nav, cards, sidebar, footer, code blocks) visually respond to LEGO theme
   4. Author sidebar is hidden on mobile (≤768px) for all pages except Home
   5. No style leakage occurs when switching between LEGO and other 7 themes
-**Plans**: TBD
+**Plans**: 1 plan
+Plans:
+- [ ] 18-01-PLAN.md — LEGO color palette, baseplate grid, component styling, mobile sidebar fix
 
 ### Phase 19: Brick Elements & Studs
 **Goal**: Content cards and navigation transform into brick-shaped elements with LEGO studs
