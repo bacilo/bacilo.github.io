@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 40" width="80" height="40">
+  <!-- 2x4 LEGO brick with 3D studs -->
+  <defs>
+    <linearGradient id="brickBody" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e8151a"/>
+      <stop offset="100%" stop-color="#c00e11"/>
+    </linearGradient>
+    <linearGradient id="studTop" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f03030"/>
+      <stop offset="100%" stop-color="#d11013"/>
+    </linearGradient>
+    <filter id="brickShadow">
+      <feDropShadow dx="1" dy="2" stdDeviation="1" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  <!-- Brick body -->
+  <rect x="1" y="14" width="78" height="25" rx="1.5" fill="url(#brickBody)" stroke="#a00d10" stroke-width="0.8" filter="url(#brickShadow)"/>
+
+  <!-- Side bevel (3D effect) -->
+  <line x1="1" y1="38" x2="79" y2="38" stroke="#8a0a0d" stroke-width="1"/>
+  <line x1="79" y1="14" x2="79" y2="38" stroke="#8a0a0d" stroke-width="0.5"/>
+
+  <!-- Studs (2 rows of 4) -->
+  <!-- Row 1 -->
+  <ellipse cx="14" cy="14" rx="6" ry="3" fill="url(#studTop)" stroke="#a00d10" stroke-width="0.6"/>
+  <ellipse cx="34" cy="14" rx="6" ry="3" fill="url(#studTop)" stroke="#a00d10" stroke-width="0.6"/>
+  <ellipse cx="54" cy="14" rx="6" ry="3" fill="url(#studTop)" stroke="#a00d10" stroke-width="0.6"/>
+  <ellipse cx="74" cy="14" rx="6" ry="3" fill="url(#studTop)" stroke="#a00d10" stroke-width="0.6"/>
+
+  <!-- Stud cylinders -->
+  <rect x="8" y="8" width="12" height="6" rx="1" fill="url(#brickBody)"/>
+  <rect x="28" y="8" width="12" height="6" rx="1" fill="url(#brickBody)"/>
+  <rect x="48" y="8" width="12" height="6" rx="1" fill="url(#brickBody)"/>
+  <rect x="68" y="8" width="12" height="6" rx="1" fill="url(#brickBody)"/>
+
+  <!-- Stud tops -->
+  <ellipse cx="14" cy="8" rx="6" ry="3" fill="url(#studTop)" stroke="#a00d10" stroke-width="0.6"/>
+  <ellipse cx="34" cy="8" rx="6" ry="3" fill="url(#studTop)" stroke="#a00d10" stroke-width="0.6"/>
+  <ellipse cx="54" cy="8" rx="6" ry="3" fill="url(#studTop)" stroke="#a00d10" stroke-width="0.6"/>
+  <ellipse cx="74" cy="8" rx="6" ry="3" fill="url(#studTop)" stroke="#a00d10" stroke-width="0.6"/>
+
+  <!-- Highlights on studs -->
+  <ellipse cx="12" cy="7" rx="2.5" ry="1" fill="rgba(255,255,255,0.25)"/>
+  <ellipse cx="32" cy="7" rx="2.5" ry="1" fill="rgba(255,255,255,0.25)"/>
+  <ellipse cx="52" cy="7" rx="2.5" ry="1" fill="rgba(255,255,255,0.25)"/>
+  <ellipse cx="72" cy="7" rx="2.5" ry="1" fill="rgba(255,255,255,0.25)"/>
+</svg>

@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 180" width="120" height="180">
+  <!-- Minifigure silhouette - classic toy brick figure -->
+  <defs>
+    <linearGradient id="headGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffe066"/>
+      <stop offset="100%" stop-color="#f6ec35"/>
+    </linearGradient>
+    <linearGradient id="bodyGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e8151a"/>
+      <stop offset="100%" stop-color="#d11013"/>
+    </linearGradient>
+    <linearGradient id="legGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0066dd"/>
+      <stop offset="100%" stop-color="#0055bf"/>
+    </linearGradient>
+    <linearGradient id="studGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffe066"/>
+      <stop offset="40%" stop-color="#f6ec35"/>
+      <stop offset="100%" stop-color="#d4c520"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Stud on head -->
+  <ellipse cx="60" cy="8" rx="12" ry="5" fill="url(#studGrad)" stroke="#c4b01a" stroke-width="0.8"/>
+  <rect x="48" y="5" width="24" height="5" fill="url(#studGrad)"/>
+  <ellipse cx="60" cy="5" rx="12" ry="5" fill="url(#headGrad)" stroke="#c4b01a" stroke-width="0.8"/>
+
+  <!-- Head -->
+  <rect x="28" y="10" width="64" height="55" rx="10" fill="url(#headGrad)" stroke="#c4b01a" stroke-width="1"/>
+
+  <!-- Face -->
+  <circle cx="44" cy="35" r="4.5" fill="#1a1a1a"/>
+  <circle cx="76" cy="35" r="4.5" fill="#1a1a1a"/>
+  <ellipse cx="44" cy="33" rx="1.8" ry="1.2" fill="rgba(255,255,255,0.4)"/>
+  <ellipse cx="76" cy="33" rx="1.8" ry="1.2" fill="rgba(255,255,255,0.4)"/>
+  <path d="M42,50 Q60,62 78,50" fill="none" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round"/>
+
+  <!-- Neck -->
+  <rect x="42" y="64" width="36" height="8" fill="url(#headGrad)"/>
+
+  <!-- Body/Torso -->
+  <path d="M22,72 L98,72 L98,118 Q98,122 94,122 L26,122 Q22,122 22,118 Z" fill="url(#bodyGrad)" stroke="#a00d10" stroke-width="1"/>
+  <!-- Torso detail - pocket line -->
+  <line x1="60" y1="82" x2="60" y2="118" stroke="#a00d10" stroke-width="0.8" opacity="0.5"/>
+
+  <!-- Left arm -->
+  <rect x="6" y="72" width="18" height="36" rx="6" fill="url(#headGrad)" stroke="#c4b01a" stroke-width="0.8"/>
+  <!-- Left hand (C-shape) -->
+  <path d="M15,108 Q15,118 10,118 Q4,118 4,112 L4,108" fill="none" stroke="url(#headGrad)" stroke-width="6" stroke-linecap="round"/>
+
+  <!-- Right arm -->
+  <rect x="96" y="72" width="18" height="36" rx="6" fill="url(#headGrad)" stroke="#c4b01a" stroke-width="0.8"/>
+  <!-- Right hand (C-shape) -->
+  <path d="M105,108 Q105,118 110,118 Q116,118 116,112 L116,108" fill="none" stroke="url(#headGrad)" stroke-width="6" stroke-linecap="round"/>
+
+  <!-- Waist/Hip -->
+  <rect x="28" y="120" width="64" height="8" fill="#333" rx="2"/>
+
+  <!-- Left leg -->
+  <rect x="28" y="126" width="30" height="46" rx="3" fill="url(#legGrad)" stroke="#004499" stroke-width="0.8"/>
+  <!-- Left foot -->
+  <path d="M28,168 L28,172 Q28,176 32,176 L62,176 Q66,176 66,172 L66,168" fill="url(#legGrad)" stroke="#004499" stroke-width="0.8"/>
+
+  <!-- Right leg -->
+  <rect x="62" y="126" width="30" height="46" rx="3" fill="url(#legGrad)" stroke="#004499" stroke-width="0.8"/>
+  <!-- Right foot -->
+  <path d="M54,168 L54,172 Q54,176 58,176 L92,176 Q96,176 96,172 L96,168" fill="url(#legGrad)" stroke="#004499" stroke-width="0.8"/>
+
+  <!-- Leg divide line -->
+  <line x1="60" y1="128" x2="60" y2="170" stroke="#004499" stroke-width="1" opacity="0.4"/>
+</svg>

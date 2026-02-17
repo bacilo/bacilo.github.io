@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 28" width="240" height="28" preserveAspectRatio="none">
+  <!-- Row of colorful bricks for dividers/borders -->
+  <defs>
+    <linearGradient id="red" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e8151a"/>
+      <stop offset="100%" stop-color="#c00e11"/>
+    </linearGradient>
+    <linearGradient id="blue" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0066dd"/>
+      <stop offset="100%" stop-color="#004499"/>
+    </linearGradient>
+    <linearGradient id="yellow" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffe066"/>
+      <stop offset="100%" stop-color="#d4c520"/>
+    </linearGradient>
+    <linearGradient id="green" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#00a033"/>
+      <stop offset="100%" stop-color="#006e22"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Red 2-stud brick -->
+  <rect x="0" y="8" width="58" height="20" rx="1" fill="url(#red)" stroke="#8a0a0d" stroke-width="0.5"/>
+  <ellipse cx="15" cy="8" rx="5" ry="2.5" fill="#e8151a" stroke="#a00d10" stroke-width="0.5"/>
+  <ellipse cx="43" cy="8" rx="5" ry="2.5" fill="#e8151a" stroke="#a00d10" stroke-width="0.5"/>
+
+  <!-- Blue 2-stud brick -->
+  <rect x="60" y="8" width="58" height="20" rx="1" fill="url(#blue)" stroke="#003377" stroke-width="0.5"/>
+  <ellipse cx="75" cy="8" rx="5" ry="2.5" fill="#0066dd" stroke="#004499" stroke-width="0.5"/>
+  <ellipse cx="103" cy="8" rx="5" ry="2.5" fill="#0066dd" stroke="#004499" stroke-width="0.5"/>
+
+  <!-- Yellow 2-stud brick -->
+  <rect x="120" y="8" width="58" height="20" rx="1" fill="url(#yellow)" stroke="#b5a81a" stroke-width="0.5"/>
+  <ellipse cx="135" cy="8" rx="5" ry="2.5" fill="#ffe066" stroke="#d4c520" stroke-width="0.5"/>
+  <ellipse cx="163" cy="8" rx="5" ry="2.5" fill="#ffe066" stroke="#d4c520" stroke-width="0.5"/>
+
+  <!-- Green 2-stud brick -->
+  <rect x="180" y="8" width="58" height="20" rx="1" fill="url(#green)" stroke="#005a1c" stroke-width="0.5"/>
+  <ellipse cx="195" cy="8" rx="5" ry="2.5" fill="#00a033" stroke="#006e22" stroke-width="0.5"/>
+  <ellipse cx="223" cy="8" rx="5" ry="2.5" fill="#00a033" stroke="#006e22" stroke-width="0.5"/>
+</svg>

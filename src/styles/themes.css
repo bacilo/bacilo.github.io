@@ -74,7 +74,7 @@
 }
 
 /* Lego Theme - Bold primary colors */
-[data-theme="lego"] {
+:root[data-theme="lego"] {
   /* LEGO primary color custom properties */
   --color-lego-red: #d11013;
   --color-lego-blue: #0055bf;
@@ -85,15 +85,15 @@
   /* Semantic color mappings */
   --color-bg: var(--color-lego-gray);
   --color-text: #000000;
-  --color-text-muted: #555555;
+  --color-text-muted: #444444;
   --color-link: #d11013;
   --color-link-hover: #a00d10;
   --color-border: #c4c4c4;
-  --color-header-bg: var(--color-lego-red);
+  --color-header-bg: #ffffff;
 }
 
 /* LEGO baseplate grid pattern */
-[data-theme="lego"] body {
+:root[data-theme="lego"] body {
   font-family: 'Baloo 2', var(--font-system);
   font-weight: 400;
   background-color: var(--color-bg);
@@ -117,90 +117,121 @@
 }
 
 /* LEGO component-scoped visual overrides */
-[data-theme="lego"] .site-header {
+:root[data-theme="lego"] .site-header {
+  background: var(--color-lego-red);
   border-bottom: 3px solid var(--color-lego-yellow);
 }
 
-[data-theme="lego"] .site-title {
+:root[data-theme="lego"] .site-title {
   color: #ffffff;
   font-weight: 800;
 }
 
-[data-theme="lego"] .site-title:hover {
+:root[data-theme="lego"] .site-title:hover {
   color: var(--color-lego-yellow);
 }
 
-[data-theme="lego"] nav {
+:root[data-theme="lego"] nav:not(.author-links) {
   background: var(--color-lego-blue);
   border-bottom: 3px solid var(--color-lego-yellow);
 }
 
-[data-theme="lego"] nav a {
+:root[data-theme="lego"] .portfolio-card {
+  border: 3px solid var(--color-lego-yellow);
+  border-radius: 4px;
+}
+
+:root[data-theme="lego"] .portfolio-card:hover,
+:root[data-theme="lego"] .portfolio-card:focus-within {
+  border-color: var(--color-lego-red);
+}
+
+:root[data-theme="lego"] .tag {
+  background: var(--color-lego-blue);
+  color: #ffffff;
+}
+
+:root[data-theme="lego"] .tag:hover {
+  background: var(--color-lego-red);
+  color: #ffffff;
+}
+
+:root[data-theme="lego"] .citation {
+  color: var(--color-text);
+}
+
+:root[data-theme="lego"] nav:not(.author-links) a {
   color: #ffffff;
   font-weight: 600;
   border-bottom-color: transparent;
   position: relative;
-  padding: var(--space-xs) var(--space-sm);
-  border-radius: 4px;
+  padding: 14px var(--space-sm) var(--space-xs);
+  border-radius: 2px;
+  background:
+    linear-gradient(to bottom, rgba(255,255,255,0.08) 0%, transparent 40%),
+    linear-gradient(to bottom, transparent 90%, rgba(0,0,0,0.15) 100%);
+  border: 2px solid rgba(0,0,0,0.15);
+  border-top: none;
   box-shadow:
-    0 2px 4px rgba(0, 0, 0, 0.15),
-    0 0 0 2px var(--color-lego-yellow);
+    0 3px 0 rgba(0,0,0,0.2),
+    inset 0 1px 0 rgba(255,255,255,0.1);
   transition:
     transform 250ms cubic-bezier(0.34, 1.56, 0.64, 1),
     box-shadow 250ms ease-out,
     color 0.2s ease;
 }
 
-[data-theme="lego"] nav a::before {
+/* Studs on top of nav bricks */
+:root[data-theme="lego"] nav:not(.author-links) a::before {
   content: '';
   position: absolute;
-  top: 2px;
+  top: -4px;
   left: 50%;
   transform: translateX(-50%);
   width: 80%;
-  height: 8px;
-  background-image: radial-gradient(
-    circle at center,
-    rgba(255, 255, 255, 0.3) 2px,
-    transparent 2px
-  );
-  background-size: 12px 12px;
-  background-repeat: round;
+  height: 10px;
+  background-image: url('/images/lego/stud.svg');
+  background-size: 24px 10px;
+  background-repeat: repeat-x;
+  background-position: center;
   pointer-events: none;
 }
 
-[data-theme="lego"] nav a:hover {
+:root[data-theme="lego"] nav:not(.author-links) a:hover {
   color: var(--color-lego-yellow);
-  transform: translateY(-2px);  /* Lift with bounce */
+  transform: translateY(-3px);
   box-shadow:
-    0 4px 8px rgba(0, 0, 0, 0.2),
-    0 0 0 2px var(--color-lego-yellow);
+    0 6px 0 rgba(0,0,0,0.15),
+    inset 0 1px 0 rgba(255,255,255,0.15);
 }
 
-[data-theme="lego"] nav a:active,
-[data-theme="lego"] nav a:focus:active {
+:root[data-theme="lego"] nav:not(.author-links) a:active,
+:root[data-theme="lego"] nav:not(.author-links) a:focus:active {
   transform: translateY(2px);
   box-shadow:
-    0 0 2px rgba(0, 0, 0, 0.1),
-    0 0 0 2px var(--color-lego-yellow);
+    0 0 0 rgba(0,0,0,0.1),
+    inset 0 2px 3px rgba(0,0,0,0.15);
 }
 
-[data-theme="lego"] nav a.active,
-[data-theme="lego"] nav a[aria-current="page"] {
+:root[data-theme="lego"] nav:not(.author-links) a.active,
+:root[data-theme="lego"] nav:not(.author-links) a[aria-current="page"] {
   color: var(--color-lego-yellow);
-  border-bottom-color: var(--color-lego-yellow);
+  background:
+    linear-gradient(to bottom, rgba(255,255,255,0.12) 0%, transparent 40%),
+    linear-gradient(to bottom, transparent 90%, rgba(0,0,0,0.15) 100%),
+    rgba(0,0,0,0.1);
   box-shadow:
-    0 2px 4px rgba(0, 0, 0, 0.15),
-    0 0 0 2px var(--color-lego-yellow);
+    0 3px 0 rgba(0,0,0,0.2),
+    inset 0 1px 0 rgba(255,255,255,0.1);
 }
 
-[data-theme="lego"] .author-sidebar {
+:root[data-theme="lego"] .author-sidebar {
   border: 3px solid var(--color-lego-blue);
   border-radius: 4px;
   background: #ffffff;
 }
 
-[data-theme="lego"] .github-card {
+:root[data-theme="lego"] .github-card {
   border: 3px solid var(--color-lego-yellow);
   border-radius: 4px;
   background: #ffffff;
@@ -215,7 +246,7 @@
     border-color 0.2s ease;
 }
 
-[data-theme="lego"] .github-card::before {
+:root[data-theme="lego"] .github-card::before {
   content: '';
   position: absolute;
   top: 0;
@@ -234,8 +265,8 @@
   z-index: 1;
 }
 
-[data-theme="lego"] .github-card:hover,
-[data-theme="lego"] .github-card:focus-within {
+:root[data-theme="lego"] .github-card:hover,
+:root[data-theme="lego"] .github-card:focus-within {
   transform: scale(1.03);  /* Subtle scale with bounce — 1.03 not 1.05 to avoid layout shift */
   border-color: var(--color-lego-red);
   box-shadow:
@@ -244,60 +275,535 @@
     0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
-[data-theme="lego"] .repo-link {
+:root[data-theme="lego"] .repo-link {
   background: var(--color-lego-red);
+  color: #ffffff;
 }
 
-[data-theme="lego"] .repo-link:hover {
+:root[data-theme="lego"] .repo-link:hover {
   background: var(--color-lego-blue);
+  color: #ffffff;
 }
 
-[data-theme="lego"] .astro-code {
+:root[data-theme="lego"] .link-button {
+  background: var(--color-lego-red);
+  color: #ffffff;
+}
+
+:root[data-theme="lego"] .link-button:hover {
+  background: var(--color-lego-blue);
+  color: #ffffff;
+}
+
+:root[data-theme="lego"] .download-link {
+  color: var(--color-lego-blue);
+  border-color: var(--color-lego-blue);
+}
+
+:root[data-theme="lego"] .download-link:hover {
+  background: var(--color-lego-blue);
+  color: #ffffff;
+}
+
+:root[data-theme="lego"] .astro-code {
   border: 3px solid var(--color-lego-blue);
   border-radius: 2px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
 }
 
-[data-theme="lego"] footer {
+:root[data-theme="lego"] footer {
   border-top: 3px solid var(--color-lego-yellow);
   background: var(--color-lego-blue);
   color: #ffffff;
 }
 
-[data-theme="lego"] footer a {
+:root[data-theme="lego"] footer a {
   color: var(--color-lego-yellow);
 }
 
-[data-theme="lego"] footer a:hover {
+:root[data-theme="lego"] footer a:hover {
   color: #ffffff;
 }
 
 /* LEGO typography hierarchy */
-[data-theme="lego"] h1 {
+:root[data-theme="lego"] h1 {
   font-family: 'Fredoka', var(--font-system);
   font-weight: 700;
 }
 
-[data-theme="lego"] h2,
-[data-theme="lego"] h3 {
+:root[data-theme="lego"] h2,
+:root[data-theme="lego"] h3 {
   font-family: 'Slackey', var(--font-system);
   font-weight: 400;  /* Slackey only has regular weight */
 }
 
-[data-theme="lego"] strong,
-[data-theme="lego"] b {
+:root[data-theme="lego"] strong,
+:root[data-theme="lego"] b {
   font-weight: 600;  /* Baloo 2 SemiBold for emphasis */
+}
+
+/* LEGO SVG asset decorations */
+
+/* Author avatar: minifigure head shape + stud on top */
+:root[data-theme="lego"] .author-photo {
+  border-radius: 12px;
+  border: 3px solid var(--color-lego-yellow);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+  position: relative;
+}
+
+/* Stud on top of avatar */
+:root[data-theme="lego"] .author-card {
+  position: relative;
+  padding-top: 12px;
+}
+
+:root[data-theme="lego"] .author-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 28px;
+  height: 14px;
+  background: var(--color-lego-yellow);
+  border-radius: 14px 14px 4px 4px;
+  box-shadow: inset 0 -2px 3px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+
+/* Minifigure decoration next to sidebar */
+:root[data-theme="lego"] .author-sidebar::after {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 90px;
+  margin: var(--space-md) auto 0;
+  background: url('/images/lego/minifig.svg') center/contain no-repeat;
+  opacity: 0.7;
+}
+
+/* Sidebar links: brick bullet points */
+:root[data-theme="lego"] .links-list li {
+  padding-left: 22px;
+  position: relative;
+}
+
+:root[data-theme="lego"] .links-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 14px;
+  height: 12px;
+  background: url('/images/lego/brick-1x1.svg') center/contain no-repeat;
+}
+
+/* Card stud strip — enhanced 3D studs via SVG */
+:root[data-theme="lego"] .github-card::before {
+  height: 16px;
+  background-image: url('/images/lego/stud.svg');
+  background-size: 24px 16px;
+  background-repeat: repeat-x;
+  background-position: center top;
+}
+
+/* Portfolio cards: stud strip */
+:root[data-theme="lego"] .portfolio-card {
+  position: relative;
+  overflow: hidden;
+}
+
+:root[data-theme="lego"] .portfolio-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 16px;
+  background-image: url('/images/lego/stud.svg');
+  background-size: 24px 16px;
+  background-repeat: repeat-x;
+  background-position: center top;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Footer: brick-row border on top */
+:root[data-theme="lego"] footer {
+  border-top: none;
+  padding-top: calc(var(--space-md) + 20px);
+  position: relative;
+}
+
+:root[data-theme="lego"] footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 20px;
+  background: url('/images/lego/brick-row.svg') repeat-x;
+  background-size: auto 20px;
+}
+
+/* Section heading brick decoration */
+:root[data-theme="lego"] h1::before {
+  content: '';
+  display: inline-block;
+  width: 24px;
+  height: 18px;
+  margin-right: 8px;
+  vertical-align: middle;
+  background: url('/images/lego/brick-2x4.svg') center/contain no-repeat;
+}
+
+/* Post/publication list dividers: brick accent */
+:root[data-theme="lego"] .post-item {
+  border-bottom-style: dashed;
+  border-bottom-color: var(--color-lego-yellow);
+}
+
+/* === LEGO content element decorations === */
+
+/* Blockquotes: vertical brick stack accent */
+:root[data-theme="lego"] .content blockquote,
+:root[data-theme="lego"] blockquote {
+  border-left: none;
+  padding-left: calc(var(--space-sm) + 20px);
+  position: relative;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 4px;
+  padding-top: var(--space-xs);
+  padding-bottom: var(--space-xs);
+}
+
+:root[data-theme="lego"] .content blockquote::before,
+:root[data-theme="lego"] blockquote::before {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  bottom: 4px;
+  width: 14px;
+  background: url('/images/lego/blockquote-bricks.svg') left top repeat-y;
+  background-size: 14px auto;
+}
+
+/* HR: brick row divider */
+:root[data-theme="lego"] .content hr,
+:root[data-theme="lego"] hr {
+  border: none;
+  height: 20px;
+  background: url('/images/lego/brick-row.svg') center repeat-x;
+  background-size: auto 20px;
+  margin: var(--space-md) 0;
+}
+
+/* Content lists: colored brick bullets */
+:root[data-theme="lego"] .content ul li {
+  list-style: none;
+  padding-left: 22px;
+  position: relative;
+}
+
+:root[data-theme="lego"] .content ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 5px;
+  width: 14px;
+  height: 12px;
+  background: url('/images/lego/brick-1x1.svg') center/contain no-repeat;
+}
+
+/* Alternate brick colors in lists */
+:root[data-theme="lego"] .content ul li:nth-child(4n+2)::before {
+  background-image: url('/images/lego/brick-1x1-blue.svg');
+}
+:root[data-theme="lego"] .content ul li:nth-child(4n+3)::before {
+  background-image: url('/images/lego/brick-1x1-yellow.svg');
+}
+:root[data-theme="lego"] .content ul li:nth-child(4n+4)::before {
+  background-image: url('/images/lego/brick-1x1-green.svg');
+}
+
+/* Inline code: subtle brick look */
+:root[data-theme="lego"] .content code:not(pre code) {
+  border: 1px solid var(--color-lego-yellow);
+  background: #fff8e1;
+}
+
+/* Tables: brick-themed header */
+:root[data-theme="lego"] .content th {
+  background: var(--color-lego-blue);
+  color: #ffffff;
+  border-color: #004499;
+}
+
+:root[data-theme="lego"] .content td {
+  border-color: var(--color-lego-yellow);
+}
+
+/* === CV page: brick-themed sections === */
+
+/* CV section headers: brick decoration */
+:root[data-theme="lego"] .cv-section h2 {
+  padding-bottom: var(--space-xs);
+  border-bottom: none;
+  position: relative;
+  padding-left: 30px;
+}
+
+:root[data-theme="lego"] .cv-section h2::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 22px;
+  height: 16px;
+  background: url('/images/lego/brick-2x4.svg') center/contain no-repeat;
+}
+
+:root[data-theme="lego"] .cv-section h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 12px;
+  background: url('/images/lego/brick-row.svg') left center repeat-x;
+  background-size: auto 12px;
+}
+
+/* CV entries: card with brick border */
+:root[data-theme="lego"] .cv-entry {
+  border-left: 4px solid var(--color-lego-red);
+  padding-left: var(--space-sm);
+  margin-bottom: var(--space-md);
+  position: relative;
+}
+
+/* Alternating brick colors for CV entries */
+:root[data-theme="lego"] .cv-entry:nth-child(4n+2) {
+  border-left-color: var(--color-lego-blue);
+}
+:root[data-theme="lego"] .cv-entry:nth-child(4n+3) {
+  border-left-color: var(--color-lego-yellow);
+}
+:root[data-theme="lego"] .cv-entry:nth-child(4n+4) {
+  border-left-color: var(--color-lego-green);
+}
+
+/* CV entry stud connector */
+:root[data-theme="lego"] .cv-entry::before {
+  content: '';
+  position: absolute;
+  left: -10px;
+  top: 8px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--color-lego-red);
+  border: 2px solid #ffffff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+:root[data-theme="lego"] .cv-entry:nth-child(4n+2)::before {
+  background: var(--color-lego-blue);
+}
+:root[data-theme="lego"] .cv-entry:nth-child(4n+3)::before {
+  background: var(--color-lego-yellow);
+}
+:root[data-theme="lego"] .cv-entry:nth-child(4n+4)::before {
+  background: var(--color-lego-green);
+}
+
+/* Skills: brick-themed categories */
+:root[data-theme="lego"] .skills-category {
+  background: #ffffff;
+  border: 2px solid var(--color-lego-yellow);
+  border-radius: 4px;
+  padding: var(--space-sm);
+  margin-bottom: var(--space-sm);
+  position: relative;
+}
+
+:root[data-theme="lego"] .skills-category::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 10px;
+  background: url('/images/lego/stud.svg') repeat-x;
+  background-size: 24px 10px;
+  pointer-events: none;
+}
+
+/* === Publications page: brick accents === */
+
+:root[data-theme="lego"] .publication-item {
+  padding-left: 24px;
+  position: relative;
+  border-bottom-color: var(--color-lego-yellow);
+  border-bottom-style: dashed;
+}
+
+:root[data-theme="lego"] .publication-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: var(--space-md);
+  width: 14px;
+  height: 12px;
+  background: url('/images/lego/brick-1x1-blue.svg') center/contain no-repeat;
+}
+
+/* Publication detail: brick-themed "Access paper" button */
+:root[data-theme="lego"] .paper-link a {
+  background: var(--color-lego-green);
+  color: #ffffff;
+  border: 2px solid #005a1c;
+  position: relative;
+  padding-top: 10px;
+  border-radius: 2px;
+  box-shadow: 0 3px 0 rgba(0,0,0,0.2);
+}
+
+:root[data-theme="lego"] .paper-link a::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 8px;
+  background: url('/images/lego/stud.svg') repeat-x;
+  background-size: 20px 8px;
+  pointer-events: none;
+}
+
+:root[data-theme="lego"] .paper-link a:hover {
+  background: #006e22;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 0 rgba(0,0,0,0.15);
+}
+
+/* Citation: brick-framed box */
+:root[data-theme="lego"] .citation {
+  background: #ffffff;
+  border: 2px solid var(--color-lego-blue);
+  border-radius: 4px;
+  padding: var(--space-sm);
+  position: relative;
+}
+
+:root[data-theme="lego"] .citation::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 10px;
+  background: url('/images/lego/stud.svg') repeat-x;
+  background-size: 20px 10px;
+  pointer-events: none;
+}
+
+/* === Talks page: brick accents === */
+
+:root[data-theme="lego"] .talk-item {
+  padding-left: 24px;
+  position: relative;
+  border-bottom-color: var(--color-lego-yellow);
+  border-bottom-style: dashed;
+}
+
+:root[data-theme="lego"] .talk-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: var(--space-md);
+  width: 14px;
+  height: 12px;
+  background: url('/images/lego/brick-1x1-yellow.svg') center/contain no-repeat;
+}
+
+/* === Buttons: all brick-styled === */
+
+:root[data-theme="lego"] .repo-link,
+:root[data-theme="lego"] .link-button {
+  position: relative;
+  padding-top: 10px;
+  border: 2px solid rgba(0,0,0,0.15);
+  border-radius: 2px;
+  box-shadow: 0 3px 0 rgba(0,0,0,0.2);
+}
+
+:root[data-theme="lego"] .repo-link::before,
+:root[data-theme="lego"] .link-button::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70%;
+  height: 8px;
+  background: url('/images/lego/stud.svg') repeat-x;
+  background-size: 20px 8px;
+  pointer-events: none;
+}
+
+:root[data-theme="lego"] .repo-link:hover,
+:root[data-theme="lego"] .link-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 0 rgba(0,0,0,0.15);
+}
+
+:root[data-theme="lego"] .repo-link:active,
+:root[data-theme="lego"] .link-button:active {
+  transform: translateY(2px);
+  box-shadow: 0 0 0 rgba(0,0,0,0.1);
+}
+
+/* === Lego head decoration for H2 section headers === */
+
+:root[data-theme="lego"] .content h2::before {
+  content: '';
+  display: inline-block;
+  width: 20px;
+  height: 24px;
+  margin-right: 6px;
+  vertical-align: middle;
+  background: url('/images/lego/lego-head.svg') center/contain no-repeat;
+}
+
+/* Card images: brick frame */
+:root[data-theme="lego"] .card-image,
+:root[data-theme="lego"] .project-image {
+  border: 3px solid var(--color-lego-yellow);
+  border-radius: 2px;
+}
+
+/* Theme switcher dropdown: brick styling */
+:root[data-theme="lego"] select {
+  border: 2px solid var(--color-lego-yellow);
+  border-radius: 2px;
+  background-color: #ffffff;
 }
 
 /* LEGO mobile performance optimizations */
 @media (max-width: 768px) {
-  [data-theme="lego"] .github-card {
+  :root[data-theme="lego"] .github-card {
     box-shadow:
       0 1px 3px rgba(0, 0, 0, 0.12),
       0 2px 6px rgba(0, 0, 0, 0.08);
   }
-  [data-theme="lego"] .github-card:hover,
-  [data-theme="lego"] .github-card:focus-within {
+  :root[data-theme="lego"] .github-card:hover,
+  :root[data-theme="lego"] .github-card:focus-within {
     box-shadow:
       0 2px 6px rgba(0, 0, 0, 0.15),
       0 4px 12px rgba(0, 0, 0, 0.12);
@@ -306,11 +812,11 @@
 
 /* LEGO accessibility - reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  [data-theme="lego"] nav a,
-  [data-theme="lego"] .github-card {
+  :root[data-theme="lego"] nav:not(.author-links) a,
+  :root[data-theme="lego"] .github-card {
     transition: none !important;
   }
-  [data-theme="lego"] nav a:active {
+  :root[data-theme="lego"] nav:not(.author-links) a:active {
     transform: translateY(2px);
   }
 }
@@ -362,8 +868,8 @@
 /* Light-based novelty themes - use light code colors */
 [data-theme="sepia"] .astro-code,
 [data-theme="sepia"] .astro-code span,
-[data-theme="lego"] .astro-code,
-[data-theme="lego"] .astro-code span {
+:root[data-theme="lego"] .astro-code,
+:root[data-theme="lego"] .astro-code span {
   color: var(--shiki-light) !important;
   background-color: var(--shiki-light-bg) !important;
 }
