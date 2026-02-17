@@ -128,4 +128,16 @@ collections:
       - { label: "Demo URL", name: "demoUrl", widget: "string", required: false }
       - { label: "Description", name: "description", widget: "text", required: false }
       - { label: "Playground URL", name: "playgroundUrl", widget: "string", required: false }
+      - label: "Stats Display"
+        name: "statsDisplay"
+        widget: "select"
+        options: ["stars", "downloads", "both", "none"]
+        default: "stars"
+        required: false
+        hint: "Which GitHub stats to display on the portfolio card"
+      - label: "npm Package Name"
+        name: "npmPackage"
+        widget: "string"
+        required: false
+        hint: "npm package name for download stats (e.g., 'my-package')"
       - { label: "Body", name: "body", widget: "markdown", required: true }

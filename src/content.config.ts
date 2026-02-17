@@ -53,6 +53,8 @@ const portfolio = defineCollection({
     demoUrl: optionalUrl,
     description: optionalStr,
     playgroundUrl: optionalUrl,
+    statsDisplay: z.enum(['stars', 'downloads', 'both', 'none']).optional().default('stars'),
+    npmPackage: optionalStr,
   })
 });
 
