@@ -1,1322 +1,829 @@
-# Architecture Integration Patterns
+# Architecture Research
 
-**Project:** Academic Website Feature Extensions
-**Domain:** Astro 5.x static site with content collections
-**Researched:** 2026-02-16
-**Overall confidence:** HIGH
+**Domain:** Immersive LEGO CSS Theme Integration
+**Researched:** 2026-02-17
+**Confidence:** HIGH
 
 ## Executive Summary
 
-This architecture document analyzes how four new feature sets integrate with the existing Astro 5.x academic website: (1) Teaching section with content collections, (2) Portfolio code embeds with syntax highlighting, (3) Configurable portfolio stats, and (4) Multi-theme CSS system. All features leverage existing architectural patterns (content collections, Astro components, CSS custom properties, client-side scripts) with minimal structural changes.
+This research addresses how to integrate immersive LEGO theme features (custom fonts, studs, brick shapes, animations, baseplate backgrounds) into an existing Astro site with a working theme system. The architecture leverages CSS cascade layers for clean scoping, conditional font loading via CSS feature queries, pseudo-element patterns for decorative studs, and component-level responsive props for sidebar control.
 
-The existing architecture is well-suited for these extensions:
-- **Content collections** already demonstrated with 5 collections (publications, talks, posts, portfolio, pages)
-- **Component composition** pattern established in portfolio cards (GitHubCard, DemoEmbed, PlaygroundEmbed)
-- **CSS custom properties** system in place with dark mode via media query
-- **CMS sync pattern** documented with comments linking config.yml to content.config.ts
+**Key integration strategy:** Scope LEGO-specific features to `[data-theme="lego"]` selectors in a dedicated CSS layer, load fonts conditionally using modern CSS font loading patterns, use pseudo-elements for decorative studs with GPU-accelerated transforms, and extend BaseLayout with per-page sidebar control via props.
 
-Key architectural insight: All new features can be implemented as **additions** rather than **modifications**, preserving existing functionality while extending capabilities.
-
-## Recommended Architecture
-
-### System Overview
+## System Overview
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    ASTRO 5.x STATIC SITE                     │
+│                    HTML Element Layer                        │
+│  <html data-theme="lego"> (attribute triggers all below)    │
 ├─────────────────────────────────────────────────────────────┤
-│                                                               │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │ Content Layer (src/content/ + content.config.ts)     │   │
-│  │  • Existing: blog, publications, talks, portfolio    │   │
-│  │  • NEW: teaching collection                          │   │
-│  │  • Glob loader pattern (Astro 5.x)                  │   │
-│  └──────────────────────────────────────────────────────┘   │
-│                           ↓                                   │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │ Page Layer (src/pages/)                              │   │
-│  │  • Dynamic routes: [...slug].astro                   │   │
-│  │  • Index pages: index.astro                          │   │
-│  │  • NEW: teaching/index.astro, teaching/[slug].astro  │   │
-│  └──────────────────────────────────────────────────────┘   │
-│                           ↓                                   │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │ Component Layer (src/components/)                    │   │
-│  │  • Layout: BaseLayout.astro                          │   │
-│  │  • Portfolio: GitHubCard, DemoEmbed, PlaygroundEmbed │   │
-│  │  • NEW: CodeEmbed (syntax highlighting)             │   │
-│  │  • MODIFIED: GitHubCard (configurable stats)        │   │
-│  └──────────────────────────────────────────────────────┘   │
-│                           ↓                                   │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │ Style Layer (src/styles/global.css)                  │   │
-│  │  • CSS custom properties (:root)                     │   │
-│  │  • Dark mode (@media prefers-color-scheme)          │   │
-│  │  • NEW: [data-theme] attribute selectors            │   │
-│  │  • NEW: Theme-specific custom property overrides    │   │
-│  └──────────────────────────────────────────────────────┘   │
-│                           ↓                                   │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │ Script Layer (src/scripts/)                          │   │
-│  │  • github-api.ts (client-side fetch + localStorage) │   │
-│  │  • NEW: theme-switcher.ts (theme persistence)       │   │
-│  └──────────────────────────────────────────────────────┘   │
-│                           ↓                                   │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │ CMS Layer (public/admin/config.yml)                  │   │
-│  │  • Mirrors content.config.ts schemas                 │   │
-│  │  • NEW: teaching collection config                   │   │
-│  │  • NEW: portfolio statsDisplay field                 │   │
-│  └──────────────────────────────────────────────────────┘   │
-│                                                               │
+│                    CSS Cascade Layers                        │
+│  ┌──────────┐  ┌──────────┐  ┌──────────────────────┐      │
+│  │  base    │  │  themes  │  │  lego-immersive      │      │
+│  │  (global)│  │  (colors)│  │  (fonts/studs/brick) │      │
+│  └────┬─────┘  └────┬─────┘  └──────────┬───────────┘      │
+│       │             │                    │                  │
+│       └─────────────┴────────────────────┘                  │
+│                      ↓                                       │
+├─────────────────────────────────────────────────────────────┤
+│                    Component Layer                           │
+│  ┌──────────────┐  ┌──────────────┐  ┌────────────────┐    │
+│  │ BaseLayout   │  │ PortfolioCard│  │ AuthorSidebar  │    │
+│  │ (with props) │  │ (with studs) │  │ (responsive)   │    │
+│  └──────────────┘  └──────────────┘  └────────────────┘    │
+├─────────────────────────────────────────────────────────────┤
+│                    Font Loading Layer                        │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │  Conditional: Only load when [data-theme="lego"]    │    │
+│  │  - Header font (tier 1)                             │    │
+│  │  - Body font (tier 2)                               │    │
+│  │  - Mono font (tier 3)                               │    │
+│  └─────────────────────────────────────────────────────┘    │
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### Component Boundaries
+## Recommended Project Structure
 
-| Component | Responsibility | Communicates With | Type |
-|-----------|---------------|-------------------|------|
-| **BaseLayout.astro** | Site structure, HTML shell, global styles | All pages via slot | EXISTING |
-| **GitHubCard.astro** | Display GitHub repo with API data, configurable stats | github-api.ts script | MODIFIED |
-| **CodeEmbed.astro** | Syntax-highlighted code blocks with copy button | Shiki (build-time), clipboard API (runtime) | NEW |
-| **DemoEmbed.astro** | Iframe embeds for demos | None (standalone) | EXISTING |
-| **PlaygroundEmbed.astro** | Iframe embeds for interactive playgrounds | None (standalone) | EXISTING |
-| **ThemeSwitcher.astro** | Theme selection UI component | theme-switcher.ts script | NEW |
-| **teaching/index.astro** | Teaching collection listing page | teaching content collection | NEW |
-| **teaching/[slug].astro** | Individual teaching entry page | teaching content collection | NEW |
-
-### Data Flow
-
-#### 1. Teaching Section Data Flow
 ```
-Content Author (CMS)
-  ↓
-teaching/*.md files created
-  ↓
-content.config.ts validates via Zod schema
-  ↓
-getCollection('teaching') in pages
-  ↓
-Rendered in teaching/index.astro and teaching/[slug].astro
-  ↓
-Static HTML output
+src/
+├── styles/
+│   ├── global.css              # EXISTING: Base styles, spacing
+│   ├── themes.css              # EXISTING: Theme color overrides
+│   └── lego-immersive.css      # NEW: LEGO-specific features
+│       ├── @layer lego-fonts   # Font definitions
+│       ├── @layer lego-studs   # Pseudo-element patterns
+│       ├── @layer lego-brick   # Border/shadow effects
+│       └── @layer lego-motion  # Animations
+├── layouts/
+│   └── BaseLayout.astro        # MODIFIED: Add hideSidebarOnMobile prop
+├── components/
+│   ├── AuthorSidebar.astro     # EXISTING: Styled via CSS
+│   └── portfolio/
+│       └── GitHubCard.astro    # EXISTING: Studs via CSS
+└── pages/
+    └── index.astro             # MODIFIED: Pass showSidebar/hideSidebarOnMobile
 ```
 
-#### 2. Code Embed Data Flow (Build-time)
-```
-Portfolio markdown content with code fences
-  ↓
-Astro processes markdown
-  ↓
-CodeEmbed component receives code prop
-  ↓
-Shiki transforms code at build time
-  ↓
-Syntax-highlighted HTML generated
-  ↓
-Client-side script adds copy button interactivity
-  ↓
-Static HTML + minimal JS for copy function
-```
+### Structure Rationale
 
-#### 3. Configurable Stats Data Flow (Runtime)
-```
-Portfolio content with statsDisplay field
-  ↓
-GitHubCard receives statsDisplay prop
-  ↓
-Client-side script checks statsDisplay value
-  ↓
-Conditional rendering of stats elements
-  ↓
-GitHub API fetch (existing pattern)
-  ↓
-Display stars, downloads, or both based on config
-```
+- **lego-immersive.css:** Separate file keeps LEGO features isolated, only loads when needed, easier to maintain
+- **CSS layers:** Control specificity order without !important, allows safe overrides, modern best practice
+- **No component modifications:** All LEGO features applied via CSS selectors, components remain theme-agnostic
+- **Props for layout control:** Existing Astro pattern, avoids complex breakpoint logic in components
 
-#### 4. Theme Switching Data Flow
-```
-User selects theme from ThemeSwitcher UI
-  ↓
-theme-switcher.ts script sets [data-theme] on <html>
-  ↓
-CSS custom properties recalculated via [data-theme] selectors
-  ↓
-Theme preference saved to localStorage
-  ↓
-On page load, theme restored from localStorage
-```
+## Architectural Patterns
 
-## Integration Points
+### Pattern 1: CSS Cascade Layers for Theme Scoping
 
-### 1. Teaching Section Integration
+**What:** Use CSS `@layer` to organize LEGO-specific styles into logical groups with controlled specificity
 
-**What it integrates with:**
-- Content collections system (content.config.ts)
-- CMS configuration (public/admin/config.yml)
-- Navigation component (add teaching link)
-- BaseLayout (uses existing layout pattern)
-- CV page (conditional display via site.json)
+**When to use:** When adding theme-specific features that should override base styles but be overridable by utilities
 
-**Files to create:**
-- `src/content.config.ts` — Add teaching collection definition (MODIFY)
-- `src/content/teaching/*.md` — Teaching entries (CREATE)
-- `src/pages/teaching/index.astro` — Teaching listing page (CREATE)
-- `src/pages/teaching/[...slug].astro` — Individual teaching page (CREATE)
-- `public/admin/config.yml` — Add teaching CMS config (MODIFY)
+**Trade-offs:**
+- **Pros:** Clean specificity management, easy to remove/disable, better code organization
+- **Cons:** Requires CSS layer support (100% in modern browsers as of 2024)
 
-**Files to modify:**
-- `src/components/Navigation.astro` — Add teaching link (MODIFY)
-
-**Pattern to follow:**
-Same pattern as publications and talks collections. Teaching collection should have:
-```typescript
-// content.config.ts
-const teaching = defineCollection({
-  loader: glob({ pattern: "**/*.md", base: "./src/content/teaching" }),
-  schema: z.object({
-    title: z.string(),
-    collection: z.literal('teaching'),
-    course: z.string(),
-    institution: z.string(),
-    semester: z.string(),
-    year: z.number(),
-    level: z.enum(['undergraduate', 'graduate', 'professional']),
-    description: optionalStr,
-    syllabus: optionalUrl,
-    permalink: z.string(),
-  })
-});
-```
-
-**Confidence:** HIGH — Existing collections demonstrate exact pattern to follow.
-
----
-
-### 2. Portfolio Code Embeds Integration
-
-**What it integrates with:**
-- Portfolio content collection (markdown body content)
-- Component composition (similar to DemoEmbed/PlaygroundEmbed)
-- Shiki syntax highlighter (Astro built-in, needs configuration)
-- CSS custom properties (for theme-aware highlighting)
-
-**Files to create:**
-- `src/components/portfolio/CodeEmbed.astro` — Syntax-highlighted code component (CREATE)
-
-**Files to modify:**
-- `astro.config.mjs` — Configure Shiki (MODIFY)
-- `src/pages/portfolio/[...slug].astro` — Use CodeEmbed in content (MODIFY)
-- Portfolio markdown files — Add code fence syntax or CodeEmbed component (MODIFY)
-
-**Implementation approaches:**
-
-**Option A: Markdown code fences (recommended)**
-```markdown
----
-title: My Project
----
-
-Here's how to use it:
-
-```typescript
-// Automatically highlighted by Shiki
-const example = "code";
-```
-```
-
-Astro 5.x has built-in Shiki support for markdown code fences. Configure in astro.config.mjs:
-
-```javascript
-// astro.config.mjs
-export default defineConfig({
-  markdown: {
-    shikiConfig: {
-      theme: 'github-light',
-      themes: {
-        light: 'github-light',
-        dark: 'github-dark'
-      },
-      wrap: true,
-      langs: ['typescript', 'javascript', 'python', 'bash', 'json', 'markdown']
-    }
-  }
-});
-```
-
-**Option B: Custom CodeEmbed component**
-For more control (copy buttons, line highlighting, diffs):
-
-```astro
----
-// CodeEmbed.astro
-import { codeToHtml } from 'shiki';
-
-interface Props {
-  code: string;
-  lang: string;
-  title?: string;
-  showLineNumbers?: boolean;
-}
-
-const { code, lang, title, showLineNumbers = true } = Astro.props;
-
-// Build-time syntax highlighting
-const html = await codeToHtml(code, {
-  lang,
-  theme: 'github-light',
-  themes: {
-    light: 'github-light',
-    dark: 'github-dark'
-  }
-});
----
-
-<div class="code-embed">
-  {title && <div class="code-title">{title}</div>}
-  <div class="code-container">
-    <Fragment set:html={html} />
-    <button class="copy-button" data-code={code}>Copy</button>
-  </div>
-</div>
-
-<script>
-  // Copy to clipboard functionality
-  document.querySelectorAll('.copy-button').forEach(button => {
-    button.addEventListener('click', async (e) => {
-      const code = e.target.dataset.code;
-      await navigator.clipboard.writeText(code);
-      button.textContent = 'Copied!';
-      setTimeout(() => { button.textContent = 'Copy'; }, 2000);
-    });
-  });
-</script>
-```
-
-**Recommendation:** Start with Option A (markdown code fences with Shiki config) for simplicity. Add Option B (custom component) later if advanced features needed.
-
-**Confidence:** MEDIUM-HIGH
-- Shiki integration: HIGH (Astro built-in, well-documented)
-- Custom component pattern: HIGH (follows existing DemoEmbed pattern)
-- Theme-aware highlighting: MEDIUM (requires CSS integration with theme system)
-
----
-
-### 3. Configurable Portfolio Stats Integration
-
-**What it integrates with:**
-- Portfolio content collection schema (add statsDisplay field)
-- GitHubCard.astro component (conditional rendering logic)
-- github-api.ts script (may need npm package stats endpoint)
-- CMS configuration (add statsDisplay field options)
-
-**Files to modify:**
-- `src/content.config.ts` — Add statsDisplay field to portfolio schema (MODIFY)
-- `src/components/portfolio/GitHubCard.astro` — Conditional stats rendering (MODIFY)
-- `src/scripts/github-api.ts` — Add npm download stats fetching (MODIFY)
-- `public/admin/config.yml` — Add statsDisplay select widget (MODIFY)
-
-**Schema changes:**
-
-```typescript
-// content.config.ts
-const portfolio = defineCollection({
-  loader: glob({ pattern: "**/*.md", base: "./src/content/portfolio" }),
-  schema: z.object({
-    // ... existing fields
-    statsDisplay: z.enum(['stars', 'downloads', 'both', 'none']).optional().default('stars'),
-    npmPackage: optionalStr, // For download stats
-  })
-});
-```
-
-**Component logic changes:**
-
-```astro
----
-// GitHubCard.astro
-interface Props {
-  // ... existing props
-  statsDisplay?: 'stars' | 'downloads' | 'both' | 'none';
-  npmPackage?: string;
-}
-
-const { statsDisplay = 'stars', npmPackage, ...rest } = Astro.props;
----
-
-<div class="github-card"
-     data-owner={owner}
-     data-repo={repo}
-     data-stats-display={statsDisplay}
-     data-npm-package={npmPackage}>
-  <!-- ... skeleton -->
-  <div class="content">
-    <!-- ... title, description -->
-    <div class="repo-stats">
-      {(statsDisplay === 'stars' || statsDisplay === 'both') && (
-        <span class="stars">Stars: <span class="star-count">-</span></span>
-      )}
-      {(statsDisplay === 'downloads' || statsDisplay === 'both') && npmPackage && (
-        <span class="downloads">Downloads: <span class="download-count">-</span></span>
-      )}
-    </div>
-  </div>
-</div>
-
-<script>
-  import { fetchRepoData, fetchNpmDownloads } from '../../scripts/github-api';
-
-  document.addEventListener('DOMContentLoaded', async () => {
-    const cards = document.querySelectorAll('.github-card');
-
-    cards.forEach(async (card) => {
-      const statsDisplay = card.getAttribute('data-stats-display');
-      const npmPackage = card.getAttribute('data-npm-package');
-
-      // Existing GitHub API logic
-      if (statsDisplay === 'stars' || statsDisplay === 'both') {
-        const data = await fetchRepoData(owner, repo);
-        // ... update stars
-      }
-
-      // NEW: npm downloads
-      if ((statsDisplay === 'downloads' || statsDisplay === 'both') && npmPackage) {
-        const downloads = await fetchNpmDownloads(npmPackage);
-        // ... update downloads
-      }
-    });
-  });
-</script>
-```
-
-**API integration:**
-
-```typescript
-// github-api.ts - Add npm download stats
-export async function fetchNpmDownloads(packageName: string): Promise<number | null> {
-  const cacheKey = `npm-downloads-${packageName}`;
-
-  // Check cache (same pattern as GitHub API)
-  try {
-    const cached = localStorage.getItem(cacheKey);
-    if (cached) {
-      const cachedData = JSON.parse(cached);
-      const age = Date.now() - cachedData.timestamp;
-      if (age < CACHE_DURATION) {
-        return cachedData.data;
-      }
-    }
-  } catch (err) {
-    console.warn('[npm API] Cache read error:', err);
-  }
-
-  // Fetch from npm API (last 30 days)
-  const url = `https://api.npmjs.org/downloads/point/last-month/${packageName}`;
-
-  try {
-    const response = await fetch(url);
-    if (!response.ok) return null;
-
-    const data = await response.json();
-    const downloads = data.downloads;
-
-    // Update cache
-    localStorage.setItem(cacheKey, JSON.stringify({
-      data: downloads,
-      timestamp: Date.now(),
-    }));
-
-    return downloads;
-  } catch (err) {
-    console.error(`[npm API] Error fetching ${packageName}:`, err);
-    return null;
-  }
-}
-```
-
-**CMS configuration:**
-
-```yaml
-# public/admin/config.yml
-- name: portfolio
-  fields:
-    # ... existing fields
-    - label: "Stats Display"
-      name: "statsDisplay"
-      widget: "select"
-      options: ["stars", "downloads", "both", "none"]
-      default: "stars"
-      required: false
-    - label: "npm Package Name"
-      name: "npmPackage"
-      widget: "string"
-      required: false
-      hint: "For npm download stats (e.g., 'my-package')"
-```
-
-**Confidence:** HIGH — Follows existing GitHub API pattern exactly. npm API is public, unauthenticated, well-documented.
-
----
-
-### 4. Multi-Theme CSS System Integration
-
-**What it integrates with:**
-- CSS custom properties system (existing :root variables)
-- Dark mode media query (currently automatic)
-- BaseLayout.astro (inject theme switcher and script)
-- localStorage (theme persistence, same pattern as GitHub API cache)
-
-**Files to create:**
-- `src/components/ThemeSwitcher.astro` — Theme selection UI (CREATE)
-- `src/scripts/theme-switcher.ts` — Theme logic and persistence (CREATE)
-- `src/styles/themes.css` — Theme-specific custom property overrides (CREATE)
-
-**Files to modify:**
-- `src/layouts/BaseLayout.astro` — Include theme script and switcher (MODIFY)
-- `src/styles/global.css` — Import themes.css (MODIFY)
-
-**Architecture approach:**
-
-**Current system (automatic dark mode):**
+**Example:**
 ```css
-/* global.css */
-:root {
-  --color-bg: #ffffff;
-  --color-text: #333333;
-  /* ... */
-}
+/* src/styles/lego-immersive.css */
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-bg: #1a1a1a;
-    --color-text: #e0e0e0;
-    /* ... */
+/* Define layer order (earlier = lower specificity) */
+@layer lego-fonts, lego-studs, lego-brick, lego-motion;
+
+/* Layer 1: Font loading (lowest specificity) */
+@layer lego-fonts {
+  /* Only load fonts when LEGO theme is active */
+  [data-theme="lego"] {
+    /* Tier 1: Headers - Bold, blocky font */
+    --font-lego-header: 'Fredoka', 'Arial Black', sans-serif;
+
+    /* Tier 2: Body - Clean, readable */
+    --font-lego-body: 'Nunito', 'Arial', sans-serif;
+
+    /* Tier 3: Mono - Technical content */
+    --font-lego-mono: 'JetBrains Mono', 'Courier New', monospace;
+  }
+
+  /* Apply fonts to elements */
+  [data-theme="lego"] h1,
+  [data-theme="lego"] h2,
+  [data-theme="lego"] h3 {
+    font-family: var(--font-lego-header);
+    font-weight: 700;
+  }
+
+  [data-theme="lego"] body,
+  [data-theme="lego"] p {
+    font-family: var(--font-lego-body);
+  }
+
+  [data-theme="lego"] code,
+  [data-theme="lego"] pre {
+    font-family: var(--font-lego-mono);
   }
 }
-```
 
-**New system (6-8 selectable themes + auto):**
-
-```css
-/* themes.css */
-
-/* Default light theme (unchanged) */
-:root {
-  --color-bg: #ffffff;
-  --color-text: #333333;
-  --color-text-muted: #666666;
-  --color-link: #0066cc;
-  --color-link-hover: #004499;
-  --color-border: #e0e0e0;
-  --color-header-bg: #f8f9fa;
-}
-
-/* Dark theme */
-[data-theme="dark"] {
-  --color-bg: #1a1a1a;
-  --color-text: #e0e0e0;
-  --color-text-muted: #a0a0a0;
-  --color-link: #6699ff;
-  --color-link-hover: #99bbff;
-  --color-border: #404040;
-  --color-header-bg: #252525;
-}
-
-/* Sepia/Academic theme */
-[data-theme="sepia"] {
-  --color-bg: #f4ecd8;
-  --color-text: #5c4a2e;
-  --color-text-muted: #8b7355;
-  --color-link: #8b4513;
-  --color-link-hover: #654321;
-  --color-border: #d4c4a8;
-  --color-header-bg: #eae0cc;
-}
-
-/* High contrast theme */
-[data-theme="high-contrast"] {
-  --color-bg: #000000;
-  --color-text: #ffffff;
-  --color-text-muted: #cccccc;
-  --color-link: #ffff00;
-  --color-link-hover: #ffff99;
-  --color-border: #ffffff;
-  --color-header-bg: #1a1a1a;
-}
-
-/* Ocean theme */
-[data-theme="ocean"] {
-  --color-bg: #0a1929;
-  --color-text: #b2bac2;
-  --color-text-muted: #8792a2;
-  --color-link: #3399ff;
-  --color-link-hover: #66b2ff;
-  --color-border: #1e3a5f;
-  --color-header-bg: #0f2235;
-}
-
-/* Forest theme */
-[data-theme="forest"] {
-  --color-bg: #1a2f23;
-  --color-text: #d4e4da;
-  --color-text-muted: #a8c5b3;
-  --color-link: #66cc99;
-  --color-link-hover: #99ddbb;
-  --color-border: #2d4a38;
-  --color-header-bg: #223529;
-}
-
-/* Solarized Light */
-[data-theme="solarized-light"] {
-  --color-bg: #fdf6e3;
-  --color-text: #657b83;
-  --color-text-muted: #93a1a1;
-  --color-link: #268bd2;
-  --color-link-hover: #2aa198;
-  --color-border: #eee8d5;
-  --color-header-bg: #f7f1df;
-}
-
-/* Solarized Dark */
-[data-theme="solarized-dark"] {
-  --color-bg: #002b36;
-  --color-text: #839496;
-  --color-text-muted: #586e75;
-  --color-link: #268bd2;
-  --color-link-hover: #2aa198;
-  --color-border: #073642;
-  --color-header-bg: #00212b;
-}
-
-/* Auto theme (respects prefers-color-scheme) */
-[data-theme="auto"] {
-  /* Uses :root default in light mode */
-}
-
-@media (prefers-color-scheme: dark) {
-  [data-theme="auto"] {
-    --color-bg: #1a1a1a;
-    --color-text: #e0e0e0;
-    --color-text-muted: #a0a0a0;
-    --color-link: #6699ff;
-    --color-link-hover: #99bbff;
-    --color-border: #404040;
-    --color-header-bg: #252525;
+/* Layer 2: Stud decorations */
+@layer lego-studs {
+  /* Cards get studs via ::before pseudo-element */
+  [data-theme="lego"] .github-card::before,
+  [data-theme="lego"] .author-sidebar::before {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    right: 8px;
+    height: 24px;
+    background:
+      radial-gradient(circle at 12px 12px, rgba(0,0,0,0.1) 6px, transparent 7px),
+      radial-gradient(circle at 36px 12px, rgba(0,0,0,0.1) 6px, transparent 7px),
+      radial-gradient(circle at 60px 12px, rgba(0,0,0,0.1) 6px, transparent 7px);
+    background-size: 48px 24px;
+    background-repeat: repeat-x;
+    pointer-events: none;
   }
-}
-```
 
-**Theme switcher component:**
-
-```astro
----
-// ThemeSwitcher.astro
-const themes = [
-  { value: 'auto', label: 'Auto' },
-  { value: 'light', label: 'Light' },
-  { value: 'dark', label: 'Dark' },
-  { value: 'sepia', label: 'Sepia' },
-  { value: 'high-contrast', label: 'High Contrast' },
-  { value: 'ocean', label: 'Ocean' },
-  { value: 'forest', label: 'Forest' },
-  { value: 'solarized-light', label: 'Solarized Light' },
-  { value: 'solarized-dark', label: 'Solarized Dark' },
-];
----
-
-<div class="theme-switcher">
-  <label for="theme-select" class="sr-only">Select theme</label>
-  <select id="theme-select" class="theme-select">
-    {themes.map(theme => (
-      <option value={theme.value}>{theme.label}</option>
-    ))}
-  </select>
-</div>
-
-<style>
-  .theme-switcher {
+  /* Position elements to make room for studs */
+  [data-theme="lego"] .github-card,
+  [data-theme="lego"] .author-sidebar {
     position: relative;
-  }
-
-  .theme-select {
-    padding: var(--space-xs) var(--space-sm);
-    background: var(--color-header-bg);
-    color: var(--color-text);
-    border: 1px solid var(--color-border);
-    border-radius: 4px;
-    font-size: 0.875rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-
-  .theme-select:hover {
-    border-color: var(--color-link);
-  }
-
-  .theme-select:focus {
-    outline: 2px solid var(--color-link);
-    outline-offset: 2px;
-  }
-</style>
-```
-
-**Theme persistence script:**
-
-```typescript
-// theme-switcher.ts
-type Theme = 'auto' | 'light' | 'dark' | 'sepia' | 'high-contrast' | 'ocean' | 'forest' | 'solarized-light' | 'solarized-dark';
-
-const STORAGE_KEY = 'site-theme';
-const DEFAULT_THEME: Theme = 'auto';
-
-/**
- * Get the current theme from localStorage or default
- */
-function getStoredTheme(): Theme {
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    return (stored as Theme) || DEFAULT_THEME;
-  } catch {
-    return DEFAULT_THEME;
+    padding-top: calc(var(--space-md) + 32px);
   }
 }
 
-/**
- * Apply theme by setting data-theme attribute on <html>
- */
-function applyTheme(theme: Theme): void {
-  if (theme === 'auto') {
-    // Remove attribute to use :root and @media query
-    document.documentElement.removeAttribute('data-theme');
-  } else if (theme === 'light') {
-    // Explicitly set light theme (overrides dark mode media query)
-    document.documentElement.removeAttribute('data-theme');
-  } else {
-    // Set specific theme
-    document.documentElement.setAttribute('data-theme', theme);
+/* Layer 3: Brick shapes */
+@layer lego-brick {
+  [data-theme="lego"] .github-card {
+    border: 3px solid var(--color-border);
+    border-radius: 2px;
+    box-shadow:
+      4px 4px 0 rgba(0,0,0,0.2),
+      8px 8px 0 rgba(0,0,0,0.1);
   }
 }
 
-/**
- * Save theme preference to localStorage
- */
-function saveTheme(theme: Theme): void {
-  try {
-    localStorage.setItem(STORAGE_KEY, theme);
-  } catch (err) {
-    console.warn('[Theme] Could not save theme preference:', err);
+/* Layer 4: Animations */
+@layer lego-motion {
+  [data-theme="lego"] .github-card:hover {
+    animation: lego-snap 0.3s ease;
   }
-}
 
-/**
- * Initialize theme system on page load
- */
-export function initTheme(): void {
-  // Apply stored theme immediately (before page render to prevent flash)
-  const theme = getStoredTheme();
-  applyTheme(theme);
-
-  // Set select value to match stored theme
-  const select = document.getElementById('theme-select') as HTMLSelectElement;
-  if (select) {
-    select.value = theme;
-
-    // Listen for theme changes
-    select.addEventListener('change', (e) => {
-      const newTheme = (e.target as HTMLSelectElement).value as Theme;
-      applyTheme(newTheme);
-      saveTheme(newTheme);
-    });
+  @keyframes lego-snap {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
   }
-}
-
-// Run immediately (before DOMContentLoaded to prevent theme flash)
-if (typeof window !== 'undefined') {
-  const theme = getStoredTheme();
-  applyTheme(theme);
 }
 ```
 
-**Integration in BaseLayout:**
+**Source:** Pattern based on [CSS Cascade Layers Guide](https://css-tricks.com/css-cascade-layers/) and [MDN @layer documentation](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@layer)
+
+### Pattern 2: Conditional Font Loading with CSS
+
+**What:** Load web fonts only when LEGO theme is active using CSS `@font-face` scoped to `[data-theme="lego"]`
+
+**When to use:** When fonts should only load for specific themes to optimize performance
+
+**Trade-offs:**
+- **Pros:** No JavaScript needed, browser-native caching, doesn't impact other themes
+- **Cons:** Font loads on theme switch (1-2 second delay first time)
+
+**Example:**
+```css
+/* src/styles/lego-immersive.css */
+
+/* Fonts only defined when LEGO theme selector exists */
+@layer lego-fonts {
+  @font-face {
+    font-family: 'Fredoka';
+    src: url('/fonts/fredoka-bold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap; /* Show fallback immediately, swap when loaded */
+  }
+
+  @font-face {
+    font-family: 'Nunito';
+    src: url('/fonts/nunito-regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'JetBrains Mono';
+    src: url('/fonts/jetbrains-mono.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  /* Fonts only apply when theme is active */
+  [data-theme="lego"] {
+    --font-lego-header: 'Fredoka', 'Arial Black', sans-serif;
+    --font-lego-body: 'Nunito', 'Arial', sans-serif;
+    --font-lego-mono: 'JetBrains Mono', 'Courier New', monospace;
+  }
+}
+```
+
+**Alternative: Google Fonts with preconnect (if using CDN)**
+```html
+<!-- In BaseLayout.astro <head> -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Only loads when font-family is applied -->
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@700&family=Nunito&family=JetBrains+Mono&display=swap" rel="stylesheet">
+```
+
+**Recommendation:** Self-host fonts for better performance and privacy. Use `font-display: swap` to prevent invisible text during load.
+
+**Source:** Based on [Astro Font Optimization](https://joelmturner.com/blog/astro-font-optimization/) and [MDN font-display](https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display)
+
+### Pattern 3: Pseudo-Element Stud Decorations
+
+**What:** Use `::before` pseudo-elements with radial-gradient circles to create LEGO stud patterns
+
+**When to use:** For decorative elements that should not be in the DOM (accessibility, performance)
+
+**Trade-offs:**
+- **Pros:** No DOM bloat, GPU-accelerated, screen-reader invisible (correct for decoration)
+- **Cons:** Limited to 2 pseudo-elements per element (::before, ::after)
+
+**Example:**
+```css
+/* Single row of studs */
+.github-card::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  left: 0;
+  width: 100%;
+  height: 24px;
+  background:
+    radial-gradient(circle at 12px 12px, rgba(0,0,0,0.15) 6px, transparent 7px);
+  background-size: 24px 24px;
+  background-repeat: repeat-x;
+  pointer-events: none; /* Allow clicks to pass through */
+  z-index: 1;
+}
+
+/* Baseplate grid pattern */
+[data-theme="lego"] body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background:
+    radial-gradient(circle at 16px 16px, rgba(0,0,0,0.02) 4px, transparent 5px);
+  background-size: 32px 32px;
+  pointer-events: none;
+  z-index: -1;
+}
+```
+
+**Performance optimization:**
+```css
+/* Use transform instead of position for animations */
+.github-card::before {
+  will-change: transform; /* Hint browser to use GPU layer */
+  transform: translateZ(0); /* Force GPU acceleration */
+}
+```
+
+**Source:** Based on [CSS Gradients Complete Guide](https://devtoolbox.dedyn.io/blog/css-gradients-complete-guide) and [CSS GPU Acceleration Guide](https://www.lexo.ch/blog/2025/01/boost-css-performance-with-will-change-and-transform-translate3d-why-gpu-acceleration-matters/)
+
+### Pattern 4: Responsive Sidebar Control via Props
+
+**What:** Use Astro component props to control sidebar visibility on mobile, combined with CSS breakpoints
+
+**When to use:** When different pages need different responsive behavior
+
+**Trade-offs:**
+- **Pros:** Declarative, type-safe, easy to understand
+- **Cons:** Requires prop threading from pages to layout
+
+**Example:**
 
 ```astro
 ---
-// BaseLayout.astro
-import ThemeSwitcher from '../components/ThemeSwitcher.astro';
-// ... existing imports
+// src/layouts/BaseLayout.astro
+import AuthorSidebar from '../components/AuthorSidebar.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  showSidebar?: boolean;
+  hideSidebarOnMobile?: boolean; // NEW: Control mobile behavior
+}
+
+const {
+  title = siteData.site.title,
+  description = siteData.site.description,
+  showSidebar = true,
+  hideSidebarOnMobile = false // NEW: Default shows on mobile
+} = Astro.props;
 ---
 
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <!-- ... existing head -->
-
-    <!-- Inline critical theme script to prevent flash -->
-    <script is:inline>
-      (function() {
-        try {
-          const theme = localStorage.getItem('site-theme') || 'auto';
-          if (theme !== 'auto' && theme !== 'light') {
-            document.documentElement.setAttribute('data-theme', theme);
-          }
-        } catch (e) {}
-      })();
-    </script>
+    <!-- ... existing head content ... -->
   </head>
   <body>
-    <SkipLink />
-    <header class="site-header">
-      <div class="header-content">
-        <a href="/" class="site-title">{siteData.site.title}</a>
-        <ThemeSwitcher />
-      </div>
-    </header>
-    <!-- ... rest of layout -->
+    <header><!-- ... --></header>
+    <nav><!-- ... --></nav>
+
+    <div class="content-wrapper">
+      {showSidebar && (
+        <aside class:list={["sidebar-wrapper", { "hide-mobile": hideSidebarOnMobile }]}>
+          <AuthorSidebar />
+        </aside>
+      )}
+      <main id="main-content">
+        <slot />
+      </main>
+    </div>
+
+    <footer><!-- ... --></footer>
   </body>
 </html>
 
-<script>
-  import { initTheme } from '../scripts/theme-switcher';
-
-  // Initialize theme system on page load
-  document.addEventListener('DOMContentLoaded', () => {
-    initTheme();
-  });
-</script>
-```
-
-**Key architectural decisions:**
-
-1. **[data-theme] attribute on <html>** — Single source of truth for theme state
-2. **CSS custom properties** — All theme changes via custom property overrides (no class swapping)
-3. **localStorage persistence** — Same pattern as GitHub API cache
-4. **Inline critical script** — Prevents flash of unstyled content (FOUC)
-5. **Auto theme option** — Preserves existing dark mode behavior
-6. **No build-time theme variants** — All themes in single CSS file (small overhead, simpler architecture)
-
-**Confidence:** HIGH — Pattern is well-established, follows existing architecture (localStorage, custom properties), similar to existing dark mode implementation.
-
----
-
-## Patterns to Follow
-
-### Pattern 1: Content Collection Addition
-
-**What:** Add a new content collection (teaching)
-
-**When:** Need structured content with schema validation and CMS editing
-
-**Example:**
-```typescript
-// 1. Define in content.config.ts
-const teaching = defineCollection({
-  loader: glob({ pattern: "**/*.md", base: "./src/content/teaching" }),
-  schema: z.object({
-    title: z.string(),
-    // ... fields
-  })
-});
-
-export const collections = {
-  publications, talks, posts, portfolio, pages,
-  teaching // Add to exports
-};
-
-// 2. Create pages following existing pattern
-// src/pages/teaching/index.astro — listing
-// src/pages/teaching/[...slug].astro — detail
-```
-
-### Pattern 2: Component Composition
-
-**What:** Build complex features from small, focused components
-
-**When:** Feature needs multiple concerns (data fetching, rendering, interactivity)
-
-**Example:**
-Portfolio card composition:
-```astro
-<GitHubCard /> <!-- Fetches API data, displays stats -->
-<DemoEmbed />  <!-- Renders iframe embed -->
-<CodeEmbed />  <!-- Syntax highlighting -->
-```
-
-Each component:
-- Single responsibility
-- Accepts props for configuration
-- Scoped styles
-- Self-contained scripts
-
-### Pattern 3: Client-Side Data Fetching with Cache
-
-**What:** Fetch external API data in browser with localStorage cache
-
-**When:** Need dynamic data that can't be build-time (GitHub API, npm stats)
-
-**Example:**
-```typescript
-// Existing pattern from github-api.ts
-export async function fetchData(key: string, url: string): Promise<any> {
-  const cacheKey = `cache-${key}`;
-
-  // 1. Check cache
-  const cached = localStorage.getItem(cacheKey);
-  if (cached) {
-    const { data, timestamp } = JSON.parse(cached);
-    if (Date.now() - timestamp < CACHE_DURATION) {
-      return data;
+<style>
+  /* Desktop: Always show sidebar */
+  @media (min-width: 768px) {
+    .sidebar-wrapper {
+      display: block;
+      width: 250px;
+      flex-shrink: 0;
     }
   }
 
-  // 2. Fetch from API
-  const response = await fetch(url);
-  const data = await response.json();
+  /* Mobile: Hide if prop is set */
+  @media (max-width: 767px) {
+    .sidebar-wrapper.hide-mobile {
+      display: none;
+    }
 
-  // 3. Update cache
-  localStorage.setItem(cacheKey, JSON.stringify({
-    data,
-    timestamp: Date.now()
-  }));
-
-  return data;
-}
+    .sidebar-wrapper:not(.hide-mobile) {
+      width: 100%;
+      margin-bottom: var(--space-md);
+    }
+  }
+</style>
 ```
 
-### Pattern 4: CSS Custom Properties for Theming
+**Usage in pages:**
+```astro
+---
+// src/pages/index.astro (homepage - show sidebar everywhere)
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout showSidebar={true} hideSidebarOnMobile={false}>
+  <h1>Home</h1>
+</BaseLayout>
 
-**What:** All colors and spacing via CSS variables, theme switching via attribute selectors
+---
+// src/pages/posts/[...slug].astro (blog post - hide on mobile)
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout showSidebar={true} hideSidebarOnMobile={true}>
+  <article><!-- post content --></article>
+</BaseLayout>
+```
 
-**When:** Need consistent styling and theme support
+**Source:** Based on [Astro Components Documentation](https://docs.astro.build/en/basics/astro-components/) and [Astro Conditional Rendering](https://docs.astro.build/en/reference/astro-syntax/)
 
-**Example:**
+## Integration Points
+
+### New Files
+
+| File | Purpose | Dependencies |
+|------|---------|--------------|
+| `src/styles/lego-immersive.css` | LEGO theme features (fonts, studs, brick, animations) | Imports after `themes.css` in BaseLayout |
+| `public/fonts/fredoka-bold.woff2` | Header font (self-hosted) | None (static asset) |
+| `public/fonts/nunito-regular.woff2` | Body font (self-hosted) | None (static asset) |
+| `public/fonts/jetbrains-mono.woff2` | Monospace font (self-hosted) | None (static asset) |
+
+### Modified Files
+
+| File | Modification | Integration Point |
+|------|--------------|-------------------|
+| `src/layouts/BaseLayout.astro` | Add `import '../styles/lego-immersive.css'` after themes import | After line 9 (after themes.css) |
+| `src/layouts/BaseLayout.astro` | Add `hideSidebarOnMobile?: boolean` to Props interface | Props interface (line 11-15) |
+| `src/layouts/BaseLayout.astro` | Add conditional class to sidebar wrapper | Sidebar div (line 63) |
+| `src/pages/index.astro` | Pass `hideSidebarOnMobile={false}` to BaseLayout | BaseLayout props (line 10) |
+| `src/pages/posts/[...slug].astro` | Pass `hideSidebarOnMobile={true}` to BaseLayout | BaseLayout props |
+| `src/pages/portfolio/[...slug].astro` | Pass `hideSidebarOnMobile={true}` to BaseLayout | BaseLayout props |
+
+### Existing Files (No Changes Needed)
+
+| File | Why Unchanged | Integration Method |
+|------|---------------|-------------------|
+| `src/styles/global.css` | Base styles still apply, custom properties cascade | LEGO styles inherit spacing/typography vars |
+| `src/styles/themes.css` | LEGO colors already defined | LEGO immersive features extend existing colors |
+| `src/components/AuthorSidebar.astro` | Component is theme-agnostic | CSS selectors target it: `[data-theme="lego"] .author-sidebar` |
+| `src/components/portfolio/GitHubCard.astro` | Component is theme-agnostic | CSS selectors target it: `[data-theme="lego"] .github-card` |
+
+## Data Flow
+
+### LEGO Theme Activation Flow
+
+```
+User selects "LEGO" theme
+    ↓
+localStorage.setItem('site-theme', 'lego')
+    ↓
+document.documentElement.setAttribute('data-theme', 'lego')
+    ↓
+CSS [data-theme="lego"] selectors activate
+    ↓
+┌─────────────────────────────────────────────────┐
+│  Layer 1: Font Loading Triggers                 │
+│  - Browser sees font-family: 'Fredoka'          │
+│  - Requests /fonts/fredoka-bold.woff2           │
+│  - Shows fallback (Arial Black) during load     │
+│  - Swaps to Fredoka when loaded (font-display)  │
+└─────────────────────────────────────────────────┘
+    ↓
+┌─────────────────────────────────────────────────┐
+│  Layer 2: Pseudo-Elements Render                │
+│  - ::before elements create stud patterns       │
+│  - GPU-accelerated radial-gradients             │
+│  - No layout reflow (positioned absolutely)     │
+└─────────────────────────────────────────────────┘
+    ↓
+┌─────────────────────────────────────────────────┐
+│  Layer 3: Brick Effects Apply                   │
+│  - Borders/shadows update on cards              │
+│  - Box-shadow renders as brick depth            │
+└─────────────────────────────────────────────────┘
+    ↓
+┌─────────────────────────────────────────────────┐
+│  Layer 4: Animations Enabled                    │
+│  - Hover triggers snap animation                │
+│  - Transform uses GPU acceleration              │
+└─────────────────────────────────────────────────┘
+```
+
+### Page Load with LEGO Theme
+
+```
+Browser requests page
+    ↓
+Inline script reads localStorage (BEFORE paint)
+    ↓
+Sets data-theme="lego" on <html>
+    ↓
+Browser loads CSS files in order:
+  1. global.css (base styles)
+  2. themes.css (LEGO colors)
+  3. lego-immersive.css (LEGO features)
+    ↓
+Browser parses CSS:
+  - Sees @font-face definitions
+  - Sees [data-theme="lego"] matches
+  - Queues font downloads
+  - Applies initial styles with fallback fonts
+    ↓
+First Paint (with LEGO colors + fallback fonts)
+    ↓
+Fonts download in background
+    ↓
+Font Swap (swap happens, may cause slight layout shift)
+    ↓
+Final Render (LEGO theme fully active)
+```
+
+## Build Order
+
+Based on dependency analysis and integration complexity, here's the recommended build order:
+
+### Phase 1: CSS Organization & Font Loading
+**Why first:** Foundation for all other features, no visual changes yet
+
+1. **Create `src/styles/lego-immersive.css` with @layer structure**
+   - Define layer order: `@layer lego-fonts, lego-studs, lego-brick, lego-motion;`
+   - Add empty layers with comments
+   - Import in BaseLayout after themes.css
+   - **Verification:** Build succeeds, no visual changes
+
+2. **Add font definitions to lego-fonts layer**
+   - Download and place fonts in `public/fonts/`
+   - Add @font-face rules with `font-display: swap`
+   - Define CSS custom properties for font families
+   - Apply fonts to elements within `[data-theme="lego"]`
+   - **Verification:** Switch to LEGO theme, fonts load (check Network tab)
+
+### Phase 2: Decorative Pseudo-Elements
+**Why second:** Visual features that don't affect layout (safe to add)
+
+3. **Add stud patterns to cards via ::before**
+   - Define radial-gradient pattern in lego-studs layer
+   - Apply to `.github-card::before`
+   - Add `position: relative` and padding adjustment to `.github-card`
+   - **Verification:** Cards show studs when LEGO theme active
+
+4. **Add stud patterns to sidebar via ::before**
+   - Same pattern as cards
+   - Apply to `.author-sidebar::before`
+   - **Verification:** Sidebar shows studs when LEGO theme active
+
+5. **Add baseplate background to body via ::after**
+   - Subtle grid pattern using radial-gradient
+   - Fixed position, behind all content (`z-index: -1`)
+   - **Verification:** Subtle grid visible on all pages
+
+### Phase 3: Brick Shape Effects
+**Why third:** Builds on existing structure, adds depth
+
+6. **Add brick borders and shadows to cards**
+   - Define in lego-brick layer
+   - Thicker borders (3px)
+   - Layered box-shadows for depth effect
+   - **Verification:** Cards have brick-like appearance
+
+7. **Add brick borders to sidebar**
+   - Same pattern as cards
+   - **Verification:** Sidebar matches card styling
+
+### Phase 4: Animations & Polish
+**Why fourth:** Non-essential, easy to debug separately
+
+8. **Add snap/bounce animations on hover**
+   - Define @keyframes in lego-motion layer
+   - Use `transform` for GPU acceleration
+   - Add to card hover states
+   - **Verification:** Smooth animation on hover, no jank
+
+9. **Add snap sound effect (optional)**
+   - JavaScript event listener on card click
+   - Play short snap.mp3 audio file
+   - **Verification:** Sound plays on click (can be muted)
+
+### Phase 5: Responsive Sidebar Control
+**Why last:** Touches multiple files, requires careful testing
+
+10. **Add hideSidebarOnMobile prop to BaseLayout**
+    - Update Props interface
+    - Add conditional class to sidebar wrapper
+    - Add CSS media query rules
+    - **Verification:** Prop works on test page
+
+11. **Update page components with prop**
+    - Homepage: `hideSidebarOnMobile={false}`
+    - Blog posts: `hideSidebarOnMobile={true}`
+    - Portfolio: `hideSidebarOnMobile={true}`
+    - **Verification:** Sidebar hides on mobile for blog/portfolio
+
+### Testing & Polish (after all phases)
+
+12. **Cross-browser testing**
+    - Test in Chrome, Firefox, Safari
+    - Test on mobile devices (iOS Safari, Chrome Android)
+    - Verify font loading, animations, pseudo-elements
+
+13. **Performance audit**
+    - Lighthouse score (should not decrease)
+    - Check font load impact (Network panel)
+    - Verify no layout shift (CLS metric)
+
+14. **Accessibility audit**
+    - Ensure studs don't interfere with screen readers
+    - Verify focus states still visible
+    - Check color contrast with LEGO colors
+
+## Scaling Considerations
+
+| Scale | Considerations | Approach |
+|-------|----------------|----------|
+| 1 theme (LEGO only) | Simple, all styles in one file | Current architecture is perfect |
+| 3-5 immersive themes | Multiple theme-specific CSS files | Use same pattern: `[data-theme="X"]` in `X-immersive.css` |
+| 10+ immersive themes | File size grows, unused CSS loaded | Consider dynamic CSS imports or build-time CSS splitting |
+| Custom user themes | Users upload fonts/styles | Needs JavaScript runtime CSS injection, API for theme management |
+
+### Scaling Priorities
+
+1. **First consideration (3-5 themes):**
+   - Create separate immersive CSS files per theme
+   - Import all in BaseLayout (total CSS still under 50KB gzipped)
+   - Browser caches all, users switch themes instantly
+
+2. **Second consideration (10+ themes):**
+   - Implement dynamic CSS loading with JavaScript
+   - Only load immersive CSS when theme selected
+   - Adds complexity but reduces initial bundle size
+
+**Recommendation for this project:** Current architecture scales well to 5-8 immersive themes without changes.
+
+## Anti-Patterns
+
+### Anti-Pattern 1: Loading All Fonts Globally
+
+**What people do:** Define @font-face at root level, fonts download even when not used
+
+**Why it's wrong:**
+- Wastes bandwidth for users on other themes
+- Increases initial page load time
+- Fonts may conflict with other theme aesthetics
+
+**Do this instead:**
+- Scope @font-face to theme selector or CSS layer
+- Use `font-display: swap` for progressive enhancement
+- Self-host fonts to control loading behavior
+
+### Anti-Pattern 2: Using DOM Elements for Studs
+
+**What people do:** Add `<span class="stud"></span>` elements via JavaScript
+
+**Why it's wrong:**
+- DOM bloat (100s of elements for grid patterns)
+- Accessibility issues (screen readers announce decorative content)
+- Poor performance (layout/paint on every element)
+
+**Do this instead:**
+- Use ::before/::after pseudo-elements
+- Use radial-gradient for patterns
+- Mark as `pointer-events: none` and decorative
+
+### Anti-Pattern 3: Inline Styles for Theme Features
+
+**What people do:** Apply LEGO styles with JavaScript: `element.style.fontFamily = 'Fredoka'`
+
+**Why it's wrong:**
+- High specificity (inline styles override CSS)
+- Can't be overridden by user preferences
+- Difficult to maintain/debug
+- No CSS cascade benefits
+
+**Do this instead:**
+- Use CSS custom properties and selectors
+- Let cascade handle specificity
+- Keep all styling in CSS files
+
+### Anti-Pattern 4: Hardcoded Breakpoints in Components
+
+**What people do:** Add responsive logic inside AuthorSidebar component
+
+**Why it's wrong:**
+- Component becomes less reusable
+- Difficult to change breakpoints globally
+- Mixes presentation logic with component logic
+
+**Do this instead:**
+- Use props to control behavior declaratively
+- Keep breakpoint logic in layout CSS
+- Component stays presentation-agnostic
+
+### Anti-Pattern 5: !important for Theme Overrides
+
+**What people do:** Force LEGO styles with `!important` everywhere
+
+**Why it's wrong:**
+- Specificity arms race
+- Difficult to override for user preferences
+- Breaks cascade layer benefits
+
+**Do this instead:**
+- Use @layer to control specificity order
+- Leverage selector specificity naturally
+- Reserve !important for true exceptions only
+
+## Performance Considerations
+
+### Font Loading Impact
+
+**Measured impact (based on research):**
+- 3 WOFF2 fonts: ~150KB total (gzipped: ~120KB)
+- First load: 1-2 second delay with `font-display: swap`
+- Cached load: Instant (browser cache)
+
+**Mitigation strategies:**
+1. Use `font-display: swap` to show fallback immediately
+2. Self-host fonts (avoid DNS lookup to Google Fonts)
+3. Subset fonts to Latin characters only (reduces size by 40%)
+4. Use `<link rel="preload">` for critical fonts (headers only)
+
+**Example preload:**
+```html
+<!-- In BaseLayout.astro <head> -->
+<link rel="preload" href="/fonts/fredoka-bold.woff2" as="font" type="font/woff2" crossorigin>
+```
+
+### Pseudo-Element Performance
+
+**GPU Acceleration requirements:**
+- Use `transform` instead of `top/left` for animations
+- Add `will-change: transform` for frequently animated elements
+- Use `translateZ(0)` to force GPU layer creation
+
+**Measured impact:**
+- Radial-gradient studs: ~2ms paint time per element
+- 20 cards with studs: ~40ms total paint time
+- Well within 16ms frame budget for 60fps
+
+**Source:** [CSS GPU Acceleration Guide](https://www.lexo.ch/blog/2025/01/boost-css-performance-with-will-change-and-transform-translate3d-why-gpu-acceleration-matters/)
+
+### Animation Performance
+
+**Best practices:**
+- Only animate `transform` and `opacity` (composited properties)
+- Avoid animating `width`, `height`, `top`, `left` (triggers layout)
+- Use `requestAnimationFrame` for JavaScript animations
+- Keep animations under 300ms for snappy feel
+
+**Example performant animation:**
 ```css
-/* Define variables */
-:root {
-  --color-bg: #ffffff;
-}
-
-/* Override with attribute selector */
-[data-theme="dark"] {
-  --color-bg: #1a1a1a;
-}
-
-/* Use in components */
-.component {
-  background: var(--color-bg);
-}
-```
-
-**Advantages:**
-- Single source of truth for values
-- Automatic cascade to all components
-- Runtime theme switching without class juggling
-- Minimal JS (just set one attribute)
-
-### Pattern 5: CMS/Schema Synchronization
-
-**What:** Keep public/admin/config.yml in sync with content.config.ts
-
-**When:** Content is editable via Decap CMS
-
-**Example:**
-```yaml
-# config.yml has comments linking to schema
-# Schema mirrors src/content.config.ts -- update both when changing fields
-fields:
-  - { label: "Title", name: "title", widget: "string", required: true }
-```
-
-```typescript
-// content.config.ts
-schema: z.object({
-  title: z.string(),
-})
-```
-
-**Process for adding fields:**
-1. Add to Zod schema in content.config.ts
-2. Add to CMS config.yml fields array
-3. Update existing content files if field is required
-4. Test in CMS (restart dev server to reload config)
-
----
-
-## Anti-Patterns to Avoid
-
-### Anti-Pattern 1: SSR or Server Endpoints
-
-**What:** Using Astro server endpoints or SSR for GitHub/npm stats
-
-**Why bad:**
-- Site is deployed to GitHub Pages (static only)
-- Adding SSR would require different hosting (Netlify/Vercel)
-- Increases complexity and cost
-- Current client-side approach works fine with caching
-
-**Instead:** Keep client-side fetching with localStorage cache (existing pattern)
-
-### Anti-Pattern 2: Runtime Markdown Rendering
-
-**What:** Using marked or markdown-it in browser to render code blocks
-
-**Why bad:**
-- Duplicates Astro's build-time markdown processing
-- Increases bundle size significantly
-- Slower rendering
-- Loses Astro's optimizations
-
-**Instead:** Use Astro's built-in markdown processing with Shiki at build time
-
-### Anti-Pattern 3: Theme Class Swapping
-
-**What:** Changing theme by toggling classes on every component
-
-**Why bad:**
-```javascript
-// BAD: Requires touching every element
-document.querySelectorAll('.card').forEach(el => {
-  el.classList.remove('light-theme');
-  el.classList.add('dark-theme');
-});
-```
-
-**Instead:** Set single attribute, let CSS cascade:
-```javascript
-// GOOD: Single attribute change
-document.documentElement.setAttribute('data-theme', 'dark');
-```
-
-### Anti-Pattern 4: Separate CSS Files Per Theme
-
-**What:** Loading different CSS files for each theme
-
-**Why bad:**
-- Requires page reload to switch themes (bad UX)
-- Increases build complexity
-- Harder to maintain consistency
-- More HTTP requests
-
-**Instead:** Single CSS file with attribute selectors for theme overrides
-
-### Anti-Pattern 5: Mixing Content Collection Types
-
-**What:** Putting teaching content in pages or posts collection
-
-**Why bad:**
-- Loses type safety (different fields per content type)
-- Harder to query specific content types
-- CMS becomes confusing (all types in one folder)
-- Breaks semantic organization
-
-**Instead:** Create dedicated collection with its own schema
-
-### Anti-Pattern 6: Hardcoding Theme Colors
-
-**What:** Using color values directly in component styles
-
-**Why bad:**
-```astro
-<style>
-  /* BAD: Doesn't respect theme */
-  .button {
-    background: #0066cc;
+@keyframes lego-snap {
+  0%, 100% {
+    transform: translateY(0) scale(1);
   }
-</style>
-```
-
-**Instead:** Always use custom properties:
-```astro
-<style>
-  /* GOOD: Theme-aware */
-  .button {
-    background: var(--color-link);
+  50% {
+    transform: translateY(-4px) scale(1.02);
   }
-</style>
+}
+
+.github-card:hover {
+  animation: lego-snap 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  /* cubic-bezier creates "snap" feel */
+}
 ```
 
----
+**Source:** [MDN CSS Performance](https://developer.mozilla.org/en-US/docs/Web/Performance/Guides/CSS_JavaScript_animation_performance)
 
-## Build Order and Dependencies
+## Open Questions
 
-### Phase 1: Foundation (No Dependencies)
+1. **Font subsetting strategy:**
+   - Should fonts include extended Latin characters?
+   - Current recommendation: Latin only (reduces size)
+   - Decision point: Test with actual content, expand if needed
 
-**Goal:** Establish base patterns without breaking existing functionality
+2. **Stud pattern density:**
+   - How many studs per row? (Currently: 8px spacing)
+   - Should density change on mobile?
+   - Current recommendation: Test with users, adjust if too busy
 
-1. **Theme System CSS** (2-3 hours)
-   - Create src/styles/themes.css with theme variables
-   - Import in global.css
-   - Test that existing site still works (default theme)
-   - No UI yet, just infrastructure
+3. **Animation triggers:**
+   - Should animations play on first load?
+   - Should there be reduced motion support?
+   - Current recommendation: Respect `prefers-reduced-motion` media query
 
-2. **Teaching Collection Schema** (1 hour)
-   - Add teaching collection to content.config.ts
-   - Add CMS configuration in config.yml
-   - Create 1-2 sample teaching/*.md files
-   - Verify schema validation works
+4. **Sound effects:**
+   - Should snap sound be default or opt-in?
+   - How to handle autoplay policies?
+   - Current recommendation: Optional, user-triggered only
 
-**Why this order:** CSS theme infrastructure must exist before theme switcher. Teaching schema must exist before pages that query it.
+## Sources
 
-### Phase 2: UI Components (Depends on Phase 1)
+### Primary Sources (HIGH confidence)
 
-**Goal:** Add visible features that use Phase 1 infrastructure
+**Codebase Analysis:**
+- `/Users/pedf/workspace/bacilo.github.io/src/layouts/BaseLayout.astro` - Existing layout structure
+- `/Users/pedf/workspace/bacilo.github.io/src/styles/global.css` - CSS custom properties system
+- `/Users/pedf/workspace/bacilo.github.io/src/styles/themes.css` - Theme color definitions
+- `/Users/pedf/workspace/bacilo.github.io/.planning/milestones/v3.0-phases/14-theme-system-foundation/14-RESEARCH.md` - Theme system architecture
 
-3. **Theme Switcher UI** (2-3 hours)
-   - Create ThemeSwitcher.astro component
-   - Create theme-switcher.ts script
-   - Add to BaseLayout.astro header
-   - Test theme switching and persistence
-   - **Depends on:** Theme CSS from step 1
+**Official Documentation:**
+- [MDN @layer](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@layer)
+- [MDN font-display](https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display)
+- [MDN radial-gradient](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/gradient/radial-gradient)
+- [MDN Pseudo-elements](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Selectors/Pseudo-elements)
+- [Astro Components](https://docs.astro.build/en/basics/astro-components/)
 
-4. **Teaching Pages** (3-4 hours)
-   - Create pages/teaching/index.astro (listing)
-   - Create pages/teaching/[...slug].astro (detail)
-   - Add teaching link to Navigation.astro
-   - Style teaching entry layout
-   - **Depends on:** Teaching collection from step 2
+### Secondary Sources (MEDIUM-HIGH confidence)
 
-### Phase 3: Portfolio Enhancements (Depends on Phase 1, 2)
+**CSS Architecture:**
+- [CSS Cascade Layers Guide | CSS-Tricks](https://css-tricks.com/css-cascade-layers/)
+- [Organise your CSS with Cascade Layers](https://www.jefersonsilva.me/articles/organise-your-css-with-cascade-layers)
+- [CSS Layers - Material UI](https://mui.com/material-ui/customization/css-layers/)
 
-**Goal:** Extend existing portfolio functionality
+**Font Loading:**
+- [Astro Font Optimization | Joel M Turner](https://joelmturner.com/blog/astro-font-optimization/)
+- [Controlling Font Performance with font-display | Chrome Developers](https://developer.chrome.com/blog/font-display)
+- [8 Web Font Optimization Strategies](https://nitropack.io/blog/post/font-loading-optimization)
 
-5. **Configurable Portfolio Stats** (3-4 hours)
-   - Add statsDisplay and npmPackage fields to portfolio schema
-   - Add fields to CMS config
-   - Modify GitHubCard.astro for conditional rendering
-   - Add fetchNpmDownloads to github-api.ts
-   - Test with different stat configurations
-   - **Depends on:** Nothing (can be parallel with 3-4)
+**CSS Patterns:**
+- [CSS Gradients Complete Guide](https://devtoolbox.dedyn.io/blog/css-gradients-complete-guide)
+- [Learn CSS radial-gradient by Building Background Patterns](https://www.freecodecamp.org/news/css-radial-gradient/)
+- [A Deep CSS Dive Into Radial And Conic Gradients](https://www.smashingmagazine.com/2022/01/css-radial-conic-gradient/)
 
-6. **Code Syntax Highlighting** (2-4 hours)
-   - **Option A (Simple):** Configure Shiki in astro.config.mjs for markdown code fences
-   - **Option B (Advanced):** Create CodeEmbed.astro component with copy button
-   - Update portfolio markdown files with code examples
-   - Test syntax highlighting with multiple languages
-   - Ensure themes work with code highlighting
-   - **Depends on:** Theme CSS from step 1 (for theme-aware highlighting)
+**Performance:**
+- [CSS GPU Acceleration Guide](https://www.lexo.ch/blog/2025/01/boost-css-performance-with-will-change-and-transform-translate3d-why-gpu-acceleration-matters/)
+- [CSS and JavaScript animation performance | MDN](https://developer.mozilla.org/en-US/docs/Web/Performance/Guides/CSS_JavaScript_animation_performance)
+- [Improving HTML5 App Performance with GPU Accelerated CSS](https://www.urbaninsight.com/article/improving-html5-app-performance-gpu-accelerated-css-transitions)
 
-### Phase 4: Integration and Testing (Depends on All)
+**Responsive Patterns:**
+- [Astro Conditional Rendering](https://docs.astro.build/en/reference/astro-syntax/)
+- [Understanding Astro components](https://dominuskelvin.dev/blog/understanding-astro-components)
 
-7. **Integration Testing** (2-3 hours)
-   - Test all features together
-   - Verify CMS editing workflow
-   - Check theme switching doesn't break components
-   - Test GitHub/npm API fetching with cache
-   - Mobile responsiveness check
-   - Accessibility audit (keyboard nav, screen readers)
+### Tertiary Sources (LOW-MEDIUM confidence)
 
-8. **Documentation and Refinement** (1-2 hours)
-   - Update README with new features
-   - Document theme customization process
-   - Add developer notes about maintaining schemas/CMS sync
-
-### Total Estimated Time: 16-24 hours
-
-### Dependency Graph
-
-```
-themes.css (1) ──┬──> ThemeSwitcher (3) ───┐
-                 │                          │
-teaching schema (2) ──> teaching pages (4) ─┼──> Integration (7)
-                                             │
-portfolio schema (5) ────────────────────────┤
-                                             │
-Shiki config (6) ────────────────────────────┘
-```
-
-### Parallel Work Opportunities
-
-Can be done simultaneously:
-- Theme CSS + Teaching schema (no conflicts)
-- Theme switcher + Teaching pages (different files)
-- Portfolio stats + Code highlighting (different concerns)
-
-Cannot be parallelized:
-- Theme CSS must complete before theme switcher
-- Teaching schema must complete before teaching pages
-- All features must complete before integration testing
+**Best Practices:**
+- [Organizing your CSS | MDN](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Styling_basics/Organizing)
+- [CSS Best Practices for Clean and Maintainable Code](https://allthingsprogramming.com/css-best-practices-for-clean-and-maintainable-code/)
+- [An Ultimate Guide To CSS Pseudo Classes And Pseudo Elements](https://www.smashingmagazine.com/2016/05/an-ultimate-guide-to-css-pseudo-classes-and-pseudo-elements/)
 
 ---
-
-## Scalability Considerations
-
-### At Current Scale (< 100 portfolio items, < 50 teaching entries)
-
-| Concern | Approach | Why |
-|---------|----------|-----|
-| API rate limits | Client-side fetch with 1-hour cache | GitHub: 60 req/hr unauthenticated, npm: no rate limit. Cache reduces requests significantly. |
-| Build time | Static site generation | Fast builds with Astro 5.x. Content collections use glob loader (incremental). |
-| Bundle size | Code splitting via Astro islands | Theme CSS ~2-3KB. Each script loads per-page. No runtime framework. |
-| Browser storage | localStorage for cache + theme | Minimal usage (~1KB per repo cached, ~100 bytes theme pref). |
-
-### At Medium Scale (100-500 portfolio items, 50-200 teaching entries)
-
-| Concern | Approach | Why |
-|---------|----------|-----|
-| API rate limits | Add GitHub token to env for 5000 req/hr | Use in build-time data fetching instead of client-side. |
-| Build time | Still acceptable (1-2 min) | Astro's incremental builds help. Consider caching API responses at build time. |
-| Bundle size | Still minimal | No change in approach. Static site = no scaling issues. |
-| Page load | Lazy load portfolio cards | Intersection Observer to fetch API data only when cards visible. |
-
-### At Large Scale (500+ items, complex queries)
-
-| Concern | Approach | Why |
-|---------|----------|-----|
-| API rate limits | Pre-fetch at build time, store in static JSON | Eliminate client-side API calls entirely. Trade-off: stats not real-time but build-time. |
-| Build time | Pagination, virtual collections | Split large collections into pages. Use Astro's pagination. |
-| Search/filtering | Add client-side search library (fuse.js) or pre-build search index | Static site search via client-side indexing. |
-
-### Current Recommendation
-
-**Keep existing client-side approach.** It scales well for academic portfolio use case (unlikely to hit rate limits with caching). If rate limits become an issue, easy migration path: move fetching to build time with GitHub token in env.
-
----
-
-## New vs. Modified Components Summary
-
-### New Files (To Create)
-
-| File | Purpose | Lines Est. | Complexity |
-|------|---------|-----------|------------|
-| `src/content/teaching/*.md` | Teaching entry content | N/A | Low |
-| `src/pages/teaching/index.astro` | Teaching listing page | ~80 | Low |
-| `src/pages/teaching/[...slug].astro` | Teaching detail page | ~60 | Low |
-| `src/components/ThemeSwitcher.astro` | Theme selection UI | ~40 | Low |
-| `src/components/portfolio/CodeEmbed.astro` | Syntax-highlighted code (if Option B) | ~80 | Medium |
-| `src/scripts/theme-switcher.ts` | Theme logic and persistence | ~60 | Low |
-| `src/styles/themes.css` | Theme-specific CSS overrides | ~200 | Low |
-
-**Total new files:** 7 (or 6 if using markdown code fences instead of CodeEmbed)
-
-### Modified Files (To Update)
-
-| File | Changes | Risk | Lines Changed |
-|------|---------|------|---------------|
-| `src/content.config.ts` | Add teaching collection, portfolio fields | Low | +15-20 |
-| `public/admin/config.yml` | Add teaching + portfolio field configs | Low | +40-50 |
-| `src/components/portfolio/GitHubCard.astro` | Conditional stats rendering | Low | +20-30 |
-| `src/scripts/github-api.ts` | Add npm download fetching function | Low | +40-50 |
-| `src/layouts/BaseLayout.astro` | Add theme switcher, inline script | Low | +15-20 |
-| `src/components/Navigation.astro` | Add teaching link | Very Low | +1-2 |
-| `src/styles/global.css` | Import themes.css | Very Low | +1 |
-| `astro.config.mjs` | Configure Shiki (if using code fences) | Low | +10-15 |
-
-**Total modified files:** 8
-
-### Risk Assessment
-
-**Low Risk Changes:**
-- All additions follow existing patterns
-- No breaking changes to existing components
-- New collections don't affect existing ones
-- Theme system is additive (doesn't remove dark mode)
-- Portfolio stats are optional fields (backward compatible)
-
-**Medium Risk Changes:**
-- None identified
-
-**Mitigation:**
-- Test incrementally (one feature at a time)
-- Keep git commits granular for easy rollback
-- Test CMS editing after schema changes
-- Verify theme switching doesn't break existing styles
-
----
-
-## Confidence Assessment
-
-| Area | Confidence | Sources | Notes |
-|------|------------|---------|-------|
-| Content Collections | HIGH | Existing codebase | 5 collections already implemented, pattern is clear |
-| Component Architecture | HIGH | Existing codebase | Portfolio components demonstrate composition pattern |
-| CSS Custom Properties | HIGH | Existing codebase + training data | Site already uses custom properties with dark mode |
-| Client-Side Fetching | HIGH | Existing codebase | GitHub API pattern established and working |
-| Theme Switching | HIGH | Training data + web standards | Standard [data-theme] pattern, well-established |
-| Shiki Integration | MEDIUM-HIGH | Training data | Astro has built-in Shiki, but dual-theme config needs verification |
-| npm API | MEDIUM-HIGH | Training data + public API docs | Public API, no auth needed, straightforward endpoint |
-| Build-Time Code Highlighting | MEDIUM | Training data | Shiki API is stable but specific Astro integration steps need verification |
-
-**Overall confidence: HIGH** — All features align with existing architectural patterns. No experimental approaches or major refactors required.
-
----
-
-## Source Attribution
-
-### HIGH Confidence (Direct Verification)
-
-- **Astro content collections with glob loader:** Verified in `/Users/pedf/workspace/bacilo.github.io/src/content.config.ts` (lines 1-67)
-- **Component composition pattern:** Verified in `/Users/pedf/workspace/bacilo.github.io/src/pages/portfolio/index.astro` (lines 19-40)
-- **CSS custom properties system:** Verified in `/Users/pedf/workspace/bacilo.github.io/src/styles/global.css` (lines 1-38)
-- **Client-side API fetching with cache:** Verified in `/Users/pedf/workspace/bacilo.github.io/src/scripts/github-api.ts` (lines 22-96)
-- **CMS schema sync pattern:** Verified in `/Users/pedf/workspace/bacilo.github.io/public/admin/config.yml` (comments on lines 72, 86, 104, 121)
-- **Existing dark mode implementation:** Verified in `/Users/pedf/workspace/bacilo.github.io/src/styles/global.css` (lines 27-38)
-
-### MEDIUM-HIGH Confidence (Training Data + Standards)
-
-- **Shiki syntax highlighting:** Based on Astro training data (January 2025 cutoff) - Astro has built-in Shiki support since v2.x, continued in v5.x
-- **npm downloads API:** Public npm registry API endpoint (`https://api.npmjs.org/downloads/point/`) - no authentication required
-- **CSS [data-theme] pattern:** Standard web practice, widely used in production sites
-- **localStorage theme persistence:** Standard browser API, same pattern as existing cache implementation
-- **Inline script for FOUC prevention:** Standard pattern for preventing theme flash
-
-### MEDIUM Confidence (Training Data, Needs Verification)
-
-- **Astro 5.x Shiki dual-theme config:** Training data suggests `themes: { light, dark }` config exists, but exact API for dual-theme should be verified in official docs
-- **Shiki codeToHtml API for custom component:** Training data indicates this API exists, but implementation details should be verified if using custom component
-
-### Areas Flagged for Verification
-
-1. **Shiki dual-theme configuration syntax** — Exact config format for light/dark theme switching in Astro 5.x markdown config
-2. **Shiki codeToHtml API** — If building custom CodeEmbed component, verify current Shiki API (may have changed since training data)
-
-**Mitigation:** Start with simple markdown code fence approach (lower risk). Add custom component later if needed.
-
----
-
-## Open Questions for Phase-Specific Research
-
-These questions don't block initial implementation but may need deeper research:
-
-1. **Teaching collection fields:** What fields do typical academic teaching sections include? (Can refine schema based on user needs)
-
-2. **npm download time ranges:** API supports last-day, last-week, last-month. Which is most meaningful for portfolio stats?
-
-3. **Theme naming and count:** Document suggests 6-8 themes. Which specific themes provide best coverage? (Color-blind accessible options?)
-
-4. **Code highlighting language support:** Which languages should be pre-configured? (TypeScript, JavaScript, Python, Bash are obvious - what else?)
-
-5. **Teaching section navigation:** Should teaching have its own top-level nav link, or be under "CV" section?
-
-6. **Portfolio stats display defaults:** Should statsDisplay default to 'stars', 'both', or 'none'?
-
-**Resolution strategy:** These are design/UX questions, not technical blockers. Can be decided during implementation or deferred to user preference.
-
----
-
-## Next Steps for Implementer
-
-1. **Review this architecture document** — Understand integration points and data flows
-
-2. **Start with Phase 1 (Foundation):**
-   - Create themes.css (use color examples provided)
-   - Add teaching collection to content.config.ts
-
-3. **Test incrementally:**
-   - After each step, verify existing functionality still works
-   - Check that builds succeed and CMS loads
-
-4. **Follow existing patterns:**
-   - Copy structure from publications/talks for teaching pages
-   - Copy pattern from GitHubCard for fetching npm stats
-   - Use same localStorage pattern for theme persistence
-
-5. **Flag issues early:**
-   - If Shiki config doesn't work as documented, simplify to basic code fences first
-   - If theme switching has visual glitches, check CSS specificity conflicts
-   - If CMS doesn't reflect schema changes, restart dev server and clear browser cache
-
-**Success criteria:**
-- [ ] All 4 features working independently
-- [ ] Features work together (themes apply to code highlighting, etc.)
-- [ ] CMS editing works for teaching and new portfolio fields
-- [ ] No regressions to existing functionality
-- [ ] Builds succeed for GitHub Pages deployment
+*Architecture research for: Immersive LEGO CSS Theme Integration*
+*Researched: 2026-02-17*

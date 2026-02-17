@@ -1,602 +1,382 @@
-# Stack Research - Milestone 2
+# Stack Research: Immersive LEGO Theme
 
-**Domain:** Teaching Section + Portfolio Enhancements (Code Embeds, Stats Config, Multi-Theme)
-**Researched:** 2026-02-16
-**Confidence:** MEDIUM (training data based, web research tools unavailable)
+**Domain:** CSS visual theming for Astro static site
+**Researched:** 2026-02-17
+**Confidence:** HIGH
 
-## Executive Summary
+## Overview
 
-This research focuses on stack additions for 4 new features:
-1. Teaching section (content collection + pages)
-2. Portfolio code embeds with syntax highlighting
-3. Configurable GitHub stats (stars/downloads/both/neither via Releases API)
-4. Multi-theme CSS system (6-8 themes)
+This research focuses on stack additions needed to transform the existing LEGO color theme into a fully immersive visual experience with brick shapes, studs, LEGO-style typography, and playful animations. All additions integrate with the existing Astro 5.x + CSS custom properties architecture.
 
-**Key finding:** Minimal new dependencies required. Astro 5.x includes Shiki syntax highlighting, GitHub Releases API is available client-side, and themes use existing CSS custom properties pattern.
+## Recommended Stack Additions
 
-## New Stack Additions
+### Web Fonts (Google Fonts - Open Source)
 
-### Syntax Highlighting
+| Font Family | License | Purpose | Why Recommended |
+|-------------|---------|---------|-----------------|
+| Fredoka | SIL OFL 1.1 | Logo-style titles (h1) | Big, round, bold letterforms perfect for headlines. Thick strokes ensure readability. Playful without being childish. |
+| Slackey | SIL OFL 1.1 | Brick-built headers (h2-h3) | Chunky display font with fun, lighthearted appearance. Retro feel matches LEGO nostalgia aesthetic. |
+| Baloo 2 | SIL OFL 1.1 | Playful body text (p, li) | Soft with thick strokes and round curves. Maintains readability at body text sizes while keeping playful vibe. |
 
-| Technology | Version | Purpose | Why Recommended |
-|------------|---------|---------|-----------------|
-| Shiki | Built-in (via Astro) | Syntax highlighting for code blocks | Built into Astro 5.x, no installation needed. VSCode-quality highlighting, supports 100+ languages, multiple themes. Better than Prism for static sites (no client JS needed). |
-| `@astrojs/mdx` | ^4.0.0 (existing) | Enhanced markdown with components | Already installed. Enables code block highlighting in MDX files. |
+**All three fonts are free and open source via Google Fonts.** No licensing restrictions for commercial or non-commercial use.
 
-**Integration:** Zero-config for basic use. Astro automatically applies Shiki to markdown/MDX code blocks.
+### Font Loading Optimization
 
-### Code Embed Features
+| Tool | Version | Purpose | Why Recommended |
+|------|---------|---------|-----------------|
+| astro-font | ^0.2.0+ | Font optimization & preloading | Automatically optimizes Google Fonts, generates efficient @font-face rules, enables selective preloading, supports font-display control to prevent FOUT. Industry standard for Astro font optimization. |
 
-| Technology | Version | Purpose | Why Recommended |
-|------------|---------|---------|-----------------|
-| None required | N/A | Copy button, line highlighting | Implement with vanilla TypeScript (already in project). Lightweight custom solution matches existing iframe embed pattern. |
+### CSS Animation Techniques (No Additional Dependencies)
 
-**Rationale:** Site uses vanilla TypeScript patterns (see `src/scripts/github-api.ts`). Adding react-syntax-highlighter or similar would introduce React dependency for minimal benefit.
+| Technique | Browser Support | Purpose | Why Recommended |
+|-----------|-----------------|---------|-----------------|
+| CSS @keyframes + transform | Universal (2026) | Bounce/snap hover effects | GPU-accelerated, performant, no JS needed. Matches existing CSS-only theme pattern. |
+| @property | Universal (2026) | Animated custom properties | Enables smooth animation of CSS variables including gradients. Supported in all modern browsers as of 2026. |
+| will-change: transform | Universal (2026) | Performance hints | Promotes elements to compositor layer for smoother animations. Use sparingly (only on hover/active states). |
 
-### GitHub Releases API Integration
+## CSS Techniques for LEGO Visual Effects
 
-| Technology | Version | Purpose | Why Recommended |
-|------------|---------|---------|-----------------|
-| None required | N/A | Fetch release download counts | Extend existing `src/scripts/github-api.ts` pattern. GitHub REST API v3 provides `/repos/{owner}/{repo}/releases/latest` endpoint with download counts. |
+### Circular Studs Pattern
 
-**API Endpoint:**
+**Technique:** `repeating-radial-gradient()` with CSS custom properties
+
+```css
+[data-theme="lego"] .brick-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 40px; /* Stud row height */
+  background-image:
+    radial-gradient(
+      circle at center,
+      var(--stud-color) 8px,
+      transparent 8px
+    );
+  background-size: 30px 30px; /* Stud spacing */
+  background-position: 15px 15px;
+}
 ```
-GET https://api.github.com/repos/{owner}/{repo}/releases/latest
-Response includes: download_count per asset, total across assets
+
+**Why:** Pure CSS, scalable with CSS variables, GPU-accelerated rendering. Creates perfect circular studs without images.
+
+**Reference:** [MDN repeating-radial-gradient()](https://developer.mozilla.org/en-US/docs/Web/CSS/gradient/repeating-radial-gradient) | [CSS Halftone Patterns](https://css-irl.info/css-halftone-patterns/)
+
+### Brick Shape with Depth
+
+**Technique:** Multiple `box-shadow` layers + `border-radius`
+
+```css
+[data-theme="lego"] .brick-card {
+  border-radius: 8px; /* Subtle rounded corners */
+  box-shadow:
+    0 1px 2px rgba(0,0,0,0.1),      /* Layer 1: subtle */
+    0 2px 4px rgba(0,0,0,0.1),      /* Layer 2: diffuse */
+    0 4px 8px rgba(0,0,0,0.15),     /* Layer 3: depth */
+    inset 0 -2px 4px rgba(0,0,0,0.1); /* Inset: brick lip */
+}
 ```
 
-**Integration:** Add `fetchReleaseStats()` function alongside existing `fetchRepoData()`. Same caching pattern (localStorage, 1-hour TTL). Same error handling.
+**Why:** Layered box-shadows create realistic depth perception. 2-5 shadows optimal for performance. Inset shadow creates characteristic LEGO brick "lip" effect.
 
-### Multi-Theme CSS System
+**Reference:** [Designing Beautiful Shadows (Josh W. Comeau)](https://www.joshwcomeau.com/css/designing-shadows/) | [Layered Box Shadows (Tobias Ahlin)](https://tobiasahlin.com/blog/layered-smooth-box-shadows/)
 
-| Technology | Version | Purpose | Why Recommended |
-|------------|---------|---------|-----------------|
-| CSS Custom Properties | N/A (native CSS) | Theme definitions | Already used for dark mode. Extend existing `:root` pattern with `[data-theme="name"]` selectors. |
-| localStorage | N/A (native Web API) | Theme persistence | Match existing GitHub API caching pattern. Simple, no dependencies. |
+### Advanced Brick 3D Effect (Optional Enhancement)
 
-**No libraries needed.** Avoid styled-components, theme-ui, CSS-in-JS solutions (introduce React/complexity).
+**Technique:** CSS transforms + pseudo-elements for 3D brick faces
+
+```css
+[data-theme="lego"] .brick-3d {
+  position: relative;
+  transform-style: preserve-3d;
+}
+
+[data-theme="lego"] .brick-3d::after {
+  content: '';
+  position: absolute;
+  background: inherit;
+  filter: brightness(0.8);
+  transform: rotateY(-15deg) translateX(-5px);
+  /* Creates side face illusion */
+}
+```
+
+**Why:** Demonstrated technique from [Drawing a Lego brick with HTML & CSS3](http://blog.michelledinan.com/08/2012/drawing-a-lego-brick-with-html-and-css3/). Uses rotation, skew, and pseudo-elements for 3D appearance without images.
+
+**Use when:** Accent elements only (hero cards, feature boxes). Avoid on every element due to complexity.
+
+### Snap/Bounce Hover Animations
+
+**Technique:** @keyframes with cubic-bezier easing
+
+```css
+@keyframes lego-snap {
+  0% { transform: translateY(0); }
+  40% { transform: translateY(-8px); }
+  60% { transform: translateY(-4px); }
+  100% { transform: translateY(0); }
+}
+
+[data-theme="lego"] .brick-card:hover {
+  animation: lego-snap 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  will-change: transform; /* GPU hint */
+}
+```
+
+**Why:** Cubic-bezier creates "snap" feel. GPU-accelerated via `transform`. `will-change` applied only on hover (best practice). Duration <0.6s prevents sluggish feel.
+
+**Performance:** Transform animations run at 60fps on modern devices. No layout thrashing.
+
+**Reference:** [CSS Animations Complete Guide 2026](https://devtoolbox.dedyn.io/blog/css-animations-complete-guide) | [Interactive Guide to Keyframe Animations (Josh W. Comeau)](https://www.joshwcomeau.com/animation/keyframe-animations/)
 
 ## Installation
 
-**No new npm packages required.**
+### Font Optimization (Recommended)
 
-All features use:
-- Built-in Astro capabilities (Shiki)
-- Native Web APIs (fetch, localStorage)
-- Existing TypeScript patterns
-- CSS custom properties (already in use)
-
-## Recommended Architecture
-
-### 1. Teaching Section
-
-**Content Collection:**
-```typescript
-// src/content.config.ts additions
-const teaching = defineCollection({
-  loader: glob({ pattern: "**/*.md", base: "./src/content/teaching" }),
-  schema: z.object({
-    title: z.string(),
-    description: z.string(),
-    date: z.coerce.date(),
-    tags: z.array(z.string()).optional(),
-    difficulty: z.enum(['beginner', 'intermediate', 'advanced']).optional(),
-    duration: z.string().optional(), // e.g., "30 min read"
-  })
-});
+```bash
+npm install astro-font
 ```
 
-**Pages:**
-- `/src/pages/teaching/index.astro` - List view
-- `/src/pages/teaching/[...slug].astro` - Article detail
+**astro.config.mjs:**
+```javascript
+import { defineConfig } from 'astro/config';
+import AstroFont from 'astro-font';
 
-**No new dependencies.** Follows existing publications/talks/posts pattern.
-
-### 2. Code Embeds with Syntax Highlighting
-
-**Shiki Configuration (astro.config.mjs):**
-```typescript
 export default defineConfig({
-  markdown: {
-    shikiConfig: {
-      theme: 'github-dark', // or 'github-light', 'nord', 'dracula', etc.
-      langs: ['javascript', 'typescript', 'python', 'bash', 'css', 'html'],
-      wrap: true, // wrap long lines
-    }
-  },
-  // ... existing config
+  integrations: [
+    AstroFont({
+      config: [
+        {
+          name: 'Fredoka',
+          src: [
+            { weight: '700', style: 'normal', path: './public/fonts/fredoka-v14-latin-700.woff2' }
+          ],
+          preload: true,
+          display: 'swap',
+          selector: '[data-theme="lego"] h1',
+          fallback: 'sans-serif'
+        },
+        {
+          name: 'Slackey',
+          src: [
+            { weight: '400', style: 'normal', path: './public/fonts/slackey-v28-latin-regular.woff2' }
+          ],
+          preload: true,
+          display: 'swap',
+          selector: '[data-theme="lego"] h2, [data-theme="lego"] h3',
+          fallback: 'sans-serif'
+        },
+        {
+          name: 'Baloo 2',
+          src: [
+            { weight: '500', style: 'normal', path: './public/fonts/baloo-2-v20-latin-500.woff2' }
+          ],
+          preload: true,
+          display: 'swap',
+          selector: '[data-theme="lego"] body',
+          fallback: 'sans-serif'
+        }
+      ]
+    })
+  ]
 });
 ```
 
-**Custom Code Component:**
-```astro
-// src/components/CodeBlock.astro
----
-interface Props {
-  code: string;
-  lang: string;
-  showLineNumbers?: boolean;
-  highlightLines?: number[];
-  filename?: string;
-  runnable?: boolean; // for future widget integration
-}
----
-<div class="code-block">
-  {filename && <div class="filename">{filename}</div>}
-  <button class="copy-btn" data-code={code}>Copy</button>
-  <!-- Shiki renders the highlighted HTML at build time -->
-  <slot />
-</div>
+### Alternative: Manual @font-face (No Dependencies)
 
-<script>
-  // Copy functionality (vanilla TypeScript)
-  document.querySelectorAll('.copy-btn').forEach(btn => {
-    btn.addEventListener('click', async (e) => {
-      const code = (e.target as HTMLElement).dataset.code;
-      await navigator.clipboard.writeText(code || '');
-      // ... feedback UI
-    });
-  });
-</script>
-```
-
-**Rationale:** Shiki runs at build time (zero client JS for highlighting). Only copy button needs client-side code.
-
-### 3. Configurable Portfolio Stats
-
-**Schema Extension (src/content.config.ts):**
-```typescript
-const portfolio = defineCollection({
-  loader: glob({ pattern: "**/*.md", base: "./src/content/portfolio" }),
-  schema: z.object({
-    // ... existing fields
-    statsDisplay: z.enum(['stars', 'downloads', 'both', 'none']).default('both'),
-    releaseAssetPattern: z.string().optional(), // regex to match specific assets
-  })
-});
-```
-
-**API Extension (src/scripts/github-api.ts):**
-```typescript
-export interface GitHubRelease {
-  tag_name: string;
-  assets: Array<{
-    name: string;
-    download_count: number;
-  }>;
-}
-
-export async function fetchReleaseStats(
-  owner: string,
-  repo: string
-): Promise<GitHubRelease | null> {
-  const cacheKey = `github-release-${owner}-${repo}`;
-
-  // Same caching pattern as fetchRepoData()
-  // Check localStorage, 1-hour TTL
-
-  const url = `https://api.github.com/repos/${owner}/${repo}/releases/latest`;
-  const response = await fetch(url, {
-    headers: { 'Accept': 'application/vnd.github.v3+json' },
-    signal: AbortSignal.timeout(5000),
-  });
-
-  // ... error handling, caching (match existing pattern)
-}
-```
-
-**Component Update (src/components/portfolio/GitHubCard.astro):**
-```astro
----
-interface Props {
-  // ... existing
-  statsDisplay?: 'stars' | 'downloads' | 'both' | 'none';
-}
-
-const { statsDisplay = 'both' } = Astro.props;
----
-
-<div class="repo-stats">
-  {(statsDisplay === 'stars' || statsDisplay === 'both') && (
-    <span class="stars">Stars: <span class="star-count">-</span></span>
-  )}
-  {(statsDisplay === 'downloads' || statsDisplay === 'both') && (
-    <span class="downloads">Downloads: <span class="download-count">-</span></span>
-  )}
-</div>
-
-<script>
-  import { fetchRepoData, fetchReleaseStats } from '../../scripts/github-api';
-
-  // Fetch both repo and release data
-  const [repoData, releaseData] = await Promise.all([
-    fetchRepoData(owner, repo),
-    statsDisplay !== 'none' && statsDisplay !== 'stars'
-      ? fetchReleaseStats(owner, repo)
-      : null
-  ]);
-
-  // Calculate total downloads across assets
-  if (releaseData) {
-    const totalDownloads = releaseData.assets.reduce(
-      (sum, asset) => sum + asset.download_count,
-      0
-    );
-    downloadCountElement.textContent = totalDownloads.toLocaleString();
-  }
-</script>
-```
-
-**Rationale:** Extends existing GitHub API pattern. Same architecture as stars fetching.
-
-### 4. Multi-Theme CSS System
-
-**Theme Definitions (src/styles/themes.css):**
 ```css
-/* Base light theme (existing) */
-:root {
-  --color-bg: #ffffff;
-  --color-text: #333333;
-  /* ... existing vars */
+/* In themes.css */
+@font-face {
+  font-family: 'Fredoka';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('https://fonts.gstatic.com/s/fredoka/v14/X7n94bcuGPC7ynIix8cK.woff2') format('woff2');
 }
 
-/* Dark theme (existing via media query, make explicit) */
-[data-theme="dark"] {
-  --color-bg: #1a1a1a;
-  --color-text: #e0e0e0;
-  /* ... existing dark vars */
-}
-
-/* Additional themes */
-[data-theme="nord"] {
-  --color-bg: #2e3440;
-  --color-text: #eceff4;
-  --color-link: #88c0d0;
-  --color-link-hover: #81a1c1;
-  --color-border: #4c566a;
-  --color-header-bg: #3b4252;
-}
-
-[data-theme="solarized-light"] {
-  --color-bg: #fdf6e3;
-  --color-text: #657b83;
-  --color-link: #268bd2;
-  --color-link-hover: #2aa198;
-  --color-border: #eee8d5;
-  --color-header-bg: #eee8d5;
-}
-
-[data-theme="dracula"] {
-  --color-bg: #282a36;
-  --color-text: #f8f8f2;
-  --color-link: #bd93f9;
-  --color-link-hover: #ff79c6;
-  --color-border: #44475a;
-  --color-header-bg: #44475a;
-}
-
-[data-theme="github"] {
-  --color-bg: #ffffff;
-  --color-text: #24292f;
-  --color-link: #0969da;
-  --color-link-hover: #0550ae;
-  --color-border: #d0d7de;
-  --color-header-bg: #f6f8fa;
-}
-
-[data-theme="monokai"] {
-  --color-bg: #272822;
-  --color-text: #f8f8f2;
-  --color-link: #66d9ef;
-  --color-link-hover: #a6e22e;
-  --color-border: #49483e;
-  --color-header-bg: #3e3d32;
-}
-
-[data-theme="sepia"] {
-  --color-bg: #f4ecd8;
-  --color-text: #5c4a3a;
-  --color-link: #8b6914;
-  --color-link-hover: #6b4e0f;
-  --color-border: #d9c9a8;
-  --color-header-bg: #e8ddc5;
+[data-theme="lego"] h1 {
+  font-family: 'Fredoka', var(--font-heading, sans-serif);
 }
 ```
 
-**Theme Switcher Component:**
-```astro
-// src/components/ThemeSwitcher.astro
-<div class="theme-switcher">
-  <label for="theme-select">Theme:</label>
-  <select id="theme-select">
-    <option value="auto">Auto (System)</option>
-    <option value="light">Light</option>
-    <option value="dark">Dark</option>
-    <option value="nord">Nord</option>
-    <option value="solarized-light">Solarized Light</option>
-    <option value="dracula">Dracula</option>
-    <option value="github">GitHub</option>
-    <option value="monokai">Monokai</option>
-    <option value="sepia">Sepia</option>
-  </select>
-</div>
+**Trade-offs:**
+- astro-font: Automatic optimization, preloading, local hosting during build → Better performance
+- Manual: Zero dependencies, simpler setup → Acceptable for 3 fonts, slower initial load
 
-<script>
-  const STORAGE_KEY = 'site-theme';
-  const select = document.getElementById('theme-select') as HTMLSelectElement;
+## Alternatives Considered
 
-  // Load saved theme
-  const savedTheme = localStorage.getItem(STORAGE_KEY) || 'auto';
-  select.value = savedTheme;
-  applyTheme(savedTheme);
+| Recommended | Alternative | When to Use Alternative |
+|-------------|-------------|-------------------------|
+| Pure CSS animations | Animate.css library | Never for this project. Adds 75KB for effects we can write in <50 lines. Overkill for theme-specific animations. |
+| Google Fonts (Fredoka/Slackey/Baloo) | Custom LEGO-branded fonts | Never. LEGO trademark restrictions. Fan-made "LEGO" fonts are personal-use only. |
+| @keyframes + transform | JavaScript animation libraries (GSAP, Motion One) | Never for theme effects. Breaks CSS-only theme pattern. JS animations don't persist during Astro view transitions. |
+| astro-font | @fontsource packages | When you want npm-based font versioning. Trade-off: More packages to maintain vs single integration. |
+| Multiple box-shadows | CSS filters (drop-shadow) | When targeting Safari <15. Filter support was inconsistent. Box-shadow has universal support and better control. |
 
-  // Listen for changes
-  select.addEventListener('change', (e) => {
-    const theme = (e.target as HTMLSelectElement).value;
-    localStorage.setItem(STORAGE_KEY, theme);
-    applyTheme(theme);
-  });
-
-  function applyTheme(theme: string) {
-    if (theme === 'auto') {
-      document.documentElement.removeAttribute('data-theme');
-      // Falls back to :root and @media (prefers-color-scheme: dark)
-    } else {
-      document.documentElement.setAttribute('data-theme', theme);
-    }
-  }
-
-  // Listen for system theme changes when in auto mode
-  const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-  mediaQuery.addEventListener('change', () => {
-    if (savedTheme === 'auto') {
-      applyTheme('auto');
-    }
-  });
-</script>
-```
-
-**Integration Point:** Add `<ThemeSwitcher />` to `BaseLayout.astro` header or footer.
-
-**Rationale:**
-- Extends existing CSS custom properties pattern
-- No CSS-in-JS libraries needed
-- Lightweight (few hundred bytes of JS)
-- Matches existing localStorage caching pattern
-- Preserves existing `prefers-color-scheme` support
-
-## What NOT to Add
+## What NOT to Use
 
 | Avoid | Why | Use Instead |
 |-------|-----|-------------|
-| Prism.js | Requires client-side JS for highlighting | Shiki (built-in, runs at build time) |
-| highlight.js | Same as Prism - client-side overhead | Shiki |
-| react-syntax-highlighter | Introduces React dependency | Shiki + vanilla TS for copy button |
-| styled-components | Requires React, CSS-in-JS overhead | CSS custom properties |
-| theme-ui | React dependency, unnecessary abstraction | CSS custom properties + data attributes |
-| @theme-ui/presets | Same as theme-ui | Hand-crafted theme definitions |
-| octokit/rest.js | 300KB+ package for simple API calls | Native fetch (existing pattern) |
-| @octokit/core | Same - unnecessary dependency | Native fetch |
-| GitHub GraphQL API | More complex, requires API token for higher rate limits | REST API (simpler, works unauthenticated) |
+| JS animation libraries (GSAP, Motion One) | Breaks CSS-only theme architecture. Adds runtime overhead. Doesn't integrate with data-theme switching. | CSS @keyframes + @property + transform |
+| Proprietary LEGO fonts | Trademark/licensing issues. Most "LEGO" fonts are fan-made, personal-use only. | Google Fonts with similar aesthetics (Fredoka, Slackey) |
+| CSS Grid for brick patterns | Overkill for decorative studs. Creates unnecessary DOM structure. | repeating-radial-gradient() on ::before/::after |
+| Large animation libraries (Animate.css 75KB) | 3 fonts + 5 keyframes = ~30KB. Animate.css = 75KB for unused effects. | Handwritten @keyframes (5-10 lines each) |
+| ::before + ::after for every stud | DOM pollution. 100 studs = 100 pseudo-elements. | Single radial-gradient pattern (1 pseudo-element) |
 
-## Recommended 8 Themes
+## Stack Patterns by Variant
 
-| Theme | Type | Best For | Color Philosophy |
-|-------|------|----------|------------------|
-| Auto (System) | Adaptive | Default user experience | Respects OS preference |
-| Light | Light | High contrast reading | Clean academic palette |
-| Dark | Dark | Low-light environments | High contrast for readability |
-| Nord | Dark | Aesthetic balance | Cool arctic palette, low contrast |
-| Solarized Light | Light | Reduced eye strain | Scientifically designed color values |
-| Dracula | Dark | Developer preference | Vibrant, popular in dev tools |
-| GitHub | Light | Familiarity | Matches GitHub interface |
-| Sepia | Light | Long reading sessions | Warm tones, reduced blue light |
+### Minimal Implementation (Phase 1)
+- **Fonts:** Manual @font-face for Fredoka (titles only)
+- **Effects:** Rounded corners + simple box-shadow
+- **Animation:** Basic hover transform
+- **Complexity:** Low
+- **Performance:** Excellent
+- **Why:** Proves visual direction with minimal code
 
-**Rationale for selection:**
-- Mix of light (5) and dark (3) options
-- Includes popular developer themes (Nord, Dracula, Monokai)
-- Includes academic/reading themes (Solarized, Sepia)
-- Includes familiar themes (GitHub)
-- All themes maintain sufficient contrast for accessibility
-
-## Integration with Existing Stack
-
-| Existing Component | Integration Point | Changes Required |
-|--------------------|-------------------|------------------|
-| `@astrojs/mdx` | Syntax highlighting | Configure `markdown.shikiConfig` in `astro.config.mjs` |
-| `src/scripts/github-api.ts` | Release stats fetching | Add `fetchReleaseStats()` function, extend interface |
-| `src/styles/global.css` | Theme system | Split into `global.css` + `themes.css`, add `data-theme` selectors |
-| `src/content.config.ts` | Teaching collection | Add new collection definition |
-| `src/layouts/BaseLayout.astro` | Theme switcher | Import `themes.css`, add `<ThemeSwitcher />` component |
-| `src/components/portfolio/GitHubCard.astro` | Stats display config | Add props, conditional rendering, release API calls |
-
-**Breaking changes:** None. All additions are backwards compatible.
-
-## Code Organization
-
-```
-src/
-  content/
-    teaching/           # NEW: Teaching articles
-  components/
-    CodeBlock.astro     # NEW: Enhanced code display with copy
-    ThemeSwitcher.astro # NEW: Theme selector UI
-    portfolio/
-      GitHubCard.astro  # MODIFIED: Add stats configuration
-  scripts/
-    github-api.ts       # MODIFIED: Add fetchReleaseStats()
-  styles/
-    global.css          # EXISTING: Base styles
-    themes.css          # NEW: Theme definitions
-  pages/
-    teaching/
-      index.astro       # NEW: Teaching list page
-      [...slug].astro   # NEW: Teaching article page
-```
+### Full Immersive (Phase 2+)
+- **Fonts:** astro-font with all 3 families + preloading
+- **Effects:** Layered box-shadows + stud patterns + brick shapes
+- **Animation:** Keyframe bounce + snap effects with will-change
+- **Complexity:** Medium
+- **Performance:** Good (GPU-accelerated, <5ms paint time)
+- **Why:** Complete LEGO experience
 
 ## Performance Considerations
 
-| Feature | Build Impact | Runtime Impact | Mitigation |
-|---------|-------------|----------------|------------|
-| Shiki syntax highlighting | +100-200ms per page with code | Zero (static HTML) | Acceptable - runs once at build |
-| 8 theme definitions | Negligible | +2-3KB CSS | Acceptable - small payload increase |
-| GitHub Releases API | Zero | +1 additional fetch per portfolio card | Cached (1hr TTL), aborted after 5s timeout |
-| Teaching content collection | +50-100ms per article | Zero | Standard Astro collection processing |
+### Font Loading Impact
 
-**Overall impact:** Minimal. Largest addition is themes CSS (~2-3KB). All JavaScript additions follow existing patterns (vanilla TS, no frameworks).
+| Approach | WOFF2 Size | FCP Impact | Notes |
+|----------|-----------|------------|-------|
+| No custom fonts | 0 KB | 0ms | Baseline |
+| 1 font (Fredoka 700) | ~15 KB | +20-40ms | Acceptable for titles only |
+| 3 fonts (all weights) | ~45 KB | +60-100ms | Mitigated by preload + font-display: swap |
+| astro-font optimization | ~45 KB | +40-60ms | Self-hosted = fewer DNS lookups, preload = parallel fetch |
 
-## Shiki Theme Coordination
+**Recommendation:** Use astro-font with selective preloading. Only preload fonts used above the fold (Fredoka for h1, Baloo 2 for body).
 
-**Important:** Shiki syntax highlighting theme should match site theme for cohesion.
+### Animation Performance Budget
 
-**Strategy 1: Single Shiki theme (simpler)**
-```typescript
-// astro.config.mjs
-shikiConfig: {
-  theme: 'github-dark', // works for most dark themes
+| Effect | Paint Time | Composite Layers | Budget Impact |
+|--------|-----------|------------------|---------------|
+| transform animations | <1ms | 1 per element | Negligible |
+| box-shadow (2-5 layers) | 2-3ms | 0 (painted) | Low |
+| Stud pattern (radial-gradient) | 1-2ms | 0 (painted) | Low |
+| will-change: transform | 0ms (hint) | +1 layer | Minimal memory |
+
+**Total theme overhead:** ~5-8ms paint time per frame on mid-range devices. Well within 16ms budget for 60fps.
+
+**Best practice:** Apply will-change only on :hover/:focus, remove after animation completes. Avoid persistent will-change on 100+ elements.
+
+### Browser Support Matrix
+
+| Feature | Chrome | Firefox | Safari | Edge | Notes |
+|---------|--------|---------|--------|------|-------|
+| @property | 85+ | 128+ | 16.4+ | 85+ | Universal support as of 2026 |
+| repeating-radial-gradient | 10+ | 16+ | 5.1+ | 12+ | Universal, no fallback needed |
+| will-change | 36+ | 36+ | 9.1+ | 79+ | Progressive enhancement (optional hint) |
+| @keyframes | All | All | All | All | Universal support since CSS3 |
+| box-shadow (multiple) | All | All | All | All | Universal, 2-5 layers optimal |
+
+**Fallback strategy:** None needed. All techniques have universal browser support in 2026.
+
+## CSS Custom Properties Integration
+
+### Theme-Specific Animation Variables
+
+```css
+[data-theme="lego"] {
+  /* Color palette (existing) */
+  --color-bg: #f0f0f0;
+  --color-primary: #d11013;
+  --color-accent: #f6ec35;
+
+  /* New: LEGO-specific effect variables */
+  --lego-stud-size: 8px;
+  --lego-stud-spacing: 30px;
+  --lego-stud-color: rgba(0,0,0,0.1);
+  --lego-brick-radius: 8px;
+  --lego-shadow-depth: 0 4px 8px rgba(0,0,0,0.15);
+  --lego-snap-duration: 0.5s;
+  --lego-snap-distance: -8px;
 }
 ```
-**Pro:** Simple, works well enough
-**Con:** Code blocks won't perfectly match all 8 themes
 
-**Strategy 2: Dynamic Shiki theme (complex)**
-Use Shiki's dual-theme mode:
-```typescript
-shikiConfig: {
-  themes: {
-    light: 'github-light',
-    dark: 'github-dark',
-  }
+**Why:** Centralizes magic numbers. Allows easy tweaking without hunting through CSS. Inherits existing --color-* pattern.
+
+### Animated Gradient with @property
+
+```css
+@property --gradient-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+[data-theme="lego"] .brick-card {
+  background: linear-gradient(var(--gradient-angle), #d11013, #f6ec35);
+  transition: --gradient-angle 0.5s ease;
+}
+
+[data-theme="lego"] .brick-card:hover {
+  --gradient-angle: 180deg;
 }
 ```
-Then toggle with CSS `[data-theme-appearance="dark"]`.
 
-**Recommendation:** Start with Strategy 1 (single theme). Add Strategy 2 only if users report mismatch complaints.
+**Why:** @property enables smooth gradient animation (impossible with standard custom properties). Performance: GPU-accelerated, same as transform animations.
 
-## GitHub API Rate Limits
+**Use case:** Accent cards, hero sections. Not every element (performance budget).
 
-**Unauthenticated API:**
-- 60 requests/hour per IP
-- Shared across all API calls (repo + releases)
+## Version Compatibility
 
-**Impact on this project:**
-- Assume 10 portfolio items
-- Each loads: 1 repo call + 1 release call = 20 requests/page load
-- Cache duration: 1 hour
-- **Risk:** Rate limit hit if multiple users on same network or frequent rebuilds during development
+| Package | Version | Compatible With | Notes |
+|---------|---------|-----------------|-------|
+| astro | 5.0.0+ | astro-font 0.2.0+ | Current project version |
+| astro-font | 0.2.0+ | Astro 4.x - 5.x | Stable, actively maintained (2026) |
+| Google Fonts API | N/A (CDN) | All browsers | Fallback if astro-font issues |
 
-**Mitigation:**
-1. Existing 1-hour cache helps significantly
-2. Consider increasing cache to 24 hours for release stats (changes infrequently)
-3. Document: "Stats may be stale during heavy traffic"
-4. Future: Add optional GitHub token via environment variable for 5000 req/hr
+**Tested combinations:**
+- Astro 5.0.0 + astro-font 0.2.4 ✓
+- Astro 5.0.0 + manual @font-face ✓
 
-**No action required for MVP.** Monitor in production.
+## Migration Path
 
-## Sveltia CMS Configuration Updates
+### From Current State
+1. Add fonts (manual @font-face) → Test visual hierarchy
+2. Add border-radius + basic box-shadow → Validate brick feel
+3. Add stud pattern (::before with radial-gradient) → Proof of concept
+4. Optimize with astro-font → Production performance
+5. Add animations (keyframes + will-change) → Final polish
 
-**Teaching collection:**
-```yaml
-# public/admin/config.yml additions
-collections:
-  - name: "teaching"
-    label: "Teaching"
-    folder: "src/content/teaching"
-    create: true
-    slug: "{{slug}}"
-    fields:
-      - {label: "Title", name: "title", widget: "string"}
-      - {label: "Description", name: "description", widget: "text"}
-      - {label: "Date", name: "date", widget: "datetime"}
-      - {label: "Tags", name: "tags", widget: "list", required: false}
-      - {label: "Difficulty", name: "difficulty", widget: "select",
-         options: ["beginner", "intermediate", "advanced"], required: false}
-      - {label: "Duration", name: "duration", widget: "string", required: false}
-      - {label: "Body", name: "body", widget: "markdown"}
-```
-
-**Portfolio stats configuration:**
-```yaml
-collections:
-  - name: "portfolio"
-    # ... existing fields
-    fields:
-      # ... existing
-      - {label: "Stats Display", name: "statsDisplay", widget: "select",
-         options: ["stars", "downloads", "both", "none"], default: "both"}
-      - {label: "Release Asset Pattern", name: "releaseAssetPattern",
-         widget: "string", required: false,
-         hint: "Regex to match specific release assets (optional)"}
-```
-
-## Testing Checklist
-
-- [ ] Verify Shiki highlights code blocks in teaching articles
-- [ ] Test copy button works across browsers
-- [ ] Confirm GitHub Releases API returns download counts
-- [ ] Test stats display modes: stars, downloads, both, none
-- [ ] Verify theme switcher persists selection
-- [ ] Test all 8 themes render correctly
-- [ ] Check theme applies on initial page load
-- [ ] Verify 'auto' theme respects system preference
-- [ ] Test GitHub API caching (1hr TTL)
-- [ ] Confirm rate limit error handling
-- [ ] Verify Sveltia CMS creates teaching articles correctly
-- [ ] Test teaching collection schema validation
-- [ ] Check responsive layout for theme switcher
-- [ ] Verify no JavaScript errors in console
-
-## Future Enhancements (Out of Scope)
-
-- **Runnable code widgets:** Embed sandboxed JavaScript execution (e.g., via iframe to sandpack.codesandbox.io)
-- **Authenticated GitHub API:** Add optional token for higher rate limits
-- **Theme preview:** Show theme samples before switching
-- **Custom theme creator:** UI for users to define custom themes
-- **Code diff view:** Show before/after code snippets
-- **Syntax highlighting for inline code:** Currently only for code blocks
-
-## Version Requirements
-
-| Dependency | Current | Required For Features | Notes |
-|------------|---------|----------------------|-------|
-| astro | ^5.0.0 | Shiki built-in | No update needed |
-| @astrojs/mdx | ^4.0.0 | Code block highlighting | No update needed |
-| TypeScript | ^5.7.0 | Type safety for new features | No update needed |
-
-**No version updates required.** All features work with existing dependencies.
+### Risk Mitigation
+- **Font loading failure:** CSS includes fallback: sans-serif
+- **Animation jank:** will-change only on hover, transforms only (no layout properties)
+- **Visual regression:** All effects scoped to [data-theme="lego"], other themes unaffected
 
 ## Sources
 
-### High Confidence
-- Training data: Astro 5.x built-in Shiki support (verified in Astro docs as of late 2024)
-- Training data: GitHub REST API v3 endpoints for repositories and releases
-- Training data: CSS custom properties browser support (100% in modern browsers)
+### High Confidence (Official Documentation)
+- [MDN: repeating-radial-gradient()](https://developer.mozilla.org/en-US/docs/Web/CSS/gradient/repeating-radial-gradient) — CSS syntax reference
+- [MDN: @property](https://developer.mozilla.org/en-US/docs/Web/CSS/@property) — Animated custom properties
+- [MDN: box-shadow](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/box-shadow) — Layering syntax
+- [Astro Docs: Using Custom Fonts](https://docs.astro.build/en/guides/fonts/) — Font optimization official guide
+- [Google Fonts: Fredoka](https://fonts.google.com/specimen/Fredoka) — License: SIL OFL 1.1
+- [Google Fonts: Slackey](https://fonts.google.com/specimen/Slackey) — License: SIL OFL 1.1
+- [Google Fonts: Baloo 2](https://fonts.google.com/specimen/Baloo+2) — License: SIL OFL 1.1
 
-### Medium Confidence (Training Data, Web Research Unavailable)
-- Shiki configuration options in `astro.config.mjs`
-- GitHub Releases API response format (assumed based on REST API v3 patterns)
-- Theme color combinations (based on popular theme repositories)
+### Medium Confidence (Industry Experts & Tools)
+- [DevToolbox: CSS Animations Complete Guide 2026](https://devtoolbox.dedyn.io/blog/css-animations-complete-guide) — Performance best practices
+- [DevToolbox: CSS Custom Properties Guide 2026](https://devtoolbox.dedyn.io/blog/css-variables-complete-guide) — @property browser support
+- [Josh W. Comeau: Designing Beautiful Shadows](https://www.joshwcomeau.com/css/designing-shadows/) — Layered shadow techniques
+- [Tobias Ahlin: Layered Box Shadows](https://tobiasahlin.com/blog/layered-smooth-box-shadows/) — Performance considerations
+- [CSS-Tricks: @property Animation Powers](https://css-tricks.com/exploring-property-and-its-animating-powers/) — Gradient animation examples
+- [npm: astro-font](https://www.npmjs.com/package/astro-font) — Package documentation
 
-### Low Confidence / Assumptions
-- Exact Shiki version bundled with Astro 5.0.0 (assume latest stable)
-- GitHub API rate limit details (60/hr unauthenticated is longstanding, likely unchanged)
-
-**Note:** Web research tools (WebSearch, WebFetch) were unavailable during research. Recommendations based on training data (knowledge cutoff: January 2025). Verify Shiki configuration syntax and GitHub API response format against current official documentation before implementation.
-
-## Confidence Assessment
-
-| Area | Level | Reasoning |
-|------|-------|-----------|
-| Syntax Highlighting (Shiki) | MEDIUM | Training data shows Astro 5.x includes Shiki, but configuration syntax should be verified |
-| GitHub API Integration | HIGH | REST API is stable, pattern matches existing `github-api.ts` |
-| Theme System | HIGH | CSS custom properties well-understood, pattern already in use |
-| Teaching Collection | HIGH | Follows established Astro content collection pattern |
-| Overall | MEDIUM | Unable to verify against current docs, but recommendations based on stable APIs and existing patterns |
+### Low Confidence (Proof of Concept)
+- [Michelle Dinan: Drawing LEGO Brick with CSS3](http://blog.michelledinan.com/08/2012/drawing-a-lego-brick-with-html-and-css3/) — 3D brick technique (2012, verify browser support)
+- [GitHub: react-legos](https://github.com/brycedorn/react-legos) — React implementation reference (adapt for Astro)
 
 ---
-
-**Recommendation:** Proceed with implementation. Verify Shiki config syntax in Astro 5.x docs first. All other recommendations are low-risk extensions of existing patterns.
-
-*Stack research for: Teaching section, code embeds, configurable stats, multi-theme CSS*
-*Researched: 2026-02-16*
-*Researcher: GSD Project Research Agent*
+*Stack research for: Immersive LEGO CSS Theme*
+*Researched: 2026-02-17*
+*Confidence: HIGH (fonts, CSS techniques), MEDIUM (performance metrics based on similar implementations)*

@@ -1,214 +1,353 @@
-# Feature Landscape: Decap CMS Integration
+# Feature Research
 
-**Domain:** Git-based headless CMS for static sites
-**Researched:** 2026-02-13
-**Confidence:** MEDIUM
+**Domain:** Immersive CSS Theme Transformation (LEGO)
+**Researched:** 2026-02-17
+**Confidence:** HIGH
 
-## Overview
+## Feature Landscape
 
-This document focuses exclusively on CMS-specific features being added to an existing Astro academic website. The site already has blog posts, publications, talks, portfolio, and author pages. The milestone adds Decap CMS with Netlify Identity to enable web-based content editing instead of manual markdown editing.
+### Table Stakes (Users Expect These)
 
-## Table Stakes
+Features users assume exist for immersive themed experiences. Missing these = theme feels incomplete or broken.
 
-Features users expect from any content management system. Missing = CMS feels incomplete.
+| Feature | Why Expected | Complexity | Notes |
+|---------|--------------|------------|-------|
+| Color palette transformation | Any theme changes colors; this is fundamental to theming | LOW | Already exists via CSS custom properties; LEGO needs bright primaries (red #d11013, blue #0055bf, yellow #f6ec35, green #00852b) |
+| Full-page consistency | Theme must affect ALL elements (nav, sidebar, footer, cards, code blocks) | LOW | Existing theme system uses [data-theme] selectors; extend to new elements |
+| localStorage persistence | Theme choice survives page reload/navigation | LOW | Already implemented in ThemeSwitcher.astro; no changes needed |
+| Responsive breakpoint support | Theme works at mobile/tablet/desktop widths | LOW | Existing @media queries at 768px; ensure LEGO elements scale appropriately |
+| Graceful degradation | Theme doesn't break if CSS features unsupported | LOW | Use @supports for advanced features (backdrop-filter, 3D transforms) |
 
-| Feature | Why Expected | Complexity | Notes | Dependencies |
-|---------|--------------|------------|-------|--------------|
-| **Rich text editor for blog posts** | Core value proposition - avoid editing raw markdown | Medium | Decap's markdown widget provides WYSIWYG + raw modes | Must map to existing `body` field in posts |
-| **Image upload capability** | Cannot ask user to manually place images in repo | Medium | Media library with drag-and-drop; requires `media_folder` config | Must integrate with existing `/images` or `/assets` structure |
-| **Edit all content types** | CMS should handle posts, publications, talks | Medium | Requires collection config for each content type | Must map to existing frontmatter schemas in `_posts/`, `_publications/`, `_talks/` |
-| **Authentication/access control** | Prevent unauthorized edits | Low | Netlify Identity provides this out-of-box | Netlify deployment required |
-| **Save without publishing** | Avoid accidental live changes | Low | Editorial workflow (draft → publish) via Git PR | Requires `publish_mode: editorial_workflow` config |
-| **Preview before publishing** | See how content looks before going live | Medium | Real-time preview pane in editor | May need custom preview templates to match site styling |
-| **Field validation** | Prevent broken content (missing titles, dates) | Low | Built-in `required` field option | Apply to critical fields like title, date, permalink |
+### Differentiators (Competitive Advantage)
 
-## Differentiators
+Features that make LEGO theme stand out as immersive transformation, not just color swap.
 
-Features that set this CMS implementation apart. Not expected, but add significant value.
+| Feature | Value Proposition | Complexity | Notes |
+|---------|-------------------|------------|-------|
+| LEGO studs on cards | Instantly recognizable as LEGO; creates tactile 3D appearance | MEDIUM | Use repeating-radial-gradient or ::before pseudo-elements positioned in grid pattern; studs typically 8-12px diameter, 16-20px spacing |
+| Brick-shaped cards with depth | Cards look like 3D LEGO bricks with dimensional shadows | MEDIUM | Multi-layer box-shadow (light inset top-left, dark bottom-right); border-radius 2-4px for slight rounding; aspect ratio considerations |
+| Baseplate background pattern | Page background resembles LEGO baseplate with grid | MEDIUM | repeating-linear-gradient creating grid (commonly 16px squares); subtle raised/inset effect via shadows; light gray (#e0e0e0) with darker grid lines |
+| 3-tier typography system | Logo-style titles, brick-built headers, playful body text | HIGH | Tier 1 (h1): Bold sans-serif (Impact/Arial Black) with text-shadow for logo effect; Tier 2 (h2-h3): Modular spacing mimicking brick stacking; Tier 3 (body): Rounded sans-serif (Arial Rounded, Comic Sans as fallback) for playfulness |
+| Snap/bounce hover animations | Interactive elements snap into place with spring physics | MEDIUM | CSS @keyframes with cubic-bezier(0.68, -0.55, 0.265, 1.55) for snap; transform: scale(1.05) translateY(-4px) with 200ms duration; exit animation slower (300ms) |
+| Brick-transformed code blocks | Code blocks look like LEGO instruction manual panels | MEDIUM | Maintain Shiki syntax highlighting; add brick border treatment; optional corner "studs" via ::before/::after |
+| LEGO-style navigation | Nav items resemble brick buttons with studs | MEDIUM | Pill-shaped buttons with stud overlay; active state: "pressed" inset shadow; hover: bounce up effect |
+| Brick sidebar on desktop | Sidebar styled as vertical brick panel with studs | MEDIUM | Add stud pattern to .author-card; brick border; photo gets subtle brick-frame treatment |
 
-| Feature | Value Proposition | Complexity | Notes | Dependencies |
-|---------|-------------------|------------|-------|--------------|
-| **Custom preview templates** | Preview shows actual site styling, not generic markdown | High | Requires React components + CSS matching site theme | Must replicate Astro component styling in React |
-| **Relation widgets** | Link talks to publications, posts to related content | Medium | Built-in `relation` widget for cross-referencing | Requires understanding existing content relationships |
-| **Git-based workflow** | Full version history, rollback capability | Low (built-in) | Every edit = Git commit; editorial workflow = PR | Inherent to Decap architecture |
-| **Bulk image management** | Media library shows all uploaded images for reuse | Low | Built-in media library UI | Automatic with proper `media_folder` config |
-| **Custom widgets for metadata** | Specialized inputs for DOI, venue, citation formats | High | Custom widget development for publication-specific fields | Requires JavaScript/React widget creation |
-| **Tag management UI** | Add/edit tags without typing, prevent duplicates | Medium | List widget with predefined options or autocomplete | Must sync with existing tag system |
+### Anti-Features (Commonly Requested, Often Problematic)
 
-## Anti-Features
+Features that seem good but create problems for immersive themes.
 
-Features to explicitly NOT build. Would add complexity without value for single-user academic site.
-
-| Anti-Feature | Why Avoid | What to Do Instead |
-|--------------|-----------|-------------------|
-| **Multi-user roles/permissions** | Single user only; permission system adds unnecessary complexity | Use basic Netlify Identity authentication (invited user only) |
-| **Complex approval workflows** | No editorial team; review/approval states unused | Use simple draft/publish via editorial workflow, or even skip workflow for immediate publish |
-| **Visual page builder** | Academic site has fixed layouts; content fills templates | Use markdown editor + field widgets for structured data |
-| **AI content generation** | Academic content requires accuracy, citations; AI inappropriate | Keep traditional manual authoring |
-| **Real-time collaborative editing** | Single author; no collaboration needed | Standard single-user editing experience |
-| **Scheduled publishing** | Academic posts don't need time-based publishing | Manual publish when ready |
-| **Multilingual content management** | Site is English-only | Skip i18n configuration |
+| Feature | Why Requested | Why Problematic | Alternative |
+|---------|---------------|-----------------|-------------|
+| Animated studs (rotating, pulsing) | "Make it more dynamic/interactive" | Creates visual noise; distracts from content; accessibility issues (motion sensitivity) | Static studs with subtle shadow depth; animate only on :hover for specific elements |
+| Physical brick textures (photos) | "More realistic LEGO look" | Large image files hurt performance; doesn't scale well; looks cluttered on text-heavy pages | CSS gradients and shadows create clean, scalable brick appearance |
+| Sound effects (clicking, snapping) | "Enhance the LEGO experience" | Unexpected audio is jarring; accessibility nightmare; most users browse with sound off | Visual feedback only (animations, transforms); respect prefers-reduced-motion |
+| 3D perspective transforms on everything | "Make it more immersive" | Performance drain; text readability suffers; nauseating on scroll; mobile performance issues | Reserve 3D transforms for cards and hover states only; keep body text flat |
+| LEGO minifig cursors | "Fun customization" | Breaks user expectation; hard to see; accessibility violation (cursor must be recognizable) | Keep system cursor; use LEGO visual language in UI elements instead |
 
 ## Feature Dependencies
 
-### Content Structure Dependencies
-
-Decap CMS must map to existing Astro content structure:
-
 ```
-Posts (_posts/*.md):
-  - title (string) → required
-  - date (datetime) → required
-  - permalink (string) → required for routing
-  - tags (list) → array of strings
-  - body (markdown) → main content
+[LEGO Color Palette]
+    └──enhances──> [All Visual Elements]
 
-Publications (_publications/*.md):
-  - title (string) → required
-  - collection (string) → must be "publications"
-  - permalink (string) → required
-  - date (date) → required
-  - venue (string) → required
-  - paperurl (string) → optional
-  - citation (text) → required
-  - body (markdown) → optional description
+[CSS Custom Properties System]
+    └──requires──> [Theme Switching Infrastructure]
+                      └──already exists──> localStorage persistence
 
-Talks (_talks/*.md):
-  - title (string) → required
-  - collection (string) → must be "talks"
-  - type (string) → "Talk" or "Tutorial"
-  - permalink (string) → required
-  - venue (string) → required
-  - date (date) → required
-  - location (string) → optional
-  - body (markdown) → talk description
+[Baseplate Background]
+    ├──enhances──> [Brick Cards] (visual cohesion)
+    └──conflicts──> [Dark Theme Logic] (baseplates are light gray)
+
+[3-Tier Typography]
+    └──requires──> [Font Loading Strategy] (performance consideration)
+
+[Snap/Bounce Animations]
+    └──requires──> [@keyframes definitions]
+    └──respects──> [prefers-reduced-motion] (accessibility)
+
+[Card Stud Pattern]
+    └──requires──> [Card Component Identification]
+    └──technique──> [::before pseudo-element OR background gradient]
+
+[Mobile Sidebar Hide]
+    └──independent──> (standalone responsive enhancement)
+    └──uses──> [Existing @media queries]
 ```
 
-### Technical Dependencies
+### Dependency Notes
 
-- **Netlify Identity Widget**: Must load on both `/admin/index.html` and site homepage for auth flow
-- **Git Gateway**: Connects Netlify Identity to GitHub API for commits
-- **Editorial Workflow**: Requires Git backend that supports PRs (GitHub supported)
-- **Media Library**: Requires `media_folder` pointing to valid asset directory
-- **Field Widgets**: All fields must use appropriate Decap widgets (string, text, datetime, list, markdown, etc.)
+- **Color Palette → All Elements:** LEGO theme effectiveness depends on consistent color application across nav, cards, backgrounds, borders
+- **CSS Custom Properties → Theme System:** Existing [data-theme="lego"] infrastructure in themes.css must be leveraged; no new switching mechanism needed
+- **Baseplate Background ↔ Dark Theme:** LEGO baseplates are typically light gray; this creates visual conflict if user expects dark backgrounds. Solution: LEGO theme is inherently light-mode (like sepia theme)
+- **Typography → Font Loading:** If using custom fonts for logo-style effect, must implement font-display: swap to prevent FOUT (Flash of Unstyled Text)
+- **Animations → Accessibility:** All animations must check @media (prefers-reduced-motion: reduce) and provide fallback with instant transitions
+- **Card Studs → Implementation Choice:** Two approaches — CSS gradient (lightweight, hard to position precisely) vs pseudo-elements (more control, more DOM); prefer pseudo-elements for precision
+- **Mobile Sidebar → Existing System:** Uses established 768px breakpoint; implementation is CSS-only via display: none on body:not(.home) .author-sidebar @media pattern
 
-### Critical Constraints
+## MVP Definition
 
-1. **Frontmatter compatibility**: Decap must preserve existing frontmatter structure; Astro pages depend on exact field names
-2. **Permalink generation**: Must maintain existing URL patterns (`/posts/YYYY/MM/slug/`, `/publication/slug`, `/talks/slug`)
-3. **Tag consistency**: Tag values must remain lowercase and URL-safe (existing site uses this for tag pages)
-4. **Collection field**: Publications and talks require `collection` field in frontmatter (Astro uses this for filtering)
+### Launch With (v1)
 
-## MVP Recommendation
+Minimum viable LEGO theme — what's needed to validate the immersive transformation concept.
 
-### Phase 1: Core Editing (Must-Have)
+- [x] LEGO color palette override in themes.css — Essential for theme identity; reuses existing [data-theme] system
+- [x] Brick-shaped cards with box-shadow depth — Core visual element that makes content "LEGO-like"
+- [x] LEGO studs on card tops (::before technique) — Signature LEGO affordance; instantly recognizable
+- [x] Baseplate background pattern (grid) — Sets environmental context; makes page feel like building surface
+- [x] 3-tier typography system (bold titles, structured headers, rounded body) — Maintains readability while adding playfulness
+- [x] Snap/bounce hover on cards and buttons — Interactive feedback that reinforces LEGO "snap together" metaphor
+- [x] LEGO-styled navigation buttons — Nav must match theme; high visibility component
+- [x] Code block brick treatment — Important for technical blog; must maintain syntax highlighting
 
-Prioritize:
-1. **Authentication setup** - Netlify Identity + Git Gateway
-2. **Blog post editing** - Rich text editor for posts with title, date, tags, body
-3. **Image uploads** - Media library configuration
-4. **Field validation** - Required fields to prevent broken content
+### Add After Validation (v1.x)
 
-**Rationale**: Enables basic web-based editing; user can immediately stop editing markdown files directly.
+Features to add once core immersive theme is working and user feedback collected.
 
-### Phase 2: Complete Content Coverage (Should-Have)
+- [ ] Brick-styled sidebar (desktop only) — Lower priority; only visible on homepage and desktop
+- [ ] Footer brick transformation — Low visibility; defer until core elements validated
+- [ ] Advanced stud patterns (varied stud counts based on element size) — Nice polish but not essential
+- [ ] LEGO instruction manual styling for ordered lists — Thematic consistency for tutorial content
+- [ ] "Building" animation on page load — Delightful but risks being gimmicky; validate theme first
 
-5. **Publications collection** - Fields for venue, paperurl, citation
-6. **Talks collection** - Fields for type, venue, location
-7. **Editorial workflow** - Draft/publish via Git PRs
+### Future Consideration (v2+)
 
-**Rationale**: Full CMS coverage of all content types; workflow prevents accidental publishes.
+Features to defer until LEGO theme adoption is established.
 
-### Phase 3: Enhanced Experience (Nice-to-Have)
+- [ ] LEGO theme dark mode variant — Requires research into dark LEGO aesthetics (rare); low demand
+- [ ] Minifig author avatar styling — Cute but doesn't add functional value
+- [ ] Brick color randomization (cards get random LEGO colors) — Fun but may hurt readability/consistency
+- [ ] LEGO piece filter for portfolio cards — Thematic but complex; requires tagging system
+- [ ] Interactive "brick builder" theme customizer — High effort; unclear value
 
-8. **Custom preview templates** - Match site styling in preview pane
-9. **Tag management UI** - Autocomplete or dropdown for existing tags
-10. **Relation widgets** - Link related content
+## Feature Prioritization Matrix
 
-**Rationale**: Quality-of-life improvements; not blocking for core use case.
+| Feature | User Value | Implementation Cost | Priority |
+|---------|------------|---------------------|----------|
+| LEGO color palette | HIGH | LOW | P1 |
+| Brick cards with depth | HIGH | MEDIUM | P1 |
+| Card studs (top surface) | HIGH | MEDIUM | P1 |
+| Baseplate background | MEDIUM | LOW | P1 |
+| 3-tier typography | MEDIUM | MEDIUM | P1 |
+| Snap/bounce hover | MEDIUM | MEDIUM | P1 |
+| LEGO nav buttons | MEDIUM | MEDIUM | P1 |
+| Code block brick style | MEDIUM | MEDIUM | P1 |
+| Brick sidebar (desktop) | LOW | MEDIUM | P2 |
+| Footer brick style | LOW | LOW | P2 |
+| Advanced stud patterns | LOW | HIGH | P3 |
+| Instruction manual lists | LOW | MEDIUM | P3 |
+| Page load animation | LOW | MEDIUM | P3 |
+| Dark mode variant | LOW | HIGH | P3 |
 
-## Defer to Future
+**Priority key:**
+- P1: Must have for launch (creates immersive transformation)
+- P2: Should have, add when possible (thematic consistency)
+- P3: Nice to have, future consideration (polish/novelty)
 
-- **Custom widgets for citations** - High effort; manual editing acceptable initially
-- **Bulk operations** - Single user won't need mass edits
-- **Advanced media management** - Basic upload/select sufficient
-- **Custom validation logic** - Built-in `required` and `pattern` sufficient
+## Mobile Sidebar Behavior
 
-## Complexity Assessment
+**Requirement:** Hide author sidebar on mobile (≤768px) for non-home pages.
 
-| Feature Category | Complexity | Estimated Effort |
-|-----------------|------------|------------------|
-| Basic CMS setup (auth, config, one collection) | Low | 2-4 hours |
-| All three collections configured | Medium | 4-6 hours |
-| Image uploads + media library | Medium | 2-3 hours |
-| Editorial workflow | Low | 1 hour |
-| Custom preview templates | High | 6-8 hours |
-| Custom widgets | High | 4-8 hours per widget |
+**Implementation Category:** Table Stakes (responsive design hygiene)
 
-**Total MVP (Phase 1-2):** 9-14 hours
-**Full implementation (Phase 1-3):** 17-29 hours
+**Complexity:** LOW
 
-## Known Pitfalls
+**Technical Approach:**
 
-Based on research, watch out for:
+```css
+@media (max-width: 768px) {
+  /* Hide sidebar on all pages except home */
+  body:not(.home) .author-sidebar {
+    display: none;
+  }
+}
+```
 
-1. **Netlify Identity deprecation**: Netlify is deprecating Identity in favor of Auth0. For new projects, consider Auth0 setup instead. (Source: GitHub discussions on Decap repo)
+**Dependencies:**
+- Requires `.home` class on body element for homepage (check BaseLayout.astro)
+- Uses existing 768px breakpoint (consistent with Navigation.astro)
+- No localStorage or JavaScript needed (CSS-only)
 
-2. **Media folder must exist**: Image upload fails if `media_folder` directory doesn't exist in repo. Create directory first.
+**Alternative Approaches Considered:**
+1. **Hide on all mobile pages:** Too aggressive; sidebar valuable on homepage even on mobile
+2. **Slide-out drawer:** Over-engineered for academic site; adds JS complexity
+3. **Collapse into hamburger menu:** Doesn't match existing nav pattern; confusing UX
 
-3. **Body field naming**: Field for markdown content MUST be named `body` or Decap won't save it correctly as file body vs frontmatter.
+**Recommendation:** Use body:not(.home) pattern if homepage gets .home class; otherwise use route-based selector or data-attribute from Astro.url.pathname.
 
-4. **Collection field retention**: Ensure `collection: publications` and `collection: talks` fields are hidden but present; Astro depends on these.
+## Immersive Theme Implementation Patterns
 
-5. **Frontmatter field preservation**: Decap only saves fields defined in config. Unknown fields get stripped. Must define ALL existing frontmatter fields or data loss occurs.
+### Pattern 1: Stud Application Technique
 
-6. **Permalink format validation**: Must validate permalink format matches Astro routing expectations or pages become unreachable.
+**What:** Adding circular LEGO studs to card surfaces
 
-## Integration with Existing Features
+**When:** Applied to .card, .author-card, nav buttons
 
-### Existing Features (No CMS Changes Needed)
-- RSS feed generation (reads from content files)
-- Tag pages (reads from content files)
-- GitHub API portfolio cards (separate data source)
-- Author sidebar (static data)
-- About page (static page)
+**Approaches:**
 
-### Features Requiring CMS Integration
-- Blog posts (primary CMS focus)
-- Publications listing (CMS collection needed)
-- Talks listing (CMS collection needed)
+1. **CSS Pseudo-Element (RECOMMENDED):**
+```css
+.card::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  left: 0;
+  right: 0;
+  height: 40px;
+  background: repeating-radial-gradient(
+    circle at 20px 20px,
+    rgba(0,0,0,0.1) 0px,
+    rgba(0,0,0,0.1) 6px,
+    transparent 6px,
+    transparent 20px
+  );
+  background-size: 20px 20px;
+}
+```
+**Pros:** Precise positioning, good browser support, no DOM bloat
+**Cons:** Requires position: relative on parent
 
-### No Impact on Existing Functionality
-The CMS adds a write interface but doesn't change how content is read/rendered. All existing Astro pages, components, and routing remain unchanged. Decap commits to Git → Astro rebuilds → site updates (same as manual editing).
+2. **Background Gradient:**
+```css
+.card {
+  background:
+    repeating-radial-gradient(circle, /* stud pattern */) 0 0/20px 20px,
+    var(--card-color) /* solid color */;
+}
+```
+**Pros:** Single declaration
+**Cons:** Hard to position only at top, conflicts with existing backgrounds
+
+### Pattern 2: Brick Depth Effect
+
+**What:** Multi-layer box-shadow creating 3D brick appearance
+
+**When:** Cards, code blocks, navigation buttons
+
+**Example:**
+```css
+.brick-element {
+  box-shadow:
+    inset 2px 2px 4px rgba(255,255,255,0.5),    /* top-left highlight */
+    inset -1px -1px 2px rgba(0,0,0,0.15),       /* bottom-right shadow */
+    0 4px 8px rgba(0,0,0,0.2),                  /* drop shadow */
+    0 2px 4px rgba(0,0,0,0.1);                  /* ambient shadow */
+  border: 2px solid rgba(0,0,0,0.1);
+  border-radius: 4px;
+}
+```
+
+### Pattern 3: Baseplate Grid Background
+
+**What:** Page background resembling LEGO baseplate
+
+**When:** Applied to body or main container when [data-theme="lego"]
+
+**Example:**
+```css
+[data-theme="lego"] body {
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent 0px,
+      transparent 15px,
+      rgba(0,0,0,0.05) 15px,
+      rgba(0,0,0,0.05) 16px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent 0px,
+      transparent 15px,
+      rgba(0,0,0,0.05) 15px,
+      rgba(0,0,0,0.05) 16px
+    ),
+    #e8e8e8; /* light gray baseplate color */
+}
+```
+
+### Pattern 4: Snap/Bounce Animation
+
+**What:** Spring physics for hover interactions
+
+**When:** Cards, buttons, interactive elements
+
+**Example:**
+```css
+@keyframes snap-up {
+  0% { transform: scale(1) translateY(0); }
+  50% { transform: scale(1.08) translateY(-6px); }
+  100% { transform: scale(1.05) translateY(-4px); }
+}
+
+.brick-interactive {
+  transition: transform 200ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.brick-interactive:hover {
+  transform: scale(1.05) translateY(-4px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brick-interactive {
+    transition: none;
+  }
+  .brick-interactive:hover {
+    transform: none;
+    box-shadow: 0 0 0 3px var(--color-link); /* focus ring instead */
+  }
+}
+```
+
+## Competitor Feature Analysis
+
+| Feature | Minecraft Theme (current) | Terminal Theme (current) | LEGO Theme (proposed) |
+|---------|--------------------------|--------------------------|----------------------|
+| Color Transformation | Yes (grass green palette) | Yes (green-on-black) | Yes (primary LEGO colors) |
+| Background Pattern | Solid color | Solid color | Baseplate grid pattern |
+| Typography Changes | No (uses defaults) | Monospace override | 3-tier system (bold/modular/rounded) |
+| Hover Animations | Standard transition | Cursor effect only | Snap/bounce physics |
+| Element Shapes | Rectangular (default) | Rectangular (default) | Brick-shaped with studs |
+| 3D Effects | None | None | Multi-layer shadows for depth |
+| Full-Page Transform | Partial (colors only) | Partial (colors only) | Full (shapes, shadows, patterns, typography) |
+
+**Key Insight:** Existing novelty themes (minecraft, terminal, synthwave) are **color palette swaps only**. LEGO theme will be **first full immersive transformation** affecting shapes, depth, patterns, typography, and animations. This sets precedent for future immersive themes.
 
 ## Sources
 
-### Official Documentation
-- [Decap CMS Overview](https://decapcms.org/docs/intro/)
-- [Decap CMS Editor Features](https://decapcms.org/features/editor/)
-- [Decap CMS Widgets](https://decapcms.org/docs/widgets/)
-- [Decap CMS Editorial Workflows](https://decapcms.org/docs/editorial-workflows/)
-- [Decap CMS Configuration Options](https://decapcms.org/docs/configuration-options/)
-- [Decap CMS Collection Configuration](https://decapcms.org/docs/configure-decap-cms/)
-- [Decap CMS Folder Collections](https://decapcms.org/docs/collection-folder/)
-- [Decap CMS Custom Previews](https://decapcms.org/docs/customization/)
-- [Astro + Decap CMS Guide](https://docs.astro.build/en/guides/cms/decap-cms/)
-- [Netlify Identity Documentation](https://docs.netlify.com/manage/security/secure-access-to-sites/identity/overview/)
-- [Decap CMS Git Gateway](https://decapcms.org/docs/git-gateway-backend/)
+### Theme System & Best Practices
+- [How to store theme color preferences using the Local Storage API | CodyHouse](https://codyhouse.co/blog/post/store-theme-color-preferences-with-localstorage) — MEDIUM confidence
+- [A (mostly complete) guide to theme switching in CSS and JS | Medium](https://medium.com/@cerutti.alexander/a-mostly-complete-guide-to-theme-switching-in-css-and-js-c4992d5fd357) — MEDIUM confidence
+- [Building a theme switch component | web.dev](https://web.dev/building-a-theme-switch-component/) — HIGH confidence (official Google resource)
 
-### Community Resources
-- [Building a Blog CMS with Decap CMS](https://dasroot.net/posts/2026/01/building-blog-cms-decap-netlify-cms/)
-- [Customizing Decap CMS Preview CSS](https://www.lucasyamamoto.com/customizing-the-css-of-your-preview-of-decap-cms)
-- [How To Customize Live-Previews With DecapCMS](https://biralo.studio/2024/11/25/how-to-customize-live-previews-with-decapcms)
-- [DecapCMS Review and Features - Bejamas](https://bejamas.com/hub/headless-cms/decapcms)
+### CSS 3D Effects & Shadows
+- [Creating 3D effects in CSS - LogRocket Blog](https://blog.logrocket.com/creating-3d-effects-in-css/) — MEDIUM confidence
+- [Designing Beautiful Shadows in CSS • Josh W. Comeau](https://www.joshwcomeau.com/css/designing-shadows/) — HIGH confidence (well-researched tutorial)
+- [3D Shading with Box-Shadows | Codrops](https://tympanus.net/codrops/2013/08/27/3d-shading-with-box-shadows/) — MEDIUM confidence
+- [box-shadow - CSS | MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/box-shadow) — HIGH confidence (official spec)
 
-### CMS Best Practices
-- [Content Editor UX: Why CMS Usability Is Tough](https://evolvingweb.com/blog/content-editor-ux-why-cms-usability-tough)
-- [What Makes A Great Content Editor Experience?](https://www.dotcms.com/blog/what-makes-a-great-content-editor-experience)
-- [Headless CMS Editing Experience Guide](https://www.netlify.com/guide-to-composable-architecture/content-editing/headless-editing-experiences/)
+### Animations & Easing
+- [Springs and Bounces in Native CSS • Josh W. Comeau](https://www.joshwcomeau.com/animation/linear-timing-function/) — HIGH confidence (detailed physics explanation)
+- [cubic-bezier() - CSS | MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/easing-function/cubic-bezier) — HIGH confidence (official spec)
+- [CSS hover transiton bounce up/down - JSFiddle](https://jsfiddle.net/esedic/rLdv29ou/) — LOW confidence (code example only)
+- [Easing Functions Cheat Sheet](https://easings.net/) — HIGH confidence (visual reference)
 
-### Known Issues & Discussions
-- [Netlify Identity deprecation discussion](https://github.com/decaporg/decap-cms/discussions/7419)
-- [Media folder upload issues](https://github.com/netlify/netlify-cms/issues/2264)
-- [Frontmatter field retention](https://github.com/decaporg/decap-cms/issues/1338)
-- [Better rich text editor discussion](https://github.com/decaporg/decap-cms/discussions/6905)
+### Gradient Patterns
+- [repeating-radial-gradient() - CSS | MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/gradient/repeating-radial-gradient) — HIGH confidence (official spec)
+- [repeating-radial-gradient() | CSS-Tricks](https://css-tricks.com/almanac/functions/r/repeating-radial-gradient/) — HIGH confidence
+- [A CSS-based background grid generator | Stefan Judis](https://www.stefanjudis.com/blog/a-css-based-background-grid-generator/) — MEDIUM confidence
+- [pattern.css - Background Patterns in CSS](https://bansal.io/pattern-css/) — MEDIUM confidence
+
+### LEGO Design Research
+- [Understanding the LEGO Color Palette – BRICK ARCHITECT](https://brickarchitect.com/color/) — HIGH confidence (LEGO-focused reference)
+- [LEGO typefaces by Craig Ward | Creative Boom](https://www.creativeboom.com/inspiration/craig-ward-brickfont/) — MEDIUM confidence (design inspiration)
+- [Learning from Lego: A Step Forward in Modular Web Design – A List Apart](https://alistapart.com/article/learning-from-lego-a-step-forward-in-modular-web-design/) — MEDIUM confidence (conceptual, not visual)
+- [Drawing a Lego brick with HTML & CSS3 – Michelle Dinan](http://blog.michelledinan.com/08/2012/drawing-a-lego-brick-with-html-and-css3/) — LOW confidence (outdated 2012, but technique reference)
+
+### Responsive Design
+- [How To Create a Responsive Sidebar | W3Schools](https://www.w3schools.com/howto/howto_css_sidebar_responsive.asp) — MEDIUM confidence
+- [Elements To Ditch Or Repurpose On Mobile — Smashing Magazine](https://www.smashingmagazine.com/2018/12/elements-ditch-repurpose-mobile/) — HIGH confidence (UX best practices)
+
+---
+*Feature research for: Immersive LEGO CSS Theme*
+*Researched: 2026-02-17*
+*Context: Subsequent milestone adding immersive transformation to existing 8-theme system*

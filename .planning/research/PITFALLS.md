@@ -1,648 +1,550 @@
-# Domain Pitfalls: Adding Advanced Features to Astro Academic Website
+# Pitfalls Research
 
-**Domain:** Academic website enhancement (multi-theme, code embeds, GitHub Releases API, teaching collection)
-**Researched:** 2026-02-16
-**Overall Confidence:** MEDIUM (based on training data + codebase analysis; external verification unavailable)
-
-## Note on Research Methodology
-
-External verification tools (WebSearch, WebFetch) were unavailable. This research is based on:
-1. Analysis of existing codebase (`/Users/pedf/workspace/bacilo.github.io`)
-2. Training data knowledge (current through January 2025)
-3. Domain patterns for Astro 5.x, CSS theming, and GitHub APIs
-
-**Recommendation:** Validate HIGH and CRITICAL findings against official docs during implementation.
-
----
+**Domain:** Immersive CSS Themes (LEGO-style decorative effects) added to existing multi-theme system
+**Researched:** 2026-02-17
+**Confidence:** MEDIUM (Web research verified with multiple sources; some LOW confidence areas flagged)
 
 ## Critical Pitfalls
 
-These mistakes cause rewrites, data loss, or major integration failures.
-
-### Pitfall 1: Theme System Overriding prefers-color-scheme
+### Pitfall 1: Pseudo-Element Performance Explosion
 
 **What goes wrong:**
-Adding a manual theme switcher (light/dark/academic/etc.) that conflicts with existing `@media (prefers-color-scheme: dark)` rules. Users click theme switcher, nothing happens. Or worse: theme flickers between system preference and manual selection.
+Adding `::before` and `::after` pseudo-elements to every block element (for LEGO studs/brick effects) creates massive rendering overhead. With hundreds of elements on a page, each generating 2 additional pseudo-elements, the browser must paint 3x the original DOM. On mobile devices, this causes layout thrashing, jank during scroll, and battery drain.
 
 **Why it happens:**
-Current implementation at `/Users/pedf/workspace/bacilo.github.io/src/styles/global.css` line 28 uses media query to override CSS custom properties:
-```css
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-bg: #1a1a1a;
-    /* ... */
+Developers see pseudo-elements as "lightweight" decorative additions and apply them broadly without performance testing. The visual impact (studs on all headers, cards, sections) seems impressive until tested on actual devices. Each pseudo-element with `box-shadow`, `border-radius`, and `position: absolute` triggers expensive paint operations.
+
+**How to avoid:**
+- **Limit scope ruthlessly:** Apply stud effects only to key visual elements (header, nav, major section dividers), not every `<p>`, `<div>`, or `<span>`.
+- **Use `content-visibility: auto`** on sections with heavy pseudo-element decoration to skip rendering off-screen content ([web.dev: content-visibility](https://web.dev/articles/content-visibility)).
+- **Budget pseudo-elements:** Set a maximum (e.g., "no more than 50 pseudo-elements per viewport") and test on low-end mobile (iPhone SE, Android Go).
+- **Prefer CSS Grid/background patterns** for repeating visual effects instead of individual pseudo-elements.
+
+**Warning signs:**
+- Chrome DevTools Performance panel shows Paint >50ms per frame
+- Lighthouse Performance score drops >10 points when LEGO theme active
+- Scroll feels janky (not 60fps) on test devices
+- Mobile battery drains noticeably faster during testing
+
+**Phase to address:**
+**Phase 1-2 (Foundation & Basic Stud Effects)** — Establish pseudo-element budget and test performance baseline before adding animations.
+
+---
+
+### Pitfall 2: Font Loading Cascade Failure (FOUT/FOIT on Theme Switch)
+
+**What goes wrong:**
+LEGO theme loads 3 custom web fonts (display font for headings, body font, monospace for code). When user switches from a system font theme (Terminal, default) to LEGO theme, fonts aren't preloaded. Result: Flash of Invisible Text (FOIT) makes headings disappear for 1-3 seconds, or Flash of Unstyled Text (FOUT) causes jarring layout shifts as fallback fonts (different metrics) get replaced.
+
+**Why it happens:**
+Web fonts only load when CSS rules referencing them apply to the DOM. Theme switching via `[data-theme="lego"]` triggers font requests *after* the theme change, not before. Developers test on cached browsers (fonts already downloaded) and miss the cold-load experience. Theme-specific fonts aren't included in `<link rel="preload">` because other themes don't use them.
+
+**How to avoid:**
+- **Conditional preloading with JavaScript:** When user hovers theme switcher button, preload LEGO fonts before switch:
+  ```javascript
+  document.querySelectorAll('[data-theme-option="lego"]').forEach(btn => {
+    btn.addEventListener('mouseenter', () => {
+      const link = document.createElement('link');
+      link.rel = 'preload';
+      link.as = 'font';
+      link.type = 'font/woff2';
+      link.href = '/fonts/lego-display.woff2';
+      link.crossOrigin = 'anonymous';
+      document.head.appendChild(link);
+      // Repeat for all LEGO fonts
+    }, { once: true });
+  });
+  ```
+- **Use `font-display: swap`** to prevent invisible text ([Chrome Developers: font-display](https://developer.chrome.com/docs/lighthouse/performance/font-display)).
+- **Font metric matching:** Define fallback font stacks with similar metrics using `size-adjust`, `ascent-override`, `descent-override` to minimize layout shift ([DebugBear: Font Layout Shift](https://www.debugbear.com/blog/web-font-layout-shift)).
+  ```css
+  @font-face {
+    font-family: 'LEGO Display Fallback';
+    src: local('Arial');
+    size-adjust: 110%; /* Adjust to match LEGO font metrics */
+    ascent-override: 95%;
+    descent-override: 25%;
   }
-}
-```
+  ```
+- **Only WOFF2 format** — fastest compression, universally supported in 2026 ([DebugBear: Font Performance](https://www.debugbear.com/blog/website-font-performance)).
 
-Adding a class-based theme system (`.theme-dark`, `.theme-light`) creates specificity conflicts. Media query continues to win, overriding user's manual theme choice.
+**Warning signs:**
+- Headings disappear briefly when switching to LEGO theme (FOIT)
+- Text jumps/reflows after theme switch (FOUT with poor fallback matching)
+- Cumulative Layout Shift (CLS) >0.1 in Chrome DevTools during theme switch
+- User complaints about "text flashing" or "page jumping"
 
-**Consequences:**
-- Theme switcher appears broken
-- User confusion and complaints
-- Half-working state where some properties respect manual theme, others respect system preference
-- Accessibility issues (users who need high contrast can't override)
-
-**Prevention:**
-1. **Phase 1 decision:** Choose ONE of these architectures:
-   - **Option A (Recommended):** Class-based themes with data attribute, remove media query
-     ```css
-     [data-theme="dark"] { /* dark colors */ }
-     [data-theme="light"] { /* light colors */ }
-     [data-theme="academic"] { /* academic colors */ }
-     /* Fallback to system preference if no theme set */
-     @media (prefers-color-scheme: dark) {
-       :root:not([data-theme]) { /* dark colors */ }
-     }
-     ```
-   - **Option B:** Keep media query, add override flag
-     ```css
-     :root:not(.manual-theme) { /* existing vars */ }
-     @media (prefers-color-scheme: dark) {
-       :root:not(.manual-theme) { /* dark override */ }
-     }
-     .theme-dark { /* manual dark */ }
-     ```
-
-2. **Test checklist:**
-   - [ ] Theme switcher works when system is in dark mode
-   - [ ] Theme switcher works when system is in light mode
-   - [ ] Theme persists on page reload
-   - [ ] Theme persists across navigation
-   - [ ] System preference changes don't override manual selection
-
-**Detection:**
-- User reports "theme switcher doesn't work"
-- Browser DevTools shows computed CSS variables don't match selected theme
-- Media query visible in DevTools with higher specificity
-
-**Phase to address:** Phase 1 (Foundation) - must be decided before implementing any themes
+**Phase to address:**
+**Phase 3 (Typography Integration)** — Implement font preloading, `font-display: swap`, and fallback metric matching before declaring font integration complete.
 
 ---
 
-### Pitfall 2: Code Embed Hydration Breaking Static Site
+### Pitfall 3: Accessibility Failure — Decorative Pseudo-Content Read by Screen Readers
 
 **What goes wrong:**
-Adding "runnable widget" code embeds (interactive playgrounds) requires client-side JavaScript. Naively implementing this breaks Astro's static output model, bloating bundle size or causing hydration errors.
+LEGO stud effects use `::before { content: "●●●"; }` or similar character-based decorations. Modern screen readers (NVDA, JAWS, VoiceOver) read CSS-generated content by default, so users hear "dot dot dot" or "circle circle circle" hundreds of times while navigating the page. Purely visual decoration becomes auditory noise pollution.
 
 **Why it happens:**
-Current site uses `output: 'static'` (line 9 of `/Users/pedf/workspace/bacilo.github.io/astro.config.mjs`). Adding interactive embeds often requires:
-- Large JS libraries (CodeMirror, Monaco, Shiki runtime)
-- Framework hydration (React/Svelte/Vue)
-- Runtime code execution (eval, Function constructor)
+Developers assume CSS `content` property is ignored by assistive technology (outdated assumption from pre-2020 era). Screen reader behavior evolved to expose pseudo-content because it sometimes contains meaningful information ([Accessible Web: Screen Readers and Pseudo-Elements](https://accessibleweb.com/question-answer/how-is-css-pseudo-content-treated-by-screen-readers/), [Tink: Accessibility Support for CSS Generated Content](https://tink.uk/accessibility-support-for-css-generated-content/)). Testing only happens with visual inspection, not with actual screen reader testing.
 
-Common mistake: importing a 500KB editor library into every portfolio page that might have code.
+**How to avoid:**
+- **Use empty `content` with visual-only styling:**
+  ```css
+  .brick-element::before {
+    content: ""; /* No text content */
+    display: block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--stud-color);
+  }
+  ```
+- **If text content required, use alternative text syntax** (CSS4 proposal, limited support):
+  ```css
+  .brick-element::before {
+    content: "●●●" / ""; /* Visual content / screen reader content (empty) */
+  }
+  ```
+- **Add `aria-hidden="true"` to parent containers** with decorative pseudo-elements (if semantically appropriate):
+  ```html
+  <div class="lego-header" aria-hidden="true">
+    <!-- Decorative wrapper -->
+  </div>
+  <h1>Actual heading</h1>
+  ```
+- **Test with actual screen readers:** NVDA (Windows), VoiceOver (macOS/iOS), TalkBack (Android). Visual testing is insufficient ([F87: CSS Generated Content and WCAG Conformance](https://adrianroselli.com/2019/02/f87-css-generated-content-and-wcag-conformance.html)).
 
-**Consequences:**
-- **Bundle bloat:** Initial page load increases from ~50KB to 500KB+
-- **Hydration errors:** "Expected server HTML to contain X" errors
-- **Build failures:** SSR attempting to access `window`, `document` during static generation
-- **Performance regression:** Time to Interactive increases 2-5x
-- **GitHub Pages deployment:** Exceeds recommended bundle size limits
+**Warning signs:**
+- Screen reader announces "dot", "circle", or other decorative text repeatedly
+- Users with assistive technology report "nonsense content"
+- WCAG 1.3.1 (Info and Relationships) failure detected in accessibility audit
+- Decorative content included in page's accessible text tree (check with Accessibility Inspector in browser DevTools)
 
-**Prevention:**
-
-1. **Syntax highlighting (non-interactive):**
-   - Use build-time highlighter (Shiki, Prism) via Astro's built-in support
-   - Zero client-side JS needed
-   - Add to `astro.config.mjs`:
-     ```js
-     markdown: {
-       syntaxHighlight: 'shiki',
-       shikiConfig: { theme: 'github-dark' }
-     }
-     ```
-
-2. **Runnable widgets (interactive):**
-   - Use `client:idle` or `client:visible` directive to defer hydration
-   - Lazy-load editor libraries only when needed:
-     ```astro
-     <CodePlayground client:visible code={code} />
-     ```
-   - Consider iframe embeds to external playgrounds (CodeSandbox, StackBlitz) instead of shipping full editor
-   - If using iframe: Add loading="lazy" attribute
-
-3. **Hybrid approach:**
-   - Static syntax-highlighted code by default
-   - "Run in playground" button that opens modal/iframe on-demand
-   - Avoids loading heavy JS unless user clicks
-
-4. **Build-time checks:**
-   - Monitor bundle size: `npm run build` and check dist/ size
-   - Set budget: Individual page bundles should stay under 100KB
-   - Use `astro check` to catch SSR errors before deployment
-
-**Detection:**
-- Build warnings: "Large bundle detected"
-- Console errors: "window is not defined" during build
-- Slow page loads in production
-- GitHub Pages deployment warnings about file size
-
-**Phase to address:** Phase 2 (Code Embeds) - architecture decision required before implementation
+**Phase to address:**
+**Phase 1 (Foundation)** — Establish accessibility-safe pseudo-element patterns before building out stud effects.
 
 ---
 
-### Pitfall 3: GitHub Releases API Rate Limit Death Spiral
+### Pitfall 4: Theme Switching FOUC Due to Unscoped Immersive Styles
 
 **What goes wrong:**
-Adding GitHub Releases API calls alongside existing repo API calls exhausts the 60 requests/hour unauthenticated rate limit. Site becomes unusable for visitors, showing "Unable to load stats" errors everywhere.
+LEGO theme CSS includes aggressive immersive styles (brick borders, stud pseudo-elements, snap animations). When switching *away* from LEGO theme, these styles "leak" for 1-2 frames because CSS specificity conflicts or JavaScript timing issues cause theme cleanup to happen after new theme applies. Users see LEGO studs briefly appear on Terminal theme or brick borders flash on Synthwave theme.
 
 **Why it happens:**
-Current implementation (`/Users/pedf/workspace/bacilo.github.io/src/scripts/github-api.ts`) fetches repo data client-side for each portfolio card. Adding Releases API doubles the API calls:
+Immersive styles use high specificity selectors (`.brick-element::before`, `h1.lego-header`) that aren't strictly scoped to `[data-theme="lego"]`. Developers test switching *to* LEGO theme (works fine) but not *from* LEGO to other themes. CSS cascade order and JavaScript timing create edge cases where old styles persist for 1-2 render frames.
 
-- **Current:** 3 portfolio cards × 1 API call = 3 requests
-- **With Releases:** 3 portfolio cards × 2 API calls (repo + releases) = 6 requests
+**How to avoid:**
+- **Strict theme scoping:** All LEGO-specific styles MUST be prefixed with `[data-theme="lego"]`:
+  ```css
+  /* WRONG — applies globally */
+  .brick-element::before { content: ""; }
 
-Unauthenticated GitHub API limit: **60 requests per IP per hour**
-
-With 10+ portfolio items, a single visitor uses 20+ requests. 3 visitors = rate limited. Cached data expires in 1 hour, cycle repeats.
-
-**Consequences:**
-- **User-facing errors:** "Unable to load stats" on portfolio cards
-- **Degraded experience:** Site visitors in same network (office, university) share IP, exhaust limit faster
-- **Cache thrashing:** 1-hour cache too short for 60/hour limit
-- **No fallback:** Existing code shows error state, no graceful degradation
-
-**Prevention:**
-
-1. **Immediate (Phase 3):**
-   - Increase cache duration from 1 hour to 24 hours (line 14 of `github-api.ts`)
-     ```ts
-     const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours
-     ```
-   - Reduces repeat visitors hitting API
-
-2. **Medium-term (Phase 3):**
-   - Batch API calls: Fetch all repos + releases in single GraphQL query (1 request instead of 2N)
-   - GitHub GraphQL API: Still 60/hour limit, but more efficient
-   - Example GraphQL query fetches repo + latest release in one call
-
-3. **Long-term (Phase 3):**
-   - **Build-time pre-fetching:** Move GitHub API calls to build process
-     ```js
-     // scripts/fetch-github-data.js
-     // Run during build, save to static JSON
-     // No client-side API calls
-     ```
-   - Pros: Zero rate limit issues for visitors, faster page loads
-   - Cons: Data stale until next deployment (acceptable for academic site)
-
-4. **Fallback strategy:**
-   - Show static values from frontmatter when API fails
-   - Add `stats` field to portfolio schema:
-     ```ts
-     stats: z.object({
-       stars: z.number(),
-       downloads: z.number(),
-     }).optional()
-     ```
-   - CMS editors manually update when needed
-
-**Detection:**
-- HTTP 403 responses in browser console
-- "x-ratelimit-remaining: 0" in response headers
-- Error logs: "Rate limited for owner/repo"
-- User reports of missing stats
-
-**Phase to address:** Phase 3 (GitHub API Enhancement) - MUST address before adding Releases API
-
----
-
-### Pitfall 4: Content Collection Schema Breaking Existing Content
-
-**What goes wrong:**
-Adding new required fields or changing validation rules in `src/content.config.ts` causes build failures. All 26 existing content files must be updated simultaneously, or build breaks with validation errors.
-
-**Why it happens:**
-Astro content collections use Zod schemas for validation at build time. Current schema (`/Users/pedf/workspace/bacilo.github.io/src/content.config.ts`) has 5 collections with strict validation.
-
-Common mistakes when adding teaching collection:
-1. Copy-pasting schema from similar collection (talks/publications) without adjusting required fields
-2. Adding required fields to existing collections without updating all content files
-3. Changing field types (string → enum, optional → required)
-
-**Consequences:**
-- **Build failures:** `npm run build` fails with "Expected X, received Y" errors
-- **Broken CMS:** Sveltia CMS config out of sync, shows wrong fields
-- **Data loss risk:** CMS saves data that fails schema validation
-- **Blocked deployment:** Can't deploy to GitHub Pages until all files fixed
-- **Validation cascade:** Fixing one file reveals errors in others
-
-**Prevention:**
-
-1. **Schema evolution checklist:**
-   - [ ] New fields MUST be optional initially (use `z.optional()`)
-   - [ ] Add `z.preprocess()` for empty string handling (see lines 5-6 of `content.config.ts`)
-   - [ ] Test schema change with `npm run build` before touching content files
-   - [ ] Update CMS config (`public/admin/config.yml`) in same commit as schema change
-   - [ ] Add inline comments linking schema to CMS config:
-     ```ts
-     // Schema mirrors public/admin/config.yml -- update both when changing fields
-     ```
-
-2. **Teaching collection checklist:**
-   - [ ] Start with minimal required fields (title, date only)
-   - [ ] Add optional fields for future expansion
-   - [ ] Use consistent field naming with other collections
-   - [ ] Include `collection: z.literal('teaching')` for type safety
-
-3. **CMS sync strategy:**
-   - Keep CMS config comment (already exists at lines 72, 86, 104, 121)
-   - Use same field order in both files
-   - Test in Sveltia CMS UI after changes
-
-4. **Migration safety:**
-   - Never change existing field types in one step
-   - Add new field → migrate data → remove old field (3 commits)
-   - Use Git to verify no unintended changes: `git diff src/content/`
-
-**Detection:**
-- Build errors: "ZodError: Invalid type at..."
-- CMS errors: "Field X not found in schema"
-- Content files with missing fields
-- Type errors in `.astro` files referencing collection entries
-
-**Phase to address:** Phase 4 (Teaching Section) - critical during schema design
-
----
-
-## Moderate Pitfalls
-
-These cause bugs, rework, or user experience issues but are fixable without major rewrites.
-
-### Pitfall 5: Theme-Specific Syntax Highlighting Mismatch
-
-**What goes wrong:**
-Syntax highlighting theme (e.g., GitHub Dark) hard-coded in config, looks terrible in light themes. Code blocks with dark background appear on dark background site theme = unreadable.
-
-**Why it happens:**
-Astro's syntax highlighting config is build-time only. Can't dynamically switch Shiki theme based on user's selected site theme.
-
-**Prevention:**
-- Use dual themes in Shiki config:
-  ```js
-  shikiConfig: {
-    themes: {
-      light: 'github-light',
-      dark: 'github-dark'
+  /* CORRECT — only applies when LEGO theme active */
+  [data-theme="lego"] .brick-element::before { content: ""; }
+  ```
+- **Use CSS containment** to isolate theme styles:
+  ```css
+  [data-theme="lego"] {
+    contain: style; /* Prevents style leakage */
+  }
+  ```
+- **Remove LEGO-specific classes on theme switch** if using JavaScript to add classes:
+  ```javascript
+  function switchTheme(newTheme) {
+    // Remove old theme classes
+    document.body.classList.remove('lego-active', 'lego-animated');
+    // Set new theme
+    document.documentElement.setAttribute('data-theme', newTheme);
+    // Add new theme classes if needed
+    if (newTheme === 'lego') {
+      document.body.classList.add('lego-active');
     }
   }
   ```
-- Generates CSS with `@media (prefers-color-scheme: dark)` for code blocks
-- Must coordinate with site theme system (see Pitfall 1)
-- Alternative: Use theme-neutral syntax highlighting (min-light, min-dark)
+- **Test bidirectional switching:** Test LEGO → every other theme, not just default → LEGO.
 
-**Phase to address:** Phase 2 (Code Embeds) - during syntax highlighting setup
+**Warning signs:**
+- Flashes of LEGO decoration appear when switching to other themes
+- Console warnings about duplicate CSS custom properties
+- DevTools shows both old and new theme styles applying simultaneously
+- Layout shifts during theme transitions (CLS spikes)
 
----
-
-### Pitfall 6: Portfolio Stats Configuration Combinatorial Explosion
-
-**What goes wrong:**
-Supporting "stars/downloads/both/neither" per portfolio card creates 4 states × 3 sources (repo API, releases API, static) = 12 code paths. Logic becomes unmaintainable.
-
-**Why it happens:**
-Each portfolio item might want different stats displayed. Initial implementation uses nested conditionals:
-```astro
-{showStars && repoData && <Stars count={repoData.stars} />}
-{showDownloads && releaseData && <Downloads count={releaseData.downloads} />}
-```
-
-Adding error states, loading states, fallbacks = complexity explosion.
-
-**Prevention:**
-1. **Simplified model:** Single `statsDisplay` field with enum:
-   ```ts
-   statsDisplay: z.enum(['none', 'github', 'npm', 'both']).default('github')
-   ```
-2. **Component abstraction:**
-   ```astro
-   <StatsDisplay type={statsDisplay} repo={repo} package={package} />
-   ```
-3. **State machine pattern:** Loading → Success → Error (not nested ifs)
-
-**Phase to address:** Phase 3 (GitHub API Enhancement) - architecture design
+**Phase to address:**
+**Phase 1-2 (Foundation & Theme Scoping)** — Establish strict scoping conventions before adding complex decorations.
 
 ---
 
-### Pitfall 7: Teaching Collection Slug Collisions
+### Pitfall 5: Mobile Touch Target Failure — Studs Too Small to Be Safe
 
 **What goes wrong:**
-Adding teaching collection with auto-generated slugs (course codes like "CS101") collides with existing routes (`/pages/`, `/posts/`).
+LEGO studs (8x8px decorative circles) are placed near interactive elements (links, buttons). On mobile, touch targets must be ≥44x44px (iOS) or ≥48x48px (Android) for accessibility ([10 Mobile UX Design Trends 2026](https://webdesignerindia.medium.com/10-mobile-ux-design-trends-2026-231783d97d28)). Studs placed via `position: absolute` overlap or crowd touch targets, causing misclicks. Users tap studs instead of adjacent links.
 
 **Why it happens:**
-Astro generates routes from content collection file structure. If teaching content uses slugs like "about" or "home", collides with pages collection.
+Desktop testing with mouse cursor (1px precision) doesn't reveal touch target issues. Developers design studs for visual appeal without considering finger size (10-15mm diameter). CSS positioning (`top`, `left` values) works on desktop but creates different overlaps on mobile due to viewport differences.
 
-**Prevention:**
-- Namespace teaching routes: `/teaching/[slug]` not `/[slug]`
-- Use course code prefix in filenames: `2024-spring-cs101.md`
-- Add slug validation in schema:
-  ```ts
-  slug: z.string().regex(/^[a-z0-9-]+$/, 'Slug must be lowercase alphanumeric with hyphens')
+**How to avoid:**
+- **Never position decorative elements within 12px of interactive elements:**
+  ```css
+  [data-theme="lego"] .brick-element::before {
+    /* Ensure studs are >12px away from parent edges */
+    top: 12px;
+    left: 12px;
+  }
+
+  [data-theme="lego"] a,
+  [data-theme="lego"] button {
+    /* Ensure touch target padding */
+    padding: 12px 16px; /* Minimum 44x44px total */
+  }
+  ```
+- **Use `pointer-events: none`** on decorative pseudo-elements:
+  ```css
+  [data-theme="lego"] .brick-element::before {
+    pointer-events: none; /* Prevent studs from intercepting clicks */
+  }
+  ```
+- **Hide decorative elements on mobile** if spacing impossible:
+  ```css
+  @media (max-width: 768px) {
+    [data-theme="lego"] .dense-section::before,
+    [data-theme="lego"] .dense-section::after {
+      display: none; /* Remove studs in tight layouts */
+    }
+  }
+  ```
+- **Test on actual devices:** Simulators don't replicate touch precision issues.
+
+**Warning signs:**
+- Users report difficulty tapping links/buttons on mobile in LEGO theme
+- Lighthouse accessibility audit flags touch target sizing
+- Heat maps show taps landing on decorative elements instead of interactive elements
+- Buttons require multiple tap attempts
+
+**Phase to address:**
+**Phase 2 (Stud Effects) & Phase 7 (Responsive Refinement)** — Set touch-safe positioning rules before scaling up decoration density.
+
+---
+
+### Pitfall 6: Reduced-Motion Ignored — Animations Cause Vestibular Issues
+
+**What goes wrong:**
+LEGO theme includes snap/bounce CSS animations on theme switch, card interactions, and button clicks. Users with vestibular disorders (motion sensitivity) or those who've enabled `prefers-reduced-motion` system setting experience nausea, dizziness, or discomfort. Animations play anyway because `@media (prefers-reduced-motion: reduce)` override not implemented.
+
+**Why it happens:**
+Animations are added for visual polish without considering accessibility impact. Developers without motion sensitivity don't experience the issue personally. WCAG 2.1 Success Criterion 2.3.3 (Animation from Interactions) requires animations to be disableable ([prefers-reduced-motion: MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/prefers-reduced-motion), [Design accessible animation](https://blog.pope.tech/2025/12/08/design-accessible-animation-and-movement/)).
+
+**How to avoid:**
+- **Wrap all animations in motion query:**
+  ```css
+  /* Only animate if user hasn't requested reduced motion */
+  @media (prefers-reduced-motion: no-preference) {
+    [data-theme="lego"] .brick-snap {
+      animation: snap 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+  }
+
+  /* Fallback for reduced-motion users: instant state change */
+  @media (prefers-reduced-motion: reduce) {
+    [data-theme="lego"] .brick-snap {
+      animation: none;
+      /* Jump to final state immediately */
+    }
+  }
+  ```
+- **Disable theme-switch animations** for reduced-motion:
+  ```javascript
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function switchTheme(newTheme) {
+    if (prefersReducedMotion) {
+      // Instant switch, no transition
+      document.documentElement.setAttribute('data-theme', newTheme);
+    } else {
+      // Animated switch
+      document.documentElement.classList.add('theme-transitioning');
+      setTimeout(() => {
+        document.documentElement.setAttribute('data-theme', newTheme);
+        document.documentElement.classList.remove('theme-transitioning');
+      }, 300);
+    }
+  }
+  ```
+- **Test with system setting enabled:** macOS (System Settings > Accessibility > Display > Reduce Motion), Windows (Settings > Ease of Access > Display > Show animations).
+
+**Warning signs:**
+- Animations play when system "Reduce Motion" setting enabled
+- WCAG 2.3.3 failure in accessibility audit
+- User feedback about motion sickness or discomfort
+- No `prefers-reduced-motion` query found in CSS
+
+**Phase to address:**
+**Phase 4 (Snap Animations)** — Implement reduced-motion support *before* adding bounce/snap effects.
+
+---
+
+### Pitfall 7: Shiki Code Highlighting Theme Conflict
+
+**What goes wrong:**
+Existing site uses Shiki syntax highlighting with dual themes (light/dark via CSS variables `--shiki-light`, `--shiki-dark`). LEGO theme CSS overrides these variables or uses conflicting `!important` rules for `.astro-code` elements, breaking syntax highlighting. Code blocks either lose color entirely, display wrong theme colors, or show both themes simultaneously (unreadable mix).
+
+**Why it happens:**
+LEGO theme developers don't realize Shiki generates inline styles on `<span>` elements and uses CSS variables for theming. Adding `[data-theme="lego"] .astro-code { color: black !important; }` seems logical but nukes Shiki's token colors. Current codebase uses `!important` to override Shiki inline styles (see `themes.css:111-149`), creating specificity arms race.
+
+**How to avoid:**
+- **Respect existing Shiki variable structure:**
+  ```css
+  /* WRONG — destroys syntax highlighting */
+  [data-theme="lego"] .astro-code,
+  [data-theme="lego"] .astro-code span {
+    color: black !important; /* Overrides all token colors */
+  }
+
+  /* CORRECT — uses Shiki's light theme for LEGO */
+  [data-theme="lego"] .astro-code,
+  [data-theme="lego"] .astro-code span {
+    color: var(--shiki-light) !important;
+    background-color: var(--shiki-light-bg) !important;
+  }
+  ```
+- **Test code blocks specifically:** Ensure syntax highlighting still works with multiple languages (JavaScript, Python, CSS, etc.).
+- **Don't override Shiki custom properties** — use theme selection (`--shiki-light` vs `--shiki-dark`), don't redefine them.
+- **Consider LEGO-themed Shiki colors** (Phase 5) but as addition, not replacement:
+  ```css
+  /* Optional: LEGO-specific code theme */
+  [data-theme="lego"] {
+    --shiki-light-bg: #fffef7; /* Slightly cream background */
+    /* Keep token colors intact */
+  }
   ```
 
-**Phase to address:** Phase 4 (Teaching Section) - routing setup
+**Warning signs:**
+- Code blocks lose syntax highlighting in LEGO theme
+- Code displays solid black text with no color differentiation
+- Background colors conflict (black code on dark background)
+- Console errors about CSS custom property undefined
+
+**Phase to address:**
+**Phase 5 (Code Block Styling)** — Test and verify Shiki integration before customizing code block appearance.
 
 ---
 
-### Pitfall 8: Client-Side localStorage Quota Exceeded
+### Pitfall 8: Box-Shadow Performance Cascade (Brick Borders + Studs)
 
 **What goes wrong:**
-Aggressive GitHub API caching fills localStorage (5-10MB limit per domain). New cache writes fail silently, API rate limiting resumes.
+LEGO theme uses `box-shadow` for brick depth effects AND pseudo-element studs. Combinations like `box-shadow: 0 4px 0 #000` (brick) + `border-radius: 50%` + nested `box-shadow` on `::before` studs create exponential paint time. Each shadow multiplies rendering cost, especially with blur radius >0 ([CSS paint times](https://web.dev/articles/css-paint-times), [How to animate box-shadow](https://tobiasahlin.com/blog/how-to-animate-box-shadow/)).
 
 **Why it happens:**
-Current implementation (lines 75-78 of `github-api.ts`) caches each repo individually. Adding releases data doubles storage. With images/descriptions, cache grows fast:
+Developers add effects incrementally: brick shadow looks good, stud shadows look good, combined looks great... but performance testing happens after visual design is locked. "Paint flashing" in DevTools not checked. Multiple shadows on same element (especially with blur) are expensive operations ([CSS Box Shadow Performance](https://www.sitepoint.com/css-box-shadow-animation-performance/)).
 
-- 10 repos × 2KB each = 20KB (current)
-- 10 repos × 4KB (with releases) = 40KB
-- User browses 100+ portfolio sites = 4MB+ cached
+**How to avoid:**
+- **Budget shadows:** Maximum 1-2 `box-shadow` declarations per element.
+- **Use sharp shadows (0 blur)** for LEGO brick aesthetic — avoids expensive blur calculations:
+  ```css
+  /* Good: sharp shadow, no blur */
+  [data-theme="lego"] .brick {
+    box-shadow: 0 4px 0 #000; /* No blur radius */
+  }
 
-**Prevention:**
-1. **Implement LRU cache:** Keep only 50 most recent entries
-2. **Compress data:** Store only needed fields, not full API response
-3. **Handle quota errors:**
-   ```ts
-   try {
-     localStorage.setItem(key, value);
-   } catch (err) {
-     if (err.name === 'QuotaExceededError') {
-       // Clear old entries, retry
-       clearOldestCacheEntries();
-     }
-   }
-   ```
-4. **Monitor cache size:** Log total usage in dev tools
-
-**Phase to address:** Phase 3 (GitHub API Enhancement) - cache strategy
-
----
-
-## Minor Pitfalls
-
-### Pitfall 9: Runnable Widget Security (eval/new Function)
-
-**What goes wrong:**
-Implementing runnable code widgets with `eval()` or `new Function()` violates Content Security Policy, creates XSS risk.
-
-**Prevention:**
-- Use sandboxed iframe for code execution
-- Or: Use Web Workers for isolated execution
-- Or: Use external playground iframe (CodeSandbox, StackBlitz)
-- Never: `eval(userCode)` or `new Function(userCode)()`
-
-**Phase to address:** Phase 2 (Code Embeds) - if implementing runnable widgets
-
----
-
-### Pitfall 10: MDX vs Markdown for Code Embeds
-
-**What goes wrong:**
-Mixing `.md` and `.mdx` files in content collections causes inconsistent code block rendering. Some files get interactive widgets, others don't.
-
-**Prevention:**
-- Decide: All `.md` with Astro components, or all `.mdx` for consistency
-- Document in schema comments which collections support MDX
-- Use file extension validation if needed
-
-**Phase to address:** Phase 2 (Code Embeds) - content strategy
-
----
-
-### Pitfall 11: Theme Switcher FOUC (Flash of Unstyled Content)
-
-**What goes wrong:**
-Theme loads from localStorage after page renders, causing flash from default theme to selected theme.
-
-**Prevention:**
-- Inline theme script in `<head>` before styles:
-  ```html
-  <script>
-    const theme = localStorage.getItem('theme') || 'light';
-    document.documentElement.setAttribute('data-theme', theme);
-  </script>
+  /* Bad: blurred shadow, expensive */
+  [data-theme="lego"] .brick {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3); /* 8px blur = slow */
+  }
   ```
-- Prevents flash by setting theme before first paint
+- **Don't animate `box-shadow` directly** — animate `opacity` or `transform` instead:
+  ```css
+  /* WRONG — repaints every frame */
+  @keyframes bad {
+    from { box-shadow: 0 2px 0 #000; }
+    to { box-shadow: 0 8px 0 #000; }
+  }
 
-**Phase to address:** Phase 1 (Foundation) - theme switcher implementation
+  /* CORRECT — GPU-accelerated */
+  @keyframes good {
+    from { transform: translateY(0); }
+    to { transform: translateY(-4px); }
+  }
+  .brick { box-shadow: 0 4px 0 #000; } /* Static shadow */
+  ```
+- **Use separate layers for shadows** — avoid combining `border-radius` + `box-shadow` on same element if possible.
+
+**Warning signs:**
+- Paint time >50ms in Chrome DevTools Performance timeline
+- Scroll jank specifically in LEGO theme
+- High "Paint" percentage in Performance monitor
+- Mobile devices show visible lag when scrolling
+
+**Phase to address:**
+**Phase 2 (Brick Borders & Studs)** — Set shadow performance budget before adding animations.
 
 ---
 
-### Pitfall 12: GitHub API Response Shape Changes
+## Technical Debt Patterns
 
-**What goes wrong:**
-GitHub changes API response format, code expecting `stargazers_count` gets `undefined`.
+| Shortcut | Immediate Benefit | Long-term Cost | When Acceptable |
+|----------|-------------------|----------------|-----------------|
+| Skip font preloading | Faster initial implementation | FOUT/FOIT on every theme switch, poor UX | **Never** — required for polished theme switching |
+| Use `!important` everywhere | Overrides stubborn styles quickly | Specificity wars, unmaintainable CSS, future theme additions break | Only for Shiki override (existing pattern) |
+| Apply studs to all elements | Maximum visual impact | Performance catastrophe on mobile, battery drain | **Never** — selective decoration required |
+| Reuse existing theme switching code without LEGO-specific cleanup | Less code to write | FOUC, style leakage, broken theme transitions | Only in prototype/POC phase |
+| Skip reduced-motion implementation | One less thing to test | WCAG violation, user discomfort/nausea | **Never** — accessibility requirement |
+| Use character-based pseudo-content (`content: "●●●"`) | Quick visual decoration | Screen reader reads decorative content aloud | Only if paired with `/ ""` alternative text (limited support) |
+| Add decorative elements without `pointer-events: none` | Simpler CSS | Touch target failures on mobile | Only if studs positioned >12px from interactive elements |
 
-**Prevention:**
-- Add runtime validation with Zod for API responses
-- Provide fallback values for missing fields
-- Log warnings when shape doesn't match expected
+## Integration Gotchas
 
-**Phase to address:** Phase 3 (GitHub API Enhancement) - error handling
+| Integration Point | Common Mistake | Correct Approach |
+|-------------------|----------------|------------------|
+| **Shiki syntax highlighting** | Overriding `--shiki-*` variables or using `color: black !important` on `.astro-code` | Use existing theme selection pattern: `[data-theme="lego"]` sets `color: var(--shiki-light) !important` |
+| **Existing 7 themes** | LEGO styles leak into other themes due to unscoped selectors | Every LEGO style MUST be prefixed with `[data-theme="lego"]` |
+| **localStorage theme persistence** | Not cleaning up LEGO-specific classes/attributes when switching away | Remove LEGO classes before setting new theme attribute |
+| **CSS custom properties** | Defining LEGO-specific properties at `:root` level | Define under `[data-theme="lego"]` scope only |
+| **View Transitions API** | LEGO theme animations conflict with Astro View Transitions | Coordinate with `astro:page-load` events, disable LEGO animations during page transitions |
+| **Dark mode media query** | LEGO theme responds to `prefers-color-scheme` unintentionally | Explicitly set LEGO as light-based theme, don't inherit dark mode query |
 
----
+## Performance Traps
+
+| Trap | Symptoms | Prevention | When It Breaks |
+|------|----------|------------|----------------|
+| **Too many pseudo-elements** | Scroll jank, long paint times (>50ms), layout thrashing | Budget: max 50 pseudo-elements per viewport, use `content-visibility: auto` | >100 pseudo-elements on page |
+| **Blurred box-shadows** | High GPU memory, battery drain, janky animations | Use sharp shadows (0 blur radius) for LEGO aesthetic | >10 elements with blurred shadows |
+| **Unscoped `will-change`** | Excessive memory consumption, browser layer explosion | Apply `will-change` only during active animation, remove after ([MDN: will-change](https://developer.mozilla.org/en-US/docs/Web/CSS/will-change)) | `will-change` on >20 elements simultaneously |
+| **Font re-downloading on theme switch** | 1-3 second FOIT/FOUT, layout shifts | Preload LEGO fonts on theme switcher hover, use `font-display: swap` | Every cold theme switch |
+| **Layout shifts from fallback fonts** | CLS >0.1, text jumps during theme switch | Use `size-adjust`/`ascent-override` to match fallback font metrics | LEGO fonts have significantly different metrics than fallback |
+| **Animating non-compositor properties** | Repaint on every frame, jank on mobile | Only animate `transform`, `opacity`, `filter` — avoid animating `box-shadow`, `width`, `color` directly | Animating layout-triggering properties |
+
+## Accessibility Pitfalls
+
+| Pitfall | User Impact | Better Approach | WCAG Criterion |
+|---------|-------------|-----------------|----------------|
+| **Decorative pseudo-content read aloud** | Screen reader users hear "dot dot dot" hundreds of times | Use empty `content: ""` with visual styling only, or `content: "●" / ""` alternative text syntax | 1.3.1 Info and Relationships |
+| **No reduced-motion support** | Users with vestibular disorders experience nausea, dizziness | Wrap animations in `@media (prefers-reduced-motion: no-preference)` | 2.3.3 Animation from Interactions |
+| **Decorative fonts for body text** | Low readability, comprehension difficulty | Use LEGO display font only for headings, keep body text in readable sans-serif | 1.4.8 Visual Presentation |
+| **Small studs near touch targets** | Misclicks, frustration on mobile | `pointer-events: none` on decorative elements, maintain 44x44px touch targets | 2.5.5 Target Size |
+| **Low contrast on LEGO yellow borders** | Text unreadable for low-vision users | Ensure 4.5:1 contrast ratio for normal text, 3:1 for large text ([WCAG 1.4.3](https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum.html)) | 1.4.3 Contrast (Minimum) |
+| **Animations >3 flashes/second** | Photosensitive seizure risk | Keep animation frequency <3 Hz, disable rapid flashing in snap/bounce | 2.3.1 Three Flashes or Below Threshold |
+
+## "Looks Done But Isn't" Checklist
+
+Theme implementation appears complete but critical pieces missing:
+
+- [ ] **Font loading:** Often missing preload strategy — verify fonts load before theme switch visible (test with throttled network, cache disabled)
+- [ ] **Reduced motion:** Often missing `@media (prefers-reduced-motion)` overrides — verify animations disabled when system setting enabled
+- [ ] **Screen reader testing:** Often missing actual AT testing — verify with NVDA/VoiceOver, not just visual inspection
+- [ ] **Mobile touch targets:** Often missing real-device testing — verify on actual phone, not just browser DevTools simulator
+- [ ] **Bidirectional theme switching:** Often missing "switch away from LEGO" testing — verify LEGO → every other theme, not just default → LEGO
+- [ ] **Performance budget:** Often missing mobile device testing — verify Lighthouse score, paint times on iPhone SE / Android Go equivalent
+- [ ] **Shiki integration:** Often missing multi-language code block testing — verify JavaScript, Python, CSS, HTML, Markdown syntax highlighting intact
+- [ ] **Layout shift metrics:** Often missing CLS measurement — verify theme switch CLS <0.1 (check in Chrome DevTools)
+- [ ] **Specificity conflicts:** Often missing other-theme regression testing — verify 7 existing themes unaffected by LEGO CSS additions
+- [ ] **Font fallback metrics:** Often missing FOUT minimization — verify fallback fonts match LEGO font metrics with `size-adjust`
+
+## Recovery Strategies
+
+| Pitfall | Recovery Cost | Recovery Steps |
+|---------|---------------|----------------|
+| **Pseudo-element performance issues** | LOW | 1. Add `content-visibility: auto` to sections. 2. Remove pseudo-elements from low-value elements. 3. Profile with DevTools, iterate. |
+| **Font loading FOUT/FOIT** | LOW-MEDIUM | 1. Add preload on theme switcher hover. 2. Add `font-display: swap`. 3. Calculate fallback font metrics with font tools, apply `size-adjust`. |
+| **Screen reader reading decorations** | LOW | 1. Change `content: "text"` to `content: ""`. 2. Move visual effects to background/border properties. 3. Test with screen reader. |
+| **Theme switching FOUC** | MEDIUM | 1. Audit all selectors, add `[data-theme="lego"]` prefix. 2. Add JavaScript cleanup for LEGO classes on theme switch. 3. Add CSS `contain: style`. |
+| **Mobile touch target failures** | MEDIUM | 1. Add `pointer-events: none` to decorative pseudo-elements. 2. Increase padding on interactive elements. 3. Hide decorative elements on mobile with media query. |
+| **No reduced-motion support** | LOW | 1. Wrap animations in `@media (prefers-reduced-motion: no-preference)`. 2. Add instant fallback in `reduce` query. 3. Test with system setting. |
+| **Shiki theme conflict** | LOW | 1. Remove custom color overrides on `.astro-code`. 2. Use `var(--shiki-light)` instead. 3. Test all syntax-highlighted code blocks. |
+| **Box-shadow performance cascade** | MEDIUM-HIGH | 1. Remove blur radius from shadows. 2. Animate `transform`/`opacity` instead of `box-shadow`. 3. Reduce shadow count per element. May require visual redesign. |
+| **Unscoped will-change** | MEDIUM | 1. Remove static `will-change` declarations. 2. Add/remove `will-change` dynamically during animations only. 3. Monitor layer count in DevTools. |
+| **Decorative fonts in body text** | MEDIUM-HIGH | 1. Restrict LEGO display font to h1-h3 only. 2. Switch body text to system font stack. May reduce visual impact significantly. |
+
+## Pitfall-to-Phase Mapping
+
+| Pitfall | Prevention Phase | Verification Method |
+|---------|------------------|---------------------|
+| Pseudo-element performance explosion | Phase 1-2 (Foundation & Studs) | Chrome DevTools Performance: Paint <50ms, Lighthouse score drop <10 points |
+| Font loading FOUT/FOIT | Phase 3 (Typography) | Disable cache, throttle to Slow 3G, switch themes — no invisible text >500ms |
+| Screen reader reading decorations | Phase 1 (Foundation) | Test with NVDA/VoiceOver — no decorative content announced |
+| Theme switching FOUC | Phase 1-2 (Scoping) | Switch from LEGO to each of 7 themes — no style flashes |
+| Mobile touch target failures | Phase 2 & 7 (Studs & Responsive) | Test on iPhone/Android — all links/buttons tappable first try |
+| Reduced-motion ignored | Phase 4 (Animations) | Enable system "Reduce Motion" — all animations disabled |
+| Shiki code highlighting conflict | Phase 5 (Code Blocks) | View code blocks in JS/Python/CSS — syntax colors intact |
+| Box-shadow performance cascade | Phase 2 (Brick Borders) | Paint time <50ms with brick shadows + studs combined |
+| Unscoped will-change | Phase 4 (Animations) | DevTools Layers panel — <20 compositor layers active |
+| Decorative fonts readability | Phase 3 (Typography) | Accessibility audit — WCAG 1.4.8 pass, body text remains readable |
+| CSS specificity conflicts | Phase 1 (Foundation) | Test all 8 themes — no unexpected style changes in non-LEGO themes |
+| Layout shifts | Phase 3 & 8 (Fonts & Polish) | Chrome DevTools CLS metric <0.1 during theme switch |
 
 ## Phase-Specific Warnings
 
-| Phase Topic | Likely Pitfall | Mitigation | Priority |
-|-------------|---------------|------------|----------|
-| **Phase 1: Theme System** | Media query override conflict (Pitfall 1) | Architecture decision before coding | CRITICAL |
-| **Phase 1: Theme System** | FOUC on load (Pitfall 11) | Inline script in head | MEDIUM |
-| **Phase 2: Code Embeds** | Hydration breaking static build (Pitfall 2) | Use build-time syntax highlighting, defer interactive | CRITICAL |
-| **Phase 2: Code Embeds** | Theme mismatch for code blocks (Pitfall 5) | Dual-theme Shiki config | MEDIUM |
-| **Phase 2: Code Embeds** | eval() security issue (Pitfall 9) | Use iframe or external playground | MEDIUM |
-| **Phase 3: GitHub API** | Rate limit death spiral (Pitfall 3) | Increase cache, consider build-time fetching | CRITICAL |
-| **Phase 3: GitHub API** | localStorage quota exceeded (Pitfall 8) | LRU cache with size limits | MEDIUM |
-| **Phase 3: GitHub API** | Stats display complexity (Pitfall 6) | Simplified enum model | MEDIUM |
-| **Phase 4: Teaching Section** | Schema breaking existing content (Pitfall 4) | Optional fields, CMS sync checklist | CRITICAL |
-| **Phase 4: Teaching Section** | Slug collisions (Pitfall 7) | Namespaced routes, validation | MEDIUM |
+| Phase Topic | Likely Pitfall | Mitigation |
+|-------------|---------------|------------|
+| **Phase 1: Foundation & Color Palette** | Leaking styles into other themes | Establish `[data-theme="lego"]` scoping convention, document in PR template |
+| **Phase 2: Brick Borders & Stud Effects** | Performance collapse from too many pseudo-elements | Set pseudo-element budget (max 50/viewport), test on iPhone SE |
+| **Phase 3: Typography Integration** | FOUT/FOIT destroying theme switch UX | Implement font preloading + `font-display: swap` + fallback metrics as package |
+| **Phase 4: Snap & Bounce Animations** | Vestibular disorder triggers | Implement `prefers-reduced-motion` before adding first animation |
+| **Phase 5: Code Block Styling** | Breaking Shiki syntax highlighting | Test code blocks BEFORE and AFTER LEGO styles, verify all languages |
+| **Phase 6: Interactive States** | Touch target failures on mobile | Add `pointer-events: none` and test on real devices |
+| **Phase 7: Responsive Refinement** | Small decorative elements unusable on mobile | Hide or simplify studs on <768px viewports |
+| **Phase 8: Polish & Performance** | Shipping with performance regressions | Run Lighthouse audit before/after, require <10 point drop to ship |
 
----
+## Confident vs. Uncertain Findings
 
-## Integration Pitfalls (Multi-Feature)
+**HIGH confidence (verified with official sources):**
+- Font loading strategies (FOUT/FOIT, `font-display`, WOFF2 format)
+- `prefers-reduced-motion` accessibility requirement
+- Touch target sizing (44x44px minimum)
+- Shiki CSS variable theming structure (exists in current codebase)
+- Box-shadow performance characteristics
+- Screen reader pseudo-element behavior (modern behavior confirmed)
+- `content-visibility` performance benefits
+- `will-change` memory pitfalls
 
-### Pitfall 13: Theme System + Code Embeds Coordination
+**MEDIUM confidence (multiple web sources agree):**
+- Pseudo-element performance impact (general guidance, no specific benchmarks)
+- Font fallback metric matching with `size-adjust` (newer CSS feature, limited real-world data)
+- CSS `contain: style` for theme isolation (newer feature, browser support assumed)
+- Alternative text syntax for pseudo-content `content: "text" / "alt"` (CSS4 proposal, limited support)
 
-**What goes wrong:**
-Site theme switcher changes CSS variables, but code block themes remain static (built at compile time). User switches to light theme, code blocks stay dark.
-
-**Consequences:**
-- Inconsistent visual experience
-- Accessibility issues (insufficient contrast)
-- User confusion
-
-**Prevention:**
-1. **During Phase 1:** Document theme CSS variable names used
-2. **During Phase 2:** Configure Shiki to generate CSS using same variable names:
-   ```js
-   shikiConfig: {
-     cssVariablePrefix: '--shiki-'
-   }
-   ```
-3. **Map site themes to code themes:** Light theme → GitHub Light, Dark theme → GitHub Dark
-4. **Test matrix:** Each site theme × code block rendering = 6-8 combinations
-
-**Phase to address:** Phase 2 (Code Embeds) - must reference Phase 1 decisions
-
----
-
-### Pitfall 14: CMS Config + Schema Drift
-
-**What goes wrong:**
-Developer updates `src/content.config.ts` schema during Phase 4 (teaching section), forgets to update `public/admin/config.yml`. CMS shows wrong fields, content editors confused.
-
-**Consequences:**
-- CMS editors see outdated fields
-- New content fails validation at build time
-- Data entered in CMS but not saved to files
-- Requires manual file editing to fix
-
-**Prevention:**
-1. **Establish update protocol:**
-   - Step 1: Update schema in `src/content.config.ts`
-   - Step 2: Update CMS config in `public/admin/config.yml`
-   - Step 3: Test in CMS UI (`npm run dev`, visit `/admin/`)
-   - Step 4: Commit both files together with message: "Schema: [description]"
-
-2. **Use schema comments as reminder:**
-   ```ts
-   // Schema mirrors public/admin/config.yml -- update both when changing fields
-   ```
-
-3. **Automated validation (future):**
-   - Write script to compare schema and CMS config
-   - Run in pre-commit hook or CI
-
-4. **Phase 4 specific:**
-   - When adding teaching collection, create schema AND CMS config in same commit
-   - Use existing collections as template (compare lines 80-96 publications with schema lines 8-20)
-
-**Phase to address:** All phases touching content collections (Phase 4 primary)
-
----
-
-### Pitfall 15: GitHub API + Build-Time vs Runtime Data
-
-**What goes wrong:**
-Portfolio pages built statically at deploy time, but GitHub stats fetched client-side at runtime. Causes:
-- SSR/SSG mismatch warnings
-- Hydration errors if components expect data at build time
-- Inconsistent data between page meta tags (built) and displayed content (runtime)
-
-**Consequences:**
-- SEO issues: Meta tags show "0 stars" but page shows "150 stars"
-- Social sharing previews incorrect
-- Accessibility: Screen readers read stale static content
-
-**Prevention:**
-
-**Option A: All Runtime (Current Architecture)**
-- Keep GitHub fetching client-side
-- Don't include stats in SSG phase
-- Set meta tags to exclude stats: `<meta property="og:description" content={description}>`
-- Pros: Simple, always fresh data
-- Cons: Rate limits, slower load, no SEO for stats
-
-**Option B: All Build-Time (Recommended for Phase 3)**
-- Fetch GitHub data during build in `src/pages/portfolio/index.astro`:
-  ```js
-  const portfolioItems = await Promise.all(
-    projects.map(async (project) => {
-      const stats = await fetchRepoDataServer(project.repoUrl);
-      return { ...project, stats };
-    })
-  );
-  ```
-- Pass to component as props, no client-side fetch
-- Pros: Fast, SEO-friendly, no rate limits for users
-- Cons: Stale until next deploy (acceptable for academic portfolio)
-
-**Option C: Hybrid**
-- Build-time for initial render, client-side for updates
-- More complex, avoid unless needed
-
-**Decision point:** Phase 3 - choose architecture before implementing Releases API
-
-**Phase to address:** Phase 3 (GitHub API Enhancement) - architecture decision
-
----
-
-## Research Gaps & Open Questions
-
-Due to unavailability of external verification tools, the following should be validated during implementation:
-
-1. **Astro 5.x content collections:** Confirm current behavior of schema validation errors with existing content (training data based on Astro 4.x patterns)
-
-2. **GitHub API v3 vs v4 (GraphQL):** Verify best practices for batching repo + releases queries in 2026
-
-3. **Shiki vs Prism:** Confirm current recommendations for Astro 5.x syntax highlighting performance
-
-4. **Sveltia CMS:** Validate schema sync requirements (training data based on Netlify/Decap CMS patterns)
-
-5. **CSS custom properties browser support:** Verify current best practices for theming with custom properties (assumed stable based on 2024 data)
-
-**Recommendation:** Phase leads should verify these areas with official documentation before implementation.
-
----
-
-## Success Metrics
-
-Pitfalls successfully avoided when:
-
-- [ ] Theme switcher works in all scenarios (Pitfall 1 test checklist passed)
-- [ ] Build completes with all syntax highlighting under 100KB per page (Pitfall 2)
-- [ ] No GitHub API rate limit errors in production logs (Pitfall 3)
-- [ ] All existing content validates after teaching collection added (Pitfall 4)
-- [ ] Code blocks readable in all 6-8 theme combinations (Pitfall 5, 13)
-- [ ] CMS config stays in sync with schema throughout project (Pitfall 14)
-- [ ] localStorage cache handles quota gracefully (Pitfall 8)
-
----
-
-## Confidence Assessment by Pitfall
-
-| Pitfall | Confidence | Reason |
-|---------|------------|--------|
-| 1: Theme media query conflict | HIGH | Observable in current codebase, standard CSS specificity issue |
-| 2: Code embed hydration | HIGH | Documented Astro static build limitation |
-| 3: GitHub rate limiting | HIGH | GitHub API docs stable, visible in current implementation |
-| 4: Schema breaking content | HIGH | Observable in current Zod schemas and content files |
-| 5: Syntax highlight theme mismatch | MEDIUM | Based on Shiki patterns, requires verification with latest docs |
-| 6: Stats configuration complexity | MEDIUM | Software engineering pattern, not domain-specific |
-| 7: Teaching slug collisions | MEDIUM | Astro routing observable, teaching specifics assumed |
-| 8: localStorage quota | MEDIUM | Browser API standard, implementation pattern assumed |
-| 9: Runnable widget security | HIGH | Security fundamentals, CSP standards |
-| 10: MDX vs Markdown | MEDIUM | Astro content collection behavior, requires verification |
-| 11: Theme FOUC | HIGH | Standard web performance issue, well-documented pattern |
-| 12: API shape changes | MEDIUM | General API best practice, not GitHub-specific |
-| 13: Theme + Code coordination | MEDIUM | Integration pattern inferred, requires testing |
-| 14: CMS config drift | HIGH | Observable in current CMS config structure |
-| 15: Build-time vs runtime | HIGH | Astro architecture observable in current code |
-
-**Overall Assessment:**
-- CRITICAL pitfalls (1, 2, 3, 4, 15): HIGH confidence based on codebase analysis
-- MODERATE pitfalls (5, 6, 8, 13, 14): MEDIUM-HIGH confidence, recommend validation
-- MINOR pitfalls (7, 9, 10, 11, 12): MEDIUM confidence, standard patterns
-
----
+**LOW confidence (needs validation):**
+- Specific pseudo-element count thresholds (50/viewport is educated guess, needs testing)
+- Theme switching timing edge cases (depends on implementation details)
+- Astro View Transitions interaction (framework-specific, needs testing)
 
 ## Sources
 
-**Codebase Analysis:**
-- `/Users/pedf/workspace/bacilo.github.io/src/styles/global.css` (theme system)
-- `/Users/pedf/workspace/bacilo.github.io/src/content.config.ts` (content collections)
-- `/Users/pedf/workspace/bacilo.github.io/src/scripts/github-api.ts` (API patterns)
-- `/Users/pedf/workspace/bacilo.github.io/public/admin/config.yml` (CMS sync)
-- `/Users/pedf/workspace/bacilo.github.io/astro.config.mjs` (static build config)
+**Performance:**
+- [CSS paint times and page render weight](https://web.dev/articles/css-paint-times)
+- [How to animate box-shadow with silky smooth performance](https://tobiasahlin.com/blog/how-to-animate-box-shadow/)
+- [How to Animate CSS Box Shadows and Optimize Performance](https://www.sitepoint.com/css-box-shadow-animation-performance/)
+- [content-visibility: the new CSS property that boosts your rendering performance](https://web.dev/articles/content-visibility)
+- [Understanding the CSS will-change Property](https://www.machinet.net/tutorial-eng/understanding-the-css-will-change-property)
+- [will-change - CSS | MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/will-change)
 
-**Training Data Knowledge:**
-- Astro 4.x-5.x content collections behavior
-- GitHub API v3 rate limiting (stable since 2020)
-- CSS custom properties browser support
-- Shiki/Prism syntax highlighting patterns
-- Web performance best practices (FOUC, hydration)
+**Font Loading:**
+- [Optimizing Web Fonts: FOIT vs FOUT vs Font Display Strategies](https://talent500.com/blog/optimizing-fonts-foit-fout-font-display-strategies/)
+- [Ensure text remains visible during webfont load | Chrome for Developers](https://developer.chrome.com/docs/lighthouse/performance/font-display)
+- [The Ultimate Guide to Font Performance Optimization | DebugBear](https://www.debugbear.com/blog/website-font-performance)
+- [Fixing Layout Shifts Caused by Web Fonts | DebugBear](https://www.debugbear.com/blog/web-font-layout-shift)
 
-**Recommendations for Verification:**
-- Astro docs: https://docs.astro.build/en/guides/content-collections/
-- GitHub API docs: https://docs.github.com/en/rest/releases
-- Shiki docs: https://shiki.style/
-- CSS custom properties: MDN Web Docs
+**Accessibility:**
+- [prefers-reduced-motion - CSS | MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/prefers-reduced-motion)
+- [Design accessible animation and movement with code examples](https://blog.pope.tech/2025/12/08/design-accessible-animation-and-movement/)
+- [How is CSS pseudo content treated by screen readers?](https://accessibleweb.com/question-answer/how-is-css-pseudo-content-treated-by-screen-readers/)
+- [Accessibility support for CSS generated content - Tink](https://tink.uk/accessibility-support-for-css-generated-content/)
+- [F87: CSS Generated Content and WCAG Conformance](https://adrianroselli.com/2019/02/f87-css-generated-content-and-wcag-conformance.html)
+- [How to Choose ADA-Compliant Fonts in 2026](https://accessibe.com/blog/knowledgebase/ada-compliant-fonts)
+- [WebAIM: Typefaces and Fonts](https://webaim.org/techniques/fonts/)
+
+**Theme Switching:**
+- [Stop the Flash of Unstyled Content (FOUC) with CSS Tricks](https://javascript.plainenglish.io/stop-the-flash-of-unstyled-content-fouc-with-css-tricks-1e69608ede2f)
+- [Fixing Dark Mode Flickering (FOUC) in React and Next.js](https://notanumber.in/blog/fixing-react-dark-mode-flickering)
+- [Handling conflicts - Learn web development | MDN](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Styling_basics/Handling_conflicts)
+- [Specificity - CSS | MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/Specificity)
+
+**Mobile/Responsive:**
+- [10 Mobile UX Design Trends Every Business Must Follow in 2026](https://webdesignerindia.medium.com/10-mobile-ux-design-trends-2026-231783d97d28)
+
+**Shiki Integration:**
+- [Theme Colors Manipulation | Shiki](https://shiki.style/guide/theme-colors/)
+- [Astro Shiki Syntax Highlighting with CSS Variables](https://christianpenrod.com/blog/astro-shiki-syntax-highlighting-with-css-variables)
+
+---
+*Pitfalls research for: Immersive LEGO CSS theme addition to multi-theme academic website*
+*Researched: 2026-02-17*
+*Focus: Integration pitfalls, performance, accessibility, theme isolation*
