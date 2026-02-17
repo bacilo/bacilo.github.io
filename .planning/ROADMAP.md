@@ -48,7 +48,7 @@ Milestone v3.0 enhances the existing academic website with three major feature s
 - [x] **Phase 14: Theme System Foundation** - CSS themes infrastructure with 8 theme definitions and FOUC prevention (completed 2026-02-16)
 - [x] **Phase 15: Code Highlighting Infrastructure** - Shiki configuration and code display components (completed 2026-02-16)
 - [x] **Phase 16: Interactive Features** - Theme switcher UI and code copy buttons (completed 2026-02-16)
-- [ ] **Phase 17: Portfolio Enhancements** - Configurable stats and code embeds in portfolio cards
+- [x] **Phase 17: Portfolio Enhancements** - Configurable stats and code embeds in portfolio cards (completed 2026-02-17)
 
 ## Phase Details
 
@@ -107,7 +107,7 @@ Plans:
   3. Portfolio card author can configure stats display per card (stars, downloads, both, or none) via CMS
   4. User viewing portfolio card with code embed sees syntax-highlighted snippet
   5. User viewing portfolio card with widget embed sees runnable code demo in iframe
-**Plans:** 2 plans
+**Plans:** 2/2 plans complete
 
 Plans:
 - [ ] 17-01-PLAN.md — Configurable GitHub stats (schema, CMS, Releases API, GitHubCard)
@@ -136,7 +136,7 @@ Phases execute in numeric order: 14 → 15 → 16 → 17
 | 14. Theme System Foundation | v3.0 | Complete    | 2026-02-16 | - |
 | 15. Code Highlighting Infrastructure | v3.0 | Complete    | 2026-02-16 | - |
 | 16. Interactive Features | v3.0 | Complete    | 2026-02-16 | - |
-| 17. Portfolio Enhancements | v3.0 | 0/2 | Not started | - |
+| 17. Portfolio Enhancements | v3.0 | Complete    | 2026-02-17 | - |
 
 ---
 *Roadmap created: 2026-02-16*
