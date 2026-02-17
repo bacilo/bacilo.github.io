@@ -140,6 +140,16 @@ collections:
         widget: "string"
         required: false
         hint: "npm package name for download stats (e.g., 'my-package')"
+      - label: "Download URL"
+        name: "downloadUrl"
+        widget: "string"
+        required: false
+        hint: "Direct download link (GitHub release asset, uploaded file, PDF, etc.)"
+      - label: "Download Label"
+        name: "downloadLabel"
+        widget: "string"
+        required: false
+        hint: "Button text (default: 'Download')"
       - label: "CodePen ID"
         name: "codepenId"
         widget: "string"

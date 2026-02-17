@@ -55,6 +55,8 @@ const portfolio = defineCollection({
     playgroundUrl: optionalUrl,
     statsDisplay: z.enum(['stars', 'downloads', 'both', 'none']).optional().default('stars'),
     npmPackage: optionalStr,
+    downloadUrl: optionalUrl,
+    downloadLabel: optionalStr,
     codepenId: optionalStr,
     stackblitzId: optionalStr,
   })

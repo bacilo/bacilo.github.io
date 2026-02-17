@@ -25,6 +25,8 @@ const sortedPortfolio = portfolio.sort((a, b) => a.data.title.localeCompare(b.da
             image={project.data.image}
             slug={project.id}
             statsDisplay={project.data.statsDisplay}
+            downloadUrl={project.data.downloadUrl}
+            downloadLabel={project.data.downloadLabel}
           />
           {project.data.demoUrl && (
             <DemoEmbed
@@ -61,6 +63,9 @@ const sortedPortfolio = portfolio.sort((a, b) => a.data.title.localeCompare(b.da
             )}
             {project.data.demoUrl && (
               <a href={project.data.demoUrl} class="link-button">Live Demo</a>
+            )}
+            {project.data.downloadUrl && (
+              <a href={project.data.downloadUrl} class="link-button download" download>{project.data.downloadLabel || 'Download'}</a>
             )}
           </div>
         </li>

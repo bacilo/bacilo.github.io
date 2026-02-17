@@ -8,9 +8,11 @@ interface Props {
   image?: string;
   slug?: string;
   statsDisplay?: 'stars' | 'downloads' | 'both' | 'none';
+  downloadUrl?: string;
+  downloadLabel?: string;
 }
 
-const { repoUrl, title, description, image, slug, statsDisplay = 'stars' } = Astro.props;
+const { repoUrl, title, description, image, slug, statsDisplay = 'stars', downloadUrl, downloadLabel } = Astro.props;
 
 // Parse owner and repo from GitHub URL
 const match = repoUrl.match(/github\.com\/([^/]+)\/([^/]+)/);
@@ -47,7 +49,12 @@ const detailUrl = slug ? `/portfolio/${slug}/` : undefined;
         <span class="language">Language: <span class="lang-value">-</span></span>
       </div>
     )}
-    <a href={repoUrl} class="repo-link">View on GitHub</a>
+    <div class="card-actions">
+      <a href={repoUrl} class="repo-link">View on GitHub</a>
+      {downloadUrl && (
+        <a href={downloadUrl} class="download-link" download>{downloadLabel || 'Download'}</a>
+      )}
+    </div>
   </div>
 </div>
 
@@ -217,18 +224,38 @@ const detailUrl = slug ? `/portfolio/${slug}/` : undefined;
     font-style: italic;
   }
 
-  .repo-link {
+  .card-actions {
+    display: flex;
+    gap: var(--space-xs);
+    flex-wrap: wrap;
+  }
+
+  .repo-link,
+  .download-link {
     padding: var(--space-xs) var(--space-sm);
-    background: var(--color-link);
-    color: var(--color-bg);
     border-radius: 4px;
     text-decoration: none;
     font-size: 0.875rem;
     transition: all 0.2s ease;
-    align-self: flex-start;
+  }
+
+  .repo-link {
+    background: var(--color-link);
+    color: var(--color-bg);
+  }
+
+  .download-link {
+    background: var(--color-header-bg);
+    color: var(--color-link);
+    border: 1px solid var(--color-link);
   }
 
   .repo-link:hover {
     background: var(--color-link-hover);
+  }
+
+  .download-link:hover {
+    background: var(--color-link);
+    color: var(--color-bg);
   }
 </style>
