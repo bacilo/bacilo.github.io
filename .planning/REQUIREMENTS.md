@@ -86,41 +86,41 @@ Requirements for immersive Minecraft theme transformation. Each maps to roadmap 
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| VIS-01 | — | Pending |
-| VIS-02 | — | Pending |
-| VIS-03 | — | Pending |
-| VIS-04 | — | Pending |
-| TYPE-01 | — | Pending |
-| TYPE-02 | — | Pending |
-| TYPE-03 | — | Pending |
-| TYPE-04 | — | Pending |
-| NAV-01 | — | Pending |
-| NAV-02 | — | Pending |
-| NAV-03 | — | Pending |
-| CARD-01 | — | Pending |
-| CARD-02 | — | Pending |
-| CARD-03 | — | Pending |
-| INT-01 | — | Pending |
-| INT-02 | — | Pending |
-| INT-03 | — | Pending |
-| DECOR-01 | — | Pending |
-| DECOR-02 | — | Pending |
-| DECOR-03 | — | Pending |
-| DECOR-04 | — | Pending |
-| DECOR-05 | — | Pending |
-| COMP-01 | — | Pending |
-| COMP-02 | — | Pending |
-| COMP-03 | — | Pending |
-| COMP-04 | — | Pending |
-| QUAL-01 | — | Pending |
-| QUAL-02 | — | Pending |
-| QUAL-03 | — | Pending |
+| VIS-01 | Phase 22 | Pending |
+| VIS-02 | Phase 22 | Pending |
+| VIS-03 | Phase 22 | Pending |
+| VIS-04 | Phase 22 | Pending |
+| TYPE-01 | Phase 22 | Pending |
+| TYPE-02 | Phase 22 | Pending |
+| TYPE-03 | Phase 22 | Pending |
+| TYPE-04 | Phase 22 | Pending |
+| NAV-01 | Phase 23 | Pending |
+| NAV-02 | Phase 23 | Pending |
+| NAV-03 | Phase 23 | Pending |
+| CARD-01 | Phase 23 | Pending |
+| CARD-02 | Phase 23 | Pending |
+| CARD-03 | Phase 23 | Pending |
+| INT-01 | Phase 23 | Pending |
+| INT-02 | Phase 23 | Pending |
+| INT-03 | Phase 24 | Pending |
+| DECOR-01 | Phase 24 | Pending |
+| DECOR-02 | Phase 24 | Pending |
+| DECOR-03 | Phase 24 | Pending |
+| DECOR-04 | Phase 24 | Pending |
+| DECOR-05 | Phase 24 | Pending |
+| COMP-01 | Phase 23 | Pending |
+| COMP-02 | Phase 23 | Pending |
+| COMP-03 | Phase 23 | Pending |
+| COMP-04 | Phase 23 | Pending |
+| QUAL-01 | Phase 25 | Pending |
+| QUAL-02 | Phase 25 | Pending |
+| QUAL-03 | Phase 25 | Pending |
 
 **Coverage:**
 - v5.0 requirements: 29 total
-- Mapped to phases: 0
-- Unmapped: 29 (pending roadmap creation)
+- Mapped to phases: 29
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-02-18*
-*Last updated: 2026-02-18 after initial definition*
+*Last updated: 2026-02-18 after roadmap created — all 29 requirements mapped*

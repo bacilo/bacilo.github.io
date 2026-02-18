@@ -5,14 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-18)
 
 **Core value:** A professional online presence that showcases work and is easy to maintain with monthly content updates
-**Current focus:** v5.0 Immersive Minecraft Theme
+**Current focus:** v5.0 Immersive Minecraft Theme — Phase 22: Visual Foundation
 
 ## Current Position
 
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements
-Last activity: 2026-02-18 — Milestone v5.0 started
+Phase: 22 of 25 (Visual Foundation)
+Plan: — (not yet planned)
+Status: Ready to plan
+Last activity: 2026-02-18 — v5.0 roadmap created, Phase 22 ready for planning
+
+Progress: [░░░░░░░░░░] 0% (v5.0 — 0/4 phases)
 
 ## Performance Metrics
 
@@ -41,13 +43,20 @@ Last activity: 2026-02-18 — Milestone v5.0 started
 - Cumulative time: ~2.4 hours
 - Average: ~4.6 minutes per plan
 
-*Updated: 2026-02-18 after v4.0 milestone archived*
+*Updated: 2026-02-18 after v5.0 roadmap created*
 
 ## Accumulated Context
 
 ### Decisions
 
 Decisions are logged in PROJECT.md Key Decisions table.
+
+Key decisions relevant to v5.0:
+- Use Fontsource for pixel fonts (Silkscreen, Press Start 2P, Pixelify Sans) — same pattern as LEGO, ~60KB total
+- SVG textures in `public/images/minecraft/` — 16+ assets, ~11KB total, no new npm deps
+- `image-rendering: pixelated` + `-webkit-font-smoothing: none` required for crisp pixel art
+- Strict `[data-theme="minecraft"]` scoping on every CSS rule — zero leakage to other themes
+- VIS-04 contrast work begins in Phase 22 (foundation), not deferred to validation
 
 ### Pending Todos
 
@@ -60,8 +69,8 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-18
-Stopped at: v5.0 milestone initialization
-Resume: Defining requirements for Immersive Minecraft Theme
+Stopped at: v5.0 roadmap created — 29/29 requirements mapped across phases 22-25
+Resume: Run `/gsd:plan-phase 22` to begin Visual Foundation planning
 
 ## Archives
 
@@ -77,4 +86,4 @@ Resume: Defining requirements for Immersive Minecraft Theme
 
 ---
 *State initialized: 2026-02-17 for v4.0 milestone*
-*Last updated: 2026-02-18 after v4.0 milestone archived*
+*Last updated: 2026-02-18 after v5.0 roadmap created*
