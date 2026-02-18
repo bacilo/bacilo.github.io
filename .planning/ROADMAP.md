@@ -99,7 +99,11 @@ Plans:
   3. All buttons and links display as stone buttons with raised 3D bevel; pressing one visibly inverts the bevel to simulate a press-in effect
   4. Code blocks render as command block output (orange accent, dark background, pixel mono font) with Shiki syntax highlighting intact
   5. Author sidebar, bedrock-textured footer, and theme switcher dropdown are all transformed to match Minecraft UI aesthetics
-**Plans**: TBD
+**Plans:** 3 plans
+Plans:
+- [ ] 23-01-PLAN.md — Hotbar navigation with slot borders, active highlight, mobile responsive
+- [ ] 23-02-PLAN.md — Inventory slot cards, stone buttons, pressed bevel, reduced-motion guard
+- [ ] 23-03-PLAN.md — Command block code, footer enhancement, sidebar Creeper accent, theme switcher
 
 ### Phase 24: Decorative Assets & Animations
 **Goal**: The Minecraft theme is populated with authentic decorative SVG assets — Creeper motif, mob silhouettes, tool icons, XP bar accents, and health hearts — and hover animations respect the user's motion preferences
