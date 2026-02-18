@@ -318,3 +318,72 @@
 [data-theme="minecraft"] .talk-item:hover {
   background: rgba(98, 78, 255, 0.08);
 }
+
+/* ==========================================================================
+   Stone Buttons (INT-01, INT-02, INT-03)
+   Buttons and links styled as raised Minecraft stone buttons with 3D bevel.
+   Pressing inverts the bevel for a press-in effect.
+   All hover transitions are inside prefers-reduced-motion guard.
+   ========================================================================== */
+
+/* Raised stone button — normal state (INT-01) */
+[data-theme="minecraft"] .repo-link,
+[data-theme="minecraft"] .link-button,
+[data-theme="minecraft"] .download-link,
+[data-theme="minecraft"] .paper-link a {
+  background: var(--mc-bg-stone);
+  border: 2px solid #000000;
+  box-shadow:
+    inset 2px 2px 0 #c6c6c6,
+    inset -2px -2px 0 #373737;
+  color: var(--mc-text-light) !important;
+  text-shadow: 1px 1px 0 #1a1a1a;
+  font-family: 'Pixelify Sans', monospace;
+  border-radius: 0 !important;
+  text-decoration: none;
+  display: inline-block;
+}
+
+/* Pressed state: invert bevel shadow to simulate press-in (INT-02) */
+[data-theme="minecraft"] .repo-link:active,
+[data-theme="minecraft"] .link-button:active,
+[data-theme="minecraft"] .download-link:active,
+[data-theme="minecraft"] .paper-link a:active {
+  box-shadow:
+    inset 2px 2px 0 #373737,
+    inset -2px -2px 0 #c6c6c6;
+}
+
+/* Tag pills as small stone buttons */
+[data-theme="minecraft"] .tag {
+  background: var(--mc-bg-stone);
+  border: 1px solid #000000;
+  box-shadow:
+    inset 1px 1px 0 #9a9a9a,
+    inset -1px -1px 0 #373737;
+  color: var(--mc-text-light) !important;
+  border-radius: 0 !important;
+  text-decoration: none;
+}
+
+/* Tag hover: green highlight */
+[data-theme="minecraft"] .tag:hover {
+  background: var(--mc-bg-grass);
+  border-color: var(--mc-creeper-green);
+}
+
+/* Reduced-motion guard (INT-03): transitions only when user has no motion preference */
+@media (prefers-reduced-motion: no-preference) {
+  [data-theme="minecraft"] .repo-link,
+  [data-theme="minecraft"] .link-button,
+  [data-theme="minecraft"] .download-link,
+  [data-theme="minecraft"] .paper-link a,
+  [data-theme="minecraft"] .tag {
+    transition: box-shadow 80ms ease, background-color 120ms ease;
+  }
+
+  [data-theme="minecraft"] .github-card,
+  [data-theme="minecraft"] .portfolio-card {
+    transition: border-color 120ms ease, box-shadow 120ms ease;
+  }
+}
