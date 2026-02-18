@@ -56,8 +56,8 @@ Requirements for immersive Minecraft theme transformation. Each maps to roadmap 
 
 ### Quality Assurance
 
-- [ ] **QUAL-01**: Zero theme style leakage — switching FROM Minecraft to any other theme produces clean result
-- [ ] **QUAL-02**: Mobile responsive across all themed elements at 320px+ viewport
+- [x] **QUAL-01**: Zero theme style leakage — switching FROM Minecraft to any other theme produces clean result
+- [x] **QUAL-02**: Mobile responsive across all themed elements at 320px+ viewport
 - [ ] **QUAL-03**: Lighthouse performance score within 10 points of non-themed baseline
 
 ## Future Requirements
@@ -112,8 +112,8 @@ Requirements for immersive Minecraft theme transformation. Each maps to roadmap 
 | COMP-02 | Phase 23 | Complete |
 | COMP-03 | Phase 23 | Complete |
 | COMP-04 | Phase 23 | Complete |
-| QUAL-01 | Phase 25 | Pending |
-| QUAL-02 | Phase 25 | Pending |
+| QUAL-01 | Phase 25 | Complete |
+| QUAL-02 | Phase 25 | Complete |
 | QUAL-03 | Phase 25 | Pending |
 
 **Coverage:**

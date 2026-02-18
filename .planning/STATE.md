@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-18)
 
 **Core value:** A professional online presence that showcases work and is easy to maintain with monthly content updates
-**Current focus:** v5.0 Immersive Minecraft Theme — Phase 24 complete, ready for Phase 25
+**Current focus:** v5.0 Immersive Minecraft Theme — Phase 25 in progress (Plan 01 complete)
 
 ## Current Position
 
-Phase: 24 of 25 (Decorative Assets & Animations — complete)
-Plan: 02 of 02 (CSS Decorative Wiring — complete)
-Status: Phase 24 complete — all DECOR-01 through DECOR-05 wired via CSS pseudo-elements; ready for Phase 25 validation
-Last activity: 2026-02-18 — 24-02 complete: 6 decorative CSS sections, XP bar, INT-03 audit passed, REQUIREMENTS.md corrected
+Phase: 25 of 25 (Validation & Polish — in progress)
+Plan: 01 of 02 (CSS Leakage Audit & 320px Responsive Fixes — complete)
+Status: Phase 25 Plan 01 complete — QUAL-01 audit passed (zero leakage), QUAL-02 responsive fixes added; ready for Plan 02
+Last activity: 2026-02-18 — 25-01 complete: 5-check leakage audit passed, word-break/overflow-wrap on headings, sidebar max-width at 480px
 
-Progress: [██████░░░░] 78% (v5.0 — 7/9 plans complete)
+Progress: [████████░░] 89% (v5.0 — 8/9 plans complete)
 
 ## Performance Metrics
 
@@ -39,16 +39,16 @@ Progress: [██████░░░░] 78% (v5.0 — 7/9 plans complete)
 - Total execution time: ~13 minutes
 
 **Velocity (v5.0):**
-- Total plans completed: 7
+- Total plans completed: 8
 - Average duration: ~1.9 minutes
-- Total execution time: ~13 minutes
+- Total execution time: ~15 minutes
 
 **Overall:**
-- Total plans: 38 (across 24 phases, 5 milestones)
+- Total plans: 39 (across 25 phases, 5 milestones)
 - Cumulative time: ~2.4 hours
 - Average: ~3.9 minutes per plan
 
-*Updated: 2026-02-18 after 24-02 complete*
+*Updated: 2026-02-18 after 25-01 complete*
 
 ## Accumulated Context
 
@@ -89,6 +89,10 @@ Key decisions relevant to v5.0:
 - [24-02] Heart row uses repeat-x with fixed 90px width for exactly 5 hearts without JavaScript
 - [24-02] All decorative elements static (opacity only) — zero new transitions/keyframes; INT-03 compliance maintained
 - [24-02] INT-03 traceability corrected from Phase 24 to Phase 23 (implemented in 23-02)
+- [25-01] word-break + overflow-wrap applied separately to h1, h2, h3 (not combined selector) to allow future per-heading customization
+- [25-01] Sidebar max-width fix scoped to 480px (not 768px) — global.css already hides sidebar at 768px for non-home pages; fix targets home page only
+- [25-01] Code block overflow-x: auto confirmed already present in COMP-01 section — no duplication added
+- [25-01] Portfolio grid minmax(280px, 1fr) confirmed collapses to single column at 320px — no CSS changes needed
 
 ### Pending Todos
 
@@ -101,8 +105,8 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-18
-Stopped at: 24-02-PLAN.md complete — Phase 24 fully complete (DECOR-01 through DECOR-05 wired, INT-03 audit passed)
-Resume: Run `/gsd:execute-phase 25` to begin Phase 25 validation/QA
+Stopped at: 25-01-PLAN.md complete — QUAL-01 audit passed (81 selectors, zero leakage), QUAL-02 responsive fixes added (selector count now 85)
+Resume: Run `/gsd:execute-phase 25` to continue Phase 25 with Plan 02 (browser rendering verification)
 
 ## Archives
 
@@ -118,4 +122,4 @@ Resume: Run `/gsd:execute-phase 25` to begin Phase 25 validation/QA
 
 ---
 *State initialized: 2026-02-17 for v4.0 milestone*
-*Last updated: 2026-02-18 after 24-02 complete*
+*Last updated: 2026-02-18 after 25-01 complete*
