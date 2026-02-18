@@ -49,10 +49,10 @@ Requirements for immersive Minecraft theme transformation. Each maps to roadmap 
 
 ### Component Transforms
 
-- [ ] **COMP-01**: Code blocks styled as command block output (orange accent, dark bg, pixel mono font) with Shiki syntax highlighting preserved
-- [ ] **COMP-02**: Footer styled with bedrock texture pattern
-- [ ] **COMP-03**: Author sidebar styled as inventory panel with Creeper face accent
-- [ ] **COMP-04**: Theme switcher dropdown styled to match Minecraft UI
+- [x] **COMP-01**: Code blocks styled as command block output (orange accent, dark bg, pixel mono font) with Shiki syntax highlighting preserved
+- [x] **COMP-02**: Footer styled with bedrock texture pattern
+- [x] **COMP-03**: Author sidebar styled as inventory panel with Creeper face accent
+- [x] **COMP-04**: Theme switcher dropdown styled to match Minecraft UI
 
 ### Quality Assurance
 
@@ -108,10 +108,10 @@ Requirements for immersive Minecraft theme transformation. Each maps to roadmap 
 | DECOR-03 | Phase 24 | Pending |
 | DECOR-04 | Phase 24 | Pending |
 | DECOR-05 | Phase 24 | Pending |
-| COMP-01 | Phase 23 | Pending |
-| COMP-02 | Phase 23 | Pending |
-| COMP-03 | Phase 23 | Pending |
-| COMP-04 | Phase 23 | Pending |
+| COMP-01 | Phase 23 | Complete |
+| COMP-02 | Phase 23 | Complete |
+| COMP-03 | Phase 23 | Complete |
+| COMP-04 | Phase 23 | Complete |
 | QUAL-01 | Phase 25 | Pending |
 | QUAL-02 | Phase 25 | Pending |
 | QUAL-03 | Phase 25 | Pending |

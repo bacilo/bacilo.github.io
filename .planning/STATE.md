@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-18)
 
 **Core value:** A professional online presence that showcases work and is easy to maintain with monthly content updates
-**Current focus:** v5.0 Immersive Minecraft Theme — Phase 23: Component Transforms
+**Current focus:** v5.0 Immersive Minecraft Theme — Phase 23 complete, ready for Phase 24
 
 ## Current Position
 
-Phase: 23 of 25 (Component Transforms)
-Plan: 02 of 03 (Cards and Buttons — complete)
-Status: Plan 02 complete — ready for Plan 03 (remaining interactive elements)
-Last activity: 2026-02-18 — 23-02 complete: inventory slot cards with tooltip popup, purple glow, stone buttons with bevel
+Phase: 23 of 25 (Component Transforms — complete)
+Plan: 03 of 03 (Remaining Interactive Elements — complete)
+Status: Phase 23 complete — all three plans executed; ready for Phase 24
+Last activity: 2026-02-18 — 23-03 complete: command block code styling, Creeper face SVG, footer text/links, sidebar inventory panel, theme switcher
 
-Progress: [████░░░░░░] 50% (v5.0 — 4/8 plans complete)
+Progress: [█████░░░░░] 63% (v5.0 — 5/8 plans complete)
 
 ## Performance Metrics
 
@@ -39,16 +39,16 @@ Progress: [████░░░░░░] 50% (v5.0 — 4/8 plans complete)
 - Total execution time: ~13 minutes
 
 **Velocity (v5.0):**
-- Total plans completed: 4
-- Average duration: ~1.5 minutes
-- Total execution time: ~7 minutes
+- Total plans completed: 5
+- Average duration: ~1.7 minutes
+- Total execution time: ~9 minutes
 
 **Overall:**
-- Total plans: 35 (across 23 phases, 5 milestones)
+- Total plans: 36 (across 23 phases, 5 milestones)
 - Cumulative time: ~2.4 hours
-- Average: ~4.5 minutes per plan
+- Average: ~4.4 minutes per plan
 
-*Updated: 2026-02-18 after 23-02 complete*
+*Updated: 2026-02-18 after 23-03 complete*
 
 ## Accumulated Context
 
@@ -76,6 +76,10 @@ Key decisions relevant to v5.0:
 - [23-02] overflow:visible on .portfolio-grid and .portfolio-item required to prevent tooltip ::after from being clipped by parent
 - [23-02] Transitions placed exclusively inside prefers-reduced-motion:no-preference — no transitions outside the guard (accessible by default)
 - [23-02] !important on color and border-radius for buttons overrides Astro scoped component styles
+- [23-03] .astro-code gets structural-only CSS (border, font, shadow) — no color/background-color — Shiki handles syntax highlighting colors via themes.css !important
+- [23-03] Footer CSS scoped without background-image redeclaration — bedrock texture already set in Phase 22
+- [23-03] Creeper face SVG uses shape-rendering='crispEdges' attribute plus CSS image-rendering: pixelated for pixel-perfect rendering at any scale
+- [23-03] .author-sidebar::after used for Creeper face decoration (no HTML changes needed — pure CSS, zero layout impact)
 
 ### Pending Todos
 
@@ -88,8 +92,8 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-18
-Stopped at: 23-02-PLAN.md complete — Inventory slot cards, tooltip popup, stone buttons appended to minecraft.css
-Resume: Run `/gsd:execute-phase 23` to continue Phase 23 with Plan 03
+Stopped at: 23-03-PLAN.md complete — Phase 23 fully complete (command block code styling, Creeper face SVG, footer, sidebar inventory panel, theme switcher)
+Resume: Run `/gsd:execute-phase 24` to continue with Phase 24
 
 ## Archives
 
@@ -105,4 +109,4 @@ Resume: Run `/gsd:execute-phase 23` to continue Phase 23 with Plan 03
 
 ---
 *State initialized: 2026-02-17 for v4.0 milestone*
-*Last updated: 2026-02-18 after 23-01 complete*
+*Last updated: 2026-02-18 after 23-03 complete*
