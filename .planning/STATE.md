@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-18)
 
 **Core value:** A professional online presence that showcases work and is easy to maintain with monthly content updates
-**Current focus:** v5.0 Immersive Minecraft Theme — Phase 23 complete, ready for Phase 24
+**Current focus:** v5.0 Immersive Minecraft Theme — Phase 24 in progress, Plan 01 complete
 
 ## Current Position
 
-Phase: 23 of 25 (Component Transforms — complete)
-Plan: 03 of 03 (Remaining Interactive Elements — complete)
-Status: Phase 23 complete — all three plans executed; ready for Phase 24
-Last activity: 2026-02-18 — 23-03 complete: command block code styling, Creeper face SVG, footer text/links, sidebar inventory panel, theme switcher
+Phase: 24 of 25 (Decorative Assets & Animations — in progress)
+Plan: 01 of 02 (Pixel Art SVG Assets — complete)
+Status: Phase 24 Plan 01 complete — 7 SVG assets created; ready for Plan 02
+Last activity: 2026-02-18 — 24-01 complete: zombie/enderman/chicken silhouettes, sword/pickaxe tools, heart-full/heart-empty icons
 
-Progress: [█████░░░░░] 63% (v5.0 — 5/8 plans complete)
+Progress: [█████░░░░░] 69% (v5.0 — 6/9 plans complete)
 
 ## Performance Metrics
 
@@ -80,6 +80,10 @@ Key decisions relevant to v5.0:
 - [23-03] Footer CSS scoped without background-image redeclaration — bedrock texture already set in Phase 22
 - [23-03] Creeper face SVG uses shape-rendering='crispEdges' attribute plus CSS image-rendering: pixelated for pixel-perfect rendering at any scale
 - [23-03] .author-sidebar::after used for Creeper face decoration (no HTML changes needed — pure CSS, zero layout impact)
+- [24-01] Mob silhouettes use fill=#c8c8c8 (--mc-text-muted) not dark fill — placed on dark backgrounds (#1a1a1a) so light gray provides visible contrast
+- [24-01] Sword oriented horizontally (blade pointing right) so it tiles cleanly with repeat-x for HR replacement in Plan 24-02
+- [24-01] Heart-full uses three-tone coloring: dark border (#550000), red fill (#ff0000), pink highlights (#ff6666) for depth
+- [24-01] Heart-empty uses flat gray (#555555) with no highlights to clearly communicate empty/depleted state
 
 ### Pending Todos
 
@@ -92,8 +96,8 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-18
-Stopped at: 23-03-PLAN.md complete — Phase 23 fully complete (command block code styling, Creeper face SVG, footer, sidebar inventory panel, theme switcher)
-Resume: Run `/gsd:execute-phase 24` to continue with Phase 24
+Stopped at: 24-01-PLAN.md complete — 7 pixel-art SVG assets created (mob silhouettes, tool icons, health hearts)
+Resume: Run `/gsd:execute-phase 24` to continue with Phase 24 Plan 02
 
 ## Archives
 
@@ -109,4 +113,4 @@ Resume: Run `/gsd:execute-phase 24` to continue with Phase 24
 
 ---
 *State initialized: 2026-02-17 for v4.0 milestone*
-*Last updated: 2026-02-18 after 23-03 complete*
+*Last updated: 2026-02-18 after 24-01 complete*

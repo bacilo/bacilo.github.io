@@ -115,7 +115,7 @@ Plans:
   3. Sword and pickaxe tool icon SVGs serve as section dividers or accents, reinforcing the Minecraft aesthetic
   4. An XP bar element in XP green (#7fcc19) appears beneath section headings, and health bar heart SVGs appear as decorative elements
   5. All hover animations (buttons, cards, interactive elements) play smoothly under normal settings and instantly snap to their end state when `prefers-reduced-motion: reduce` is set
-**Plans:** 2 plans
+**Plans:** 1/2 plans executed
 Plans:
 - [ ] 24-01-PLAN.md — SVG asset creation (mob silhouettes, tool icons, health hearts)
 - [ ] 24-02-PLAN.md — CSS decoration wiring, XP bar, footer accents, INT-03 audit
@@ -157,7 +157,7 @@ Plans:
 | 21. Integration Validation | v4.0 | 2/2 | Complete | 2026-02-18 |
 | 22. Visual Foundation | 2/2 | Complete    | 2026-02-18 | - |
 | 23. Component Transforms | 3/3 | Complete    | 2026-02-18 | - |
-| 24. Decorative Assets & Animations | v5.0 | 0/? | Not started | - |
+| 24. Decorative Assets & Animations | 1/2 | In Progress|  | - |
 | 25. Validation & Polish | v5.0 | 0/? | Not started | - |
 
 ---
