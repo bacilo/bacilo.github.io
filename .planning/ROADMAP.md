@@ -157,7 +157,7 @@ Plans:
 | 21. Integration Validation | v4.0 | 2/2 | Complete | 2026-02-18 |
 | 22. Visual Foundation | 2/2 | Complete    | 2026-02-18 | - |
 | 23. Component Transforms | 3/3 | Complete    | 2026-02-18 | - |
-| 24. Decorative Assets & Animations | 2/2 | Complete   | 2026-02-18 | - |
+| 24. Decorative Assets & Animations | 2/2 | Complete    | 2026-02-18 | - |
 | 25. Validation & Polish | v5.0 | 0/? | Not started | - |
 
 ---
