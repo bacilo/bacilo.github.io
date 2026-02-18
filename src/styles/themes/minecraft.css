@@ -103,3 +103,55 @@
   image-rendering: pixelated;
   image-rendering: crisp-edges;
 }
+
+/* ==========================================================================
+   Pixel Typography Hierarchy
+   WCAG AA Contrast Verification (Phase 22, verified programmatically)
+   White (#ffffff) on grass bg (#2f5a1e):  8.07:1 PASS
+   Cream (#f5f5dc) on grass bg (#2f5a1e):  7.29:1 PASS
+   White (#ffffff) on dirt bg (#614228):   9.06:1 PASS
+   White (#ffffff) on dark bg (#1a1a1a):  17.40:1 PASS
+   White (#ffffff) on stone bg (#6b6b6b):  5.33:1 PASS
+   Dark  (#1a1a1a) on stone gray (#8b8b8b): 5.11:1 PASS
+   Sky blue (#64b8d4) on dark bg (#1a1a1a): 7.75:1 PASS
+   Creeper green (#55a715) on dark bg (#1a1a1a): 5.74:1 PASS
+   Muted (#c8c8c8) on dark bg (#1a1a1a):  12.67:1 PASS
+   All pairs pass 4.5:1 minimum (AA normal text). Shadow not relied upon.
+   ========================================================================== */
+
+/* Body text (TYPE-03): Pixelify Sans for readable pixel body copy */
+[data-theme="minecraft"] body {
+  font-family: 'Pixelify Sans', monospace;
+  font-size: 16px;
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: unset;
+}
+
+/* H1 headings (TYPE-01): Silkscreen — bold, unmistakable pixel titles */
+[data-theme="minecraft"] h1 {
+  font-family: 'Silkscreen', monospace;
+  font-weight: 700;
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: unset;
+  text-shadow: 2px 2px 0 #1a1a1a;
+}
+
+/* H2-H3 headings (TYPE-02): Press Start 2P — retro game section headers */
+[data-theme="minecraft"] h2,
+[data-theme="minecraft"] h3 {
+  font-family: 'Press Start 2P', monospace;
+  font-weight: 400; /* only available weight — bitmap font */
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: unset;
+  text-shadow: 2px 2px 0 #1a1a1a;
+}
+
+/* H3 minimum size: prevent Press Start 2P from becoming unreadable in compact layouts */
+[data-theme="minecraft"] h3 {
+  font-size: 14px;
+}
+
+/* Links: inherit heading/body font so links stay in context */
+[data-theme="minecraft"] a {
+  font-family: inherit;
+}
