@@ -1,0 +1,105 @@
+/**
+ * Minecraft Theme - Color Palette and Block Textures
+ *
+ * All rules are scoped under [data-theme="minecraft"] to prevent leakage.
+ * Replaces the placeholder palette previously in themes.css.
+ *
+ * Color palette: Contrast-verified against WCAG AA (4.5:1 for normal text).
+ * SVG textures: 16x16 pixel-grid patterns, scaled 4x to 64px via background-size.
+ *
+ * Plan: 22-01 (Visual Foundation)
+ */
+
+/* ==========================================================================
+   Minecraft Color Palette - WCAG AA Verified
+   ========================================================================== */
+
+[data-theme="minecraft"] {
+  /* Primary Minecraft block colors */
+  --mc-dirt-brown: #866043;        /* Dirt block dominant tone */
+  --mc-grass-green: #5a8a2f;       /* Grass top (mid-bright) */
+  --mc-stone-gray: #8b8b8b;        /* Stone block gray */
+  --mc-sky-blue: #64b8d4;          /* Daytime sky blue */
+  --mc-creeper-green: #55a715;     /* Creeper face green */
+
+  /* Semantic background colors — adjusted for AA compliance */
+  --mc-bg-grass: #2f5a1e;          /* Deep grass (body bg): 8.07:1 vs white */
+  --mc-bg-stone: #6b6b6b;          /* Darker stone (panels): 5.33:1 vs white */
+  --mc-bg-dark: #1a1a1a;           /* Dark panels/inventory: 17.40:1 vs white */
+  --mc-bg-darkest: #0d0d0d;        /* Darkest bg */
+  --mc-bg-dirt: #614228;           /* Darker dirt (header): 9.06:1 vs white */
+
+  /* Text colors */
+  --mc-text-light: #ffffff;        /* Primary text on dark/mid backgrounds */
+  --mc-text-cream: #f5f5dc;        /* Secondary text on dark backgrounds */
+  --mc-text-muted: #c8c8c8;        /* Muted text on dark backgrounds */
+  --mc-text-dark: #1a1a1a;         /* Dark text on lighter stone backgrounds */
+
+  /* Semantic theme variable overrides (used by existing components) */
+  --color-bg: var(--mc-bg-grass);
+  --color-text: var(--mc-text-light);
+  --color-text-muted: var(--mc-text-muted);
+  --color-link: var(--mc-sky-blue);
+  --color-link-hover: #87ceeb;
+  --color-border: var(--mc-dirt-brown);
+  --color-header-bg: var(--mc-bg-dirt);
+}
+
+/* ==========================================================================
+   Block Texture Backgrounds - Section Assignments
+   ========================================================================== */
+
+/* Page body: grass block (overworld surface) */
+[data-theme="minecraft"] body {
+  background-image: url('/images/minecraft/textures/grass.svg');
+  background-size: 64px 64px;
+  background-repeat: repeat;
+  background-color: var(--mc-bg-grass);
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* Site header: dirt block (just below surface) */
+[data-theme="minecraft"] .site-header {
+  background-image: url('/images/minecraft/textures/dirt.svg');
+  background-size: 64px 64px;
+  background-repeat: repeat;
+  background-color: var(--mc-bg-dirt);
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* Navigation bar: stone block (underground) */
+[data-theme="minecraft"] nav {
+  background-image: url('/images/minecraft/textures/stone.svg');
+  background-size: 64px 64px;
+  background-repeat: repeat;
+  background-color: var(--mc-bg-stone);
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* Author sidebar: wood planks (structure/building) */
+[data-theme="minecraft"] .author-sidebar {
+  background-image: url('/images/minecraft/textures/wood.svg');
+  background-size: 64px 64px;
+  background-repeat: repeat;
+  background-color: var(--mc-dirt-brown);
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* Main content: solid dark background (no texture — readability per VIS-03 research) */
+[data-theme="minecraft"] main {
+  background-color: var(--mc-bg-dark);
+}
+
+/* Footer: bedrock (bottom of world) */
+[data-theme="minecraft"] footer {
+  background-image: url('/images/minecraft/textures/bedrock.svg');
+  background-size: 64px 64px;
+  background-repeat: repeat;
+  background-color: var(--mc-bg-darkest);
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
