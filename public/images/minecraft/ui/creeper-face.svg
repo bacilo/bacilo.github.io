@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" shape-rendering="crispEdges">
+  <!-- Background: Creeper green -->
+  <rect x="0" y="0" width="16" height="16" fill="#55a715"/>
+  <!-- Left eye -->
+  <rect x="3" y="4" width="2" height="2" fill="#1a1a1a"/>
+  <!-- Right eye -->
+  <rect x="11" y="4" width="2" height="2" fill="#1a1a1a"/>
+  <!-- Mouth: horizontal bar -->
+  <rect x="5" y="8" width="6" height="1" fill="#1a1a1a"/>
+  <!-- Mouth: left fang -->
+  <rect x="5" y="9" width="2" height="2" fill="#1a1a1a"/>
+  <!-- Mouth: right fang -->
+  <rect x="9" y="9" width="2" height="2" fill="#1a1a1a"/>
+  <!-- Mouth: bottom bar -->
+  <rect x="6" y="11" width="4" height="1" fill="#1a1a1a"/>
+</svg>

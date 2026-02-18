@@ -387,3 +387,120 @@
     transition: border-color 120ms ease, box-shadow 120ms ease;
   }
 }
+
+/* ==========================================================================
+   Command Block Code (COMP-01)
+   Code blocks styled as command block output with orange left accent.
+   CRITICAL: No color or background-color on .astro-code or .astro-code span —
+   Shiki syntax highlighting colors are handled by themes.css (lines 869-872)
+   with !important. Only structural properties set here.
+   ========================================================================== */
+
+[data-theme="minecraft"] .astro-code {
+  border: 2px solid #373737;
+  border-left: 4px solid #ff6a00;
+  border-radius: 0;
+  padding: var(--space-sm);
+  margin: var(--space-sm) 0;
+  font-family: 'Press Start 2P', 'Courier New', monospace;
+  font-size: 0.7em;
+  box-shadow:
+    inset 2px 2px 0 rgba(255, 106, 0, 0.1),
+    0 2px 4px rgba(0, 0, 0, 0.4);
+  overflow-x: auto;
+}
+
+/* ==========================================================================
+   Footer Enhancement (COMP-02)
+   Footer text, links, and stone border-top on the existing bedrock texture.
+   Do NOT re-declare background-image — bedrock texture set in Phase 22.
+   ========================================================================== */
+
+[data-theme="minecraft"] footer {
+  color: var(--mc-text-light);
+  border-top: 4px solid #373737;
+  padding-top: calc(var(--space-md) + 4px);
+}
+
+[data-theme="minecraft"] footer a {
+  color: var(--mc-sky-blue);
+  text-shadow: 1px 1px 0 #1a1a1a;
+}
+
+[data-theme="minecraft"] footer a:hover {
+  color: #87ceeb;
+  text-decoration: none;
+}
+
+/* ==========================================================================
+   Author Sidebar Inventory Panel (COMP-03)
+   Sidebar styled as an inventory panel with bevel border, square-cropped
+   photo, and a Creeper face SVG accent decoration via ::after pseudo-element.
+   Do NOT re-declare background-image — wood texture set in Phase 22.
+   ========================================================================== */
+
+[data-theme="minecraft"] .author-sidebar {
+  border: 2px solid #000000;
+  box-shadow:
+    inset 2px 2px 0 rgba(255, 255, 255, 0.1),
+    inset -2px -2px 0 rgba(0, 0, 0, 0.3);
+  color: var(--mc-text-light);
+}
+
+[data-theme="minecraft"] .author-photo {
+  border-radius: 0;
+  border: 2px solid #000000;
+  box-shadow: inset 1px 1px 0 #555555;
+}
+
+/* Creeper face decoration at bottom of sidebar */
+[data-theme="minecraft"] .author-sidebar::after {
+  content: '';
+  display: block;
+  width: 64px;
+  height: 64px;
+  margin: var(--space-md) auto 0;
+  background: url('/images/minecraft/ui/creeper-face.svg') center/contain no-repeat;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  opacity: 0.85;
+}
+
+/* Sidebar link bullets: inventory-style left padding, no list marker */
+[data-theme="minecraft"] .links-list li {
+  list-style: none;
+  padding-left: 8px;
+}
+
+/* ==========================================================================
+   Theme Switcher (COMP-04)
+   Theme switcher dropdown styled as a Minecraft stone UI element with
+   pixel font and sharp corners.
+   ========================================================================== */
+
+[data-theme="minecraft"] .theme-switcher label {
+  color: var(--mc-text-muted);
+  font-family: 'Pixelify Sans', monospace;
+}
+
+[data-theme="minecraft"] .theme-select {
+  background: var(--mc-bg-stone);
+  color: var(--mc-text-light);
+  border: 2px solid #000000;
+  border-radius: 0;
+  box-shadow:
+    inset 2px 2px 0 #9a9a9a,
+    inset -2px -2px 0 #373737;
+  font-family: 'Pixelify Sans', monospace;
+  padding: 4px 8px;
+  cursor: pointer;
+}
+
+[data-theme="minecraft"] .theme-select:hover {
+  border-color: var(--mc-sky-blue);
+}
+
+[data-theme="minecraft"] .theme-select:focus {
+  outline: 2px solid var(--mc-sky-blue);
+  outline-offset: 2px;
+}
