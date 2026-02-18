@@ -113,3 +113,12 @@ None - no external service configuration required.
 ---
 *Phase: 24-decorative-assets-animations*
 *Completed: 2026-02-18*
+
+## Self-Check: PASSED
+
+- FOUND: src/styles/themes/minecraft.css (all 6 DECOR sections present)
+- FOUND: .planning/REQUIREMENTS.md (INT-03 Phase 23, DECOR-01 through DECOR-05 complete)
+- FOUND: .planning/phases/24-decorative-assets-animations/24-02-SUMMARY.md
+- FOUND commit 3458a9a: feat(24-02): add decorative CSS rules to minecraft.css
+- FOUND commit a4d1c26: fix(24-02): correct REQUIREMENTS.md traceability and mark DECOR complete
+- FOUND commit b8536ed: docs(24-02): complete CSS decorative wiring plan
