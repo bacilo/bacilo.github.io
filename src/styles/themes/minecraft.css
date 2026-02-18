@@ -35,6 +35,9 @@
   --mc-text-muted: #c8c8c8;        /* Muted text on dark backgrounds */
   --mc-text-dark: #1a1a1a;         /* Dark text on lighter stone backgrounds */
 
+  /* Decorative accent colors */
+  --mc-xp-green: #7fcc19;           /* XP bar accent green */
+
   /* Semantic theme variable overrides (used by existing components) */
   --color-bg: var(--mc-bg-grass);
   --color-text: var(--mc-text-light);
@@ -503,4 +506,100 @@
 [data-theme="minecraft"] .theme-select:focus {
   outline: 2px solid var(--mc-sky-blue);
   outline-offset: 2px;
+}
+
+/* ==========================================================================
+   Decorative Assets (DECOR-01 through DECOR-05)
+   All decorative elements are static (opacity-only, no hover animations).
+   No transition or @keyframes declared here — INT-03 compliance preserved.
+   ========================================================================== */
+
+/* DECOR-01: Creeper face accent in footer (footer::before is free — Phase 23 only set color/border) */
+[data-theme="minecraft"] footer::before {
+  content: '';
+  display: block;
+  width: 48px;
+  height: 48px;
+  margin: 0 auto var(--space-sm);
+  background: url('/images/minecraft/ui/creeper-face.svg') center/contain no-repeat;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  opacity: 0.6;
+}
+
+/* DECOR-02: Mob silhouettes as accents before list containers */
+[data-theme="minecraft"] .post-list::before,
+[data-theme="minecraft"] .talk-list::before,
+[data-theme="minecraft"] .publication-list::before {
+  content: '';
+  display: block;
+  width: 32px;
+  height: 32px;
+  margin-bottom: var(--space-sm);
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  opacity: 0.6;
+}
+
+[data-theme="minecraft"] .post-list::before {
+  background: url('/images/minecraft/ui/chicken-silhouette.svg') center/contain no-repeat;
+}
+
+[data-theme="minecraft"] .talk-list::before {
+  background: url('/images/minecraft/ui/zombie-silhouette.svg') center/contain no-repeat;
+}
+
+[data-theme="minecraft"] .publication-list::before {
+  background: url('/images/minecraft/ui/enderman-silhouette.svg') center/contain no-repeat;
+}
+
+/* DECOR-03: Sword as repeating HR section divider + pickaxe icon before main h2 */
+[data-theme="minecraft"] hr {
+  border: none;
+  height: 16px;
+  background: url('/images/minecraft/ui/sword.svg') left center repeat-x;
+  background-size: 16px 16px;
+  margin: var(--space-md) 0;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  opacity: 0.7;
+}
+
+[data-theme="minecraft"] main h2::before {
+  content: '';
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+  vertical-align: middle;
+  background: url('/images/minecraft/ui/pickaxe.svg') center/contain no-repeat;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* DECOR-04: XP bar (green) beneath main h2 section headings */
+[data-theme="minecraft"] main h2 {
+  padding-bottom: 4px;
+}
+
+[data-theme="minecraft"] main h2::after {
+  content: '';
+  display: block;
+  height: 4px;
+  background: var(--mc-xp-green);
+  margin-top: 4px;
+  box-shadow: 0 0 4px rgba(127, 204, 25, 0.35);
+}
+
+/* DECOR-05: Row of 5 health hearts in footer via footer::after */
+[data-theme="minecraft"] footer::after {
+  content: '';
+  display: block;
+  width: 90px;
+  height: 16px;
+  margin: var(--space-sm) auto 0;
+  background: url('/images/minecraft/ui/heart-full.svg') left center repeat-x;
+  background-size: 16px 16px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
 }
