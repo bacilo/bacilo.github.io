@@ -62,17 +62,6 @@
   --color-header-bg: #111111;
 }
 
-/* Minecraft Theme - Grass block inspired palette */
-[data-theme="minecraft"] {
-  --color-bg: #3c8527;
-  --color-text: #f5f5dc;
-  --color-text-muted: #d4d4a8;
-  --color-link: #a5d152;
-  --color-link-hover: #c0e070;
-  --color-border: #7b5734;
-  --color-header-bg: #2d6a1f;
-}
-
 /* Lego Theme - Bold primary colors */
 :root[data-theme="lego"] {
   /* LEGO primary color custom properties */
