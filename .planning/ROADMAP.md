@@ -128,7 +128,10 @@ Plans:
   1. Switching FROM the Minecraft theme to any other theme (light, dark, sepia, retro terminal, LEGO, synthwave, auto) produces a visually clean result with zero Minecraft styles visible
   2. Every themed element renders without overlapping or truncation on a 320px-wide viewport
   3. Lighthouse performance score with the Minecraft theme active is within 10 points of the score with no theme active
-**Plans**: TBD
+**Plans:** 2 plans
+Plans:
+- [ ] 25-01-PLAN.md — CSS leakage audit and defensive 320px responsive fixes
+- [ ] 25-02-PLAN.md — Lighthouse performance comparison and visual verification checkpoint
 
 ## Progress
 
@@ -155,11 +158,11 @@ Plans:
 | 19. Brick Elements & Studs | v4.0 | 1/1 | Complete | 2026-02-17 |
 | 20. Typography & Animations | v4.0 | 1/1 | Complete | 2026-02-17 |
 | 21. Integration Validation | v4.0 | 2/2 | Complete | 2026-02-18 |
-| 22. Visual Foundation | 2/2 | Complete    | 2026-02-18 | - |
-| 23. Component Transforms | 3/3 | Complete    | 2026-02-18 | - |
-| 24. Decorative Assets & Animations | 2/2 | Complete    | 2026-02-18 | - |
-| 25. Validation & Polish | v5.0 | 0/? | Not started | - |
+| 22. Visual Foundation | v5.0 | 2/2 | Complete | 2026-02-18 |
+| 23. Component Transforms | v5.0 | 3/3 | Complete | 2026-02-18 |
+| 24. Decorative Assets & Animations | v5.0 | 2/2 | Complete | 2026-02-18 |
+| 25. Validation & Polish | v5.0 | 0/2 | Not started | - |
 
 ---
 *Roadmap created: 2026-02-16*
-*Last updated: 2026-02-18 after Phase 22 planning*
+*Last updated: 2026-02-18 after Phase 25 planning*
