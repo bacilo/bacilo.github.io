@@ -12,7 +12,7 @@ See: .planning/PROJECT.md (updated 2026-02-18)
 Phase: 25 of 25 (Validation & Polish — complete)
 Plan: 02 of 02 (complete)
 Status: v5.0 milestone shipped — all 29 requirements verified, all 9 plans complete
-Last activity: 2026-02-18 — v5.0 milestone archived
+Last activity: 2026-02-18 - Completed quick task 1: Fix nav visibility toggles, light theme bug, and CMS stats display redundancy
 
 Progress: [██████████] 100% (v5.0 — 9/9 plans complete, milestone shipped)
 
@@ -63,6 +63,12 @@ None.
 ### Blockers/Concerns
 
 None.
+
+### Quick Tasks Completed
+
+| # | Description | Date | Commit | Directory |
+|---|-------------|------|--------|-----------|
+| 1 | Fix nav visibility toggles, light theme bug, and CMS stats display redundancy | 2026-02-18 | 1eb80a8 | [1-fix-nav-visibility-toggles-light-theme-b](./quick/1-fix-nav-visibility-toggles-light-theme-b/) |
 
 ## Session Continuity
 
