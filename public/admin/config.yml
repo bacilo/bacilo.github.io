@@ -140,7 +140,7 @@ collections:
         widget: "select"
         options: ["stars", "downloads", "both", "none"]
         default: "stars"
-        required: false
+        required: true
         hint: "Which GitHub stats to display on the portfolio card"
       - label: "npm Package Name"
         name: "npmPackage"
