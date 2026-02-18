@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" shape-rendering="crispEdges">
+  <!-- Blade: horizontal stone gray bar pointing right, 8px wide -->
+  <rect x="6" y="7" width="8" height="2" fill="#c6c6c6"/>
+  <!-- Guard (crossguard): brown perpendicular bar -->
+  <rect x="4" y="5" width="2" height="6" fill="#866043"/>
+  <!-- Handle: brown short grip below guard -->
+  <rect x="1" y="7" width="3" height="2" fill="#866043"/>
+  <!-- Pommel: green accent at end -->
+  <rect x="0" y="7" width="1" height="2" fill="#55a715"/>
+</svg>
