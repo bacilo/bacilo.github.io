@@ -12,7 +12,7 @@ See: .planning/PROJECT.md (updated 2026-02-18)
 Phase: 25 of 25 (Validation & Polish — complete)
 Plan: 02 of 02 (complete)
 Status: v5.0 milestone shipped — all 29 requirements verified, all 9 plans complete
-Last activity: 2026-02-18 - Completed quick task 1: Fix nav visibility toggles, light theme bug, and CMS stats display redundancy
+Last activity: 2026-02-18 - Completed quick task 2: Fix Lego theme mobile nav items overlapping
 
 Progress: [██████████] 100% (v5.0 — 9/9 plans complete, milestone shipped)
 
@@ -69,6 +69,7 @@ None.
 | # | Description | Date | Commit | Directory |
 |---|-------------|------|--------|-----------|
 | 1 | Fix nav visibility toggles, light theme bug, and CMS stats display redundancy | 2026-02-18 | 1eb80a8 | [1-fix-nav-visibility-toggles-light-theme-b](./quick/1-fix-nav-visibility-toggles-light-theme-b/) |
+| 2 | Fix Lego theme mobile nav items overlapping — horizontal wrap layout | 2026-02-18 | 706508e | [2-fix-lego-theme-mobile-nav-items-overlapp](./quick/2-fix-lego-theme-mobile-nav-items-overlapp/) |
 
 ## Session Continuity
 
