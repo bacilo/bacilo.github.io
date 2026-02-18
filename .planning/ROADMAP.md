@@ -161,7 +161,7 @@ Plans:
 | 22. Visual Foundation | v5.0 | 2/2 | Complete | 2026-02-18 |
 | 23. Component Transforms | v5.0 | 3/3 | Complete | 2026-02-18 |
 | 24. Decorative Assets & Animations | v5.0 | 2/2 | Complete | 2026-02-18 |
-| 25. Validation & Polish | 2/2 | Complete   | 2026-02-18 | - |
+| 25. Validation & Polish | 2/2 | Complete    | 2026-02-18 | - |
 
 ---
 *Roadmap created: 2026-02-16*
