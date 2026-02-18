@@ -1,7 +1,15 @@
 {
   "site": {
     "title": "Pedro Ferreira",
-    "description": "Academic website and portfolio"
+    "description": "Academic website and portfolio",
+    "nav": [
+      { "href": "/", "label": "Home", "visible": true },
+      { "href": "/publications/", "label": "Publications", "visible": true },
+      { "href": "/talks/", "label": "Talks", "visible": true },
+      { "href": "/posts/", "label": "Blog", "visible": true },
+      { "href": "/portfolio/", "label": "Portfolio", "visible": true },
+      { "href": "/cv/", "label": "CV", "visible": true }
+    ]
   },
   "author": {
     "name": "Pedro Ferreira",

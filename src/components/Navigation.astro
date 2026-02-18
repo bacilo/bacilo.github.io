@@ -1,14 +1,6 @@
 ---
-// Main site navigation - data-driven for maintainability
-const navItems = [
-  { href: '/', label: 'Home' },
-  { href: '/publications/', label: 'Publications' },
-  { href: '/talks/', label: 'Talks' },
-  { href: '/posts/', label: 'Blog' },
-  { href: '/portfolio/', label: 'Portfolio' },
-  { href: '/cv/', label: 'CV' },
-];
-
+import siteData from '../data/site.json';
+const navItems = siteData.site.nav.filter(item => item.visible !== false);
 const currentPath = Astro.url.pathname;
 ---
 

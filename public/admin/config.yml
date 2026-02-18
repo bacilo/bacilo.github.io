@@ -20,6 +20,13 @@ collections:
             fields:
               - { label: "Title", name: "title", widget: "string" }
               - { label: "Description", name: "description", widget: "string" }
+              - label: "Navigation Items"
+                name: "nav"
+                widget: "list"
+                fields:
+                  - { label: "Label", name: "label", widget: "string" }
+                  - { label: "Path", name: "href", widget: "string" }
+                  - { label: "Visible", name: "visible", widget: "boolean", default: true }
           - label: "Author"
             name: "author"
             widget: "object"
