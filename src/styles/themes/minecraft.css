@@ -233,3 +233,88 @@
     flex-shrink: 0;
   }
 }
+
+/* ==========================================================================
+   Inventory Slot Cards (CARD-01, CARD-02, CARD-03)
+   Portfolio and GitHub cards styled as Minecraft inventory slots.
+   Hover reveals a Minecraft-style tooltip popup above the card plus
+   a purple enchantment glow. Responsive layout is preserved (no grid overrides).
+   ========================================================================== */
+
+/* Portfolio/GitHub cards as inventory slots (CARD-01) */
+[data-theme="minecraft"] .github-card,
+[data-theme="minecraft"] .portfolio-card {
+  background: var(--mc-bg-dark);
+  border: 2px solid #000000;
+  border-radius: 0;
+  box-shadow:
+    inset 2px 2px 0 #555555,
+    inset -2px -2px 0 #000000;
+  position: relative;
+  color: var(--mc-text-light);
+}
+
+/* Tooltip hidden by default — overridden on hover */
+[data-theme="minecraft"] .github-card::after,
+[data-theme="minecraft"] .portfolio-card::after {
+  content: "";
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Card hover: purple enchantment glow (CARD-02) */
+[data-theme="minecraft"] .github-card:hover,
+[data-theme="minecraft"] .portfolio-card:hover,
+[data-theme="minecraft"] .github-card:focus-within,
+[data-theme="minecraft"] .portfolio-card:focus-within {
+  border-color: #624eff;
+  box-shadow:
+    inset 2px 2px 0 #555555,
+    inset -2px -2px 0 #000000,
+    0 0 8px 2px rgba(98, 78, 255, 0.35);
+}
+
+/* Tooltip popup on hover: Minecraft-style dark popup above card (CARD-02) */
+[data-theme="minecraft"] .github-card:hover::after,
+[data-theme="minecraft"] .portfolio-card:hover::after {
+  content: "View Details";
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 0;
+  background: #100010;
+  border: 2px solid #2d0a2d;
+  outline: 1px solid #28002e;
+  color: #ffffff;
+  font-family: 'Pixelify Sans', monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  padding: 4px 8px;
+  white-space: nowrap;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 1;
+}
+
+/* Overflow visible: prevent grid container from clipping absolute tooltip (CARD-02) */
+[data-theme="minecraft"] .portfolio-grid,
+[data-theme="minecraft"] .portfolio-item {
+  overflow: visible;
+}
+
+/* List items as inventory rows */
+[data-theme="minecraft"] .publication-item,
+[data-theme="minecraft"] .post-item,
+[data-theme="minecraft"] .talk-item {
+  border-bottom: 2px solid #373737;
+  border-bottom-style: solid;
+  padding: var(--space-md) var(--space-sm);
+  position: relative;
+}
+
+/* List item hover: subtle purple highlight */
+[data-theme="minecraft"] .publication-item:hover,
+[data-theme="minecraft"] .post-item:hover,
+[data-theme="minecraft"] .talk-item:hover {
+  background: rgba(98, 78, 255, 0.08);
+}
