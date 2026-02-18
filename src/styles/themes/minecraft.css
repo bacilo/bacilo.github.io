@@ -155,3 +155,81 @@
 [data-theme="minecraft"] a {
   font-family: inherit;
 }
+
+/* ==========================================================================
+   Hotbar Navigation (NAV-01, NAV-02, NAV-03)
+   Navigation bar styled as a Minecraft hotbar with slot borders, 3D bevel
+   effects, active item highlight with glow, and responsive mobile support.
+   All selectors use nav:not(.author-links) to avoid styling the sidebar nav.
+   ========================================================================== */
+
+/* Hotbar outer container */
+[data-theme="minecraft"] nav:not(.author-links) {
+  background: #1a1a1a;
+  border-bottom: 2px solid #000000;
+  padding: 4px 0;
+}
+
+/* Hotbar slot list */
+[data-theme="minecraft"] nav:not(.author-links) .nav-list {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 4px 8px;
+  gap: 3px;
+  display: flex;
+}
+
+/* Individual slots (NAV-01) */
+[data-theme="minecraft"] nav:not(.author-links) .nav-list a {
+  background: var(--mc-bg-stone);
+  border: 2px solid #000000;
+  box-shadow:
+    inset 2px 2px 0 #9a9a9a,
+    inset -2px -2px 0 #373737;
+  color: var(--mc-text-light);
+  text-shadow: 2px 2px 0 #1a1a1a;
+  font-family: 'Pixelify Sans', monospace;
+  padding: 6px 10px;
+  border-radius: 0;
+  text-decoration: none;
+  display: block;
+  border-bottom: none; /* Remove default active underline from Navigation.astro */
+}
+
+/* Active slot highlight (NAV-02): lighter slot, inverted bevel, subtle glow */
+[data-theme="minecraft"] nav:not(.author-links) .nav-list a.active,
+[data-theme="minecraft"] nav:not(.author-links) .nav-list a[aria-current="page"] {
+  background: var(--mc-stone-gray);
+  color: #ffffff;
+  box-shadow:
+    inset 2px 2px 0 #e0e0e0,
+    inset -2px -2px 0 #555555,
+    0 0 6px 1px rgba(255, 255, 255, 0.25);
+  border-color: #c6c6c6;
+}
+
+/* Desktop media: keep hotbar horizontal on 768px breakpoint (override Navigation.astro vertical stack) */
+@media (max-width: 768px) {
+  [data-theme="minecraft"] nav:not(.author-links) .nav-list {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 2px;
+  }
+}
+
+/* Mobile compact layout (NAV-03): compact slots with horizontal scroll fallback at 320px+ */
+@media (max-width: 480px) {
+  [data-theme="minecraft"] nav:not(.author-links) .nav-list {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding: 4px;
+    gap: 2px;
+  }
+  [data-theme="minecraft"] nav:not(.author-links) .nav-list a {
+    padding: 5px 6px;
+    font-size: 11px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+}
