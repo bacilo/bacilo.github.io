@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-18)
 ## Current Position
 
 Phase: 22 of 25 (Visual Foundation)
-Plan: — (not yet planned)
-Status: Ready to plan
-Last activity: 2026-02-18 — v5.0 roadmap created, Phase 22 ready for planning
+Plan: 02 of 02 (Typography — next to execute)
+Status: In progress
+Last activity: 2026-02-18 — 22-01 complete: Minecraft palette, 6 SVG textures, pixel fonts installed
 
-Progress: [░░░░░░░░░░] 0% (v5.0 — 0/4 phases)
+Progress: [██░░░░░░░░] 13% (v5.0 — 1/8 plans complete)
 
 ## Performance Metrics
 
@@ -38,12 +38,17 @@ Progress: [░░░░░░░░░░] 0% (v5.0 — 0/4 phases)
 - Average duration: ~3.0 minutes
 - Total execution time: ~13 minutes
 
-**Overall:**
-- Total plans: 32 (across 21 phases, 4 milestones)
-- Cumulative time: ~2.4 hours
-- Average: ~4.6 minutes per plan
+**Velocity (v5.0):**
+- Total plans completed: 1
+- Average duration: 2 minutes
+- Total execution time: 2 minutes
 
-*Updated: 2026-02-18 after v5.0 roadmap created*
+**Overall:**
+- Total plans: 33 (across 22 phases, 5 milestones)
+- Cumulative time: ~2.4 hours
+- Average: ~4.5 minutes per plan
+
+*Updated: 2026-02-18 after 22-01 complete*
 
 ## Accumulated Context
 
@@ -57,6 +62,9 @@ Key decisions relevant to v5.0:
 - `image-rendering: pixelated` + `-webkit-font-smoothing: none` required for crisp pixel art
 - Strict `[data-theme="minecraft"]` scoping on every CSS rule — zero leakage to other themes
 - VIS-04 contrast work begins in Phase 22 (foundation), not deferred to validation
+- [22-01] Cobblestone SVG created but main uses solid --mc-bg-dark (not texture) for text readability
+- [22-01] Deleted placeholder palette from themes.css (not overridden) — avoids specificity conflicts with minecraft.css
+- [22-01] Font imports added in Plan 01 so fonts available for Plan 02 typography rules
 
 ### Pending Todos
 
@@ -69,8 +77,8 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-18
-Stopped at: v5.0 roadmap created — 29/29 requirements mapped across phases 22-25
-Resume: Run `/gsd:plan-phase 22` to begin Visual Foundation planning
+Stopped at: 22-01-PLAN.md complete — Minecraft palette, 6 SVG textures, pixel fonts wired
+Resume: Run `/gsd:execute-phase 22` to execute 22-02 (Typography)
 
 ## Archives
 
@@ -86,4 +94,4 @@ Resume: Run `/gsd:plan-phase 22` to begin Visual Foundation planning
 
 ---
 *State initialized: 2026-02-17 for v4.0 milestone*
-*Last updated: 2026-02-18 after v5.0 roadmap created*
+*Last updated: 2026-02-18 after 22-01 complete*

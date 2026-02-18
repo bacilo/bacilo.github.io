@@ -9,9 +9,9 @@ Requirements for immersive Minecraft theme transformation. Each maps to roadmap 
 
 ### Visual Foundation
 
-- [ ] **VIS-01**: Site displays Minecraft color palette (dirt brown, grass green, stone gray, sky blue, Creeper green) when Minecraft theme active
-- [ ] **VIS-02**: All SVG textures render with crisp pixel edges via `image-rendering: pixelated` at any zoom level
-- [ ] **VIS-03**: Page sections display appropriate block texture SVG backgrounds (dirt, stone, grass, wood, cobblestone, bedrock)
+- [x] **VIS-01**: Site displays Minecraft color palette (dirt brown, grass green, stone gray, sky blue, Creeper green) when Minecraft theme active
+- [x] **VIS-02**: All SVG textures render with crisp pixel edges via `image-rendering: pixelated` at any zoom level
+- [x] **VIS-03**: Page sections display appropriate block texture SVG backgrounds (dirt, stone, grass, wood, cobblestone, bedrock)
 - [ ] **VIS-04**: WCAG AA contrast ratio (4.5:1) met for all text/background combinations in Minecraft theme
 
 ### Typography
@@ -86,9 +86,9 @@ Requirements for immersive Minecraft theme transformation. Each maps to roadmap 
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| VIS-01 | Phase 22 | Pending |
-| VIS-02 | Phase 22 | Pending |
-| VIS-03 | Phase 22 | Pending |
+| VIS-01 | Phase 22 | Complete |
+| VIS-02 | Phase 22 | Complete |
+| VIS-03 | Phase 22 | Complete |
 | VIS-04 | Phase 22 | Pending |
 | TYPE-01 | Phase 22 | Pending |
 | TYPE-02 | Phase 22 | Pending |
