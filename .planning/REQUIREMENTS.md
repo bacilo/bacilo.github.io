@@ -23,9 +23,9 @@ Requirements for immersive Minecraft theme transformation. Each maps to roadmap 
 
 ### Navigation
 
-- [ ] **NAV-01**: Navigation bar styled as Minecraft hotbar with slot borders and 3D bevel effect
-- [ ] **NAV-02**: Active nav item displays highlighted slot with selector bracket/glow
-- [ ] **NAV-03**: Hotbar navigation remains usable on mobile (320px+) with responsive fallback
+- [x] **NAV-01**: Navigation bar styled as Minecraft hotbar with slot borders and 3D bevel effect
+- [x] **NAV-02**: Active nav item displays highlighted slot with selector bracket/glow
+- [x] **NAV-03**: Hotbar navigation remains usable on mobile (320px+) with responsive fallback
 
 ### Cards
 
@@ -94,9 +94,9 @@ Requirements for immersive Minecraft theme transformation. Each maps to roadmap 
 | TYPE-02 | Phase 22 | Complete |
 | TYPE-03 | Phase 22 | Complete |
 | TYPE-04 | Phase 22 | Complete |
-| NAV-01 | Phase 23 | Pending |
-| NAV-02 | Phase 23 | Pending |
-| NAV-03 | Phase 23 | Pending |
+| NAV-01 | Phase 23 | Complete |
+| NAV-02 | Phase 23 | Complete |
+| NAV-03 | Phase 23 | Complete |
 | CARD-01 | Phase 23 | Pending |
 | CARD-02 | Phase 23 | Pending |
 | CARD-03 | Phase 23 | Pending |

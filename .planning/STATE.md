@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-18)
 
 **Core value:** A professional online presence that showcases work and is easy to maintain with monthly content updates
-**Current focus:** v5.0 Immersive Minecraft Theme — Phase 22: Visual Foundation
+**Current focus:** v5.0 Immersive Minecraft Theme — Phase 23: Component Transforms
 
 ## Current Position
 
-Phase: 22 of 25 (Visual Foundation)
-Plan: 02 of 02 (Typography — complete)
-Status: Phase 22 complete — ready for Phase 23
-Last activity: 2026-02-18 — 22-02 complete: pixel typography hierarchy, WCAG AA verified
+Phase: 23 of 25 (Component Transforms)
+Plan: 01 of 03 (Hotbar Navigation — complete)
+Status: Plan 01 complete — ready for Plan 02 (Cards and Tooltips)
+Last activity: 2026-02-18 — 23-01 complete: hotbar nav with stone-gray beveled slots, active glow, mobile fallback
 
-Progress: [███░░░░░░░] 25% (v5.0 — 2/8 plans complete)
+Progress: [███░░░░░░░] 37% (v5.0 — 3/8 plans complete)
 
 ## Performance Metrics
 
@@ -39,16 +39,16 @@ Progress: [███░░░░░░░] 25% (v5.0 — 2/8 plans complete)
 - Total execution time: ~13 minutes
 
 **Velocity (v5.0):**
-- Total plans completed: 2
-- Average duration: 2 minutes
-- Total execution time: 4 minutes
+- Total plans completed: 3
+- Average duration: ~1.5 minutes
+- Total execution time: ~5 minutes
 
 **Overall:**
-- Total plans: 34 (across 22 phases, 5 milestones)
+- Total plans: 35 (across 23 phases, 5 milestones)
 - Cumulative time: ~2.4 hours
 - Average: ~4.5 minutes per plan
 
-*Updated: 2026-02-18 after 22-02 complete*
+*Updated: 2026-02-18 after 23-01 complete*
 
 ## Accumulated Context
 
@@ -68,6 +68,10 @@ Key decisions relevant to v5.0:
 - [22-02] Press Start 2P font-weight must be 400 (bitmap font — 700 causes synthetic bold artifacts)
 - [22-02] Two [data-theme="minecraft"] body rules intentional: first sets textures (22-01), second sets typography (22-02)
 - [22-02] White on #8b8b8b is 3.41:1 (AA Large only) — semantic --mc-bg-stone uses #6b6b6b (5.33:1) instead
+- [23-01] nav:not(.author-links) selector used on all hotbar rules to avoid styling sidebar navigation
+- [23-01] Desktop 768px media query added to override Navigation.astro vertical stacking behavior
+- [23-01] Active slot uses --mc-stone-gray (#8b8b8b, lighter than --mc-bg-stone #6b6b6b) for visual distinction
+- [23-01] border-bottom: none on slot anchors removes Navigation.astro active underline
 
 ### Pending Todos
 
@@ -80,8 +84,8 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-18
-Stopped at: 22-02-PLAN.md complete — Phase 22 Visual Foundation fully complete
-Resume: Run `/gsd:execute-phase 23` to begin Phase 23 (Interactive Components)
+Stopped at: 23-01-PLAN.md complete — Hotbar Navigation CSS appended to minecraft.css
+Resume: Run `/gsd:execute-phase 23` to continue Phase 23 with Plan 02 (Cards and Tooltips)
 
 ## Archives
 
@@ -97,4 +101,4 @@ Resume: Run `/gsd:execute-phase 23` to begin Phase 23 (Interactive Components)
 
 ---
 *State initialized: 2026-02-17 for v4.0 milestone*
-*Last updated: 2026-02-18 after 22-01 complete*
+*Last updated: 2026-02-18 after 23-01 complete*
