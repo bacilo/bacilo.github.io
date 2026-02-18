@@ -156,7 +156,7 @@ Font payload (~230KB total Fontsource across LEGO + Minecraft fonts); Lighthouse
 |----------|-----------|---------|
 | Astro over Jekyll | Better DX, interactive embed support, modern tooling | ✓ Good |
 | Client-side GitHub API | Always-current data, 1-hour cache reduces rate limits | ✓ Good |
-| CSS custom properties | Dark mode via prefers-color-scheme, no JS needed | ✓ Good |
+| CSS custom properties | Theme switching via data-theme attribute + JS, explicit rules per theme | ✓ Good |
 | Preserve Jekyll URLs | SEO and academic citations maintained | ✓ Good |
 | System font stack | No web font loading, instant rendering | ✓ Good |
 | Lazy-load embeds | Performance optimization for portfolio page | ✓ Good |
@@ -186,6 +186,9 @@ Font payload (~230KB total Fontsource across LEGO + Minecraft fonts); Lighthouse
 | Transitions inside prefers-reduced-motion only | Accessible by default, progressive enhancement | ✓ Good |
 | Press Start 2P font-weight 400 only | Bitmap font — synthetic bold at 700 causes artifacts | ✓ Good |
 | word-break on pixel-font headings | Bitmap fonts can't naturally break — prevents 320px overflow | ✓ Good |
+| Nav items in site.json with visible flag | Data-driven nav, CMS-toggleable without code edits | ✓ Good |
+| setAttribute for light theme | Prevents OS dark media query from bleeding into explicit light selection | ✓ Good |
+| Remove dark media query from global.css :root | Auto theme in themes.css handles dark OS; bare :root is light-only | ✓ Good |
 
 ---
-*Last updated: 2026-02-18 after v5.0 milestone shipped*
+*Last updated: 2026-02-18 after quick task 1 (nav toggles, light theme fix, CMS stats dedup)*

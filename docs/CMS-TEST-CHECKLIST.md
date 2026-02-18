@@ -66,6 +66,7 @@
 - [ ] Click "New Portfolio" button
 - [ ] Fill required field: Title
 - [ ] Optional: Add Excerpt, Repository URL, Demo URL, Description, Playground URL
+- [ ] Verify Stats Display dropdown shows exactly 4 options: stars, downloads, both, none (no empty "(None)" entry)
 - [ ] Write markdown content in Body field
 - [ ] Click "Save"
 - [ ] Verify file created in `src/content/portfolio/` directory (format: slug.md, no date prefix)
@@ -160,6 +161,7 @@
 - [ ] Click "New Portfolio" button
 - [ ] Fill required field: Title
 - [ ] Optional: Add Excerpt, Repository URL, Demo URL, Description, Playground URL
+- [ ] Verify Stats Display dropdown shows exactly 4 options: stars, downloads, both, none (no empty "(None)" entry)
 - [ ] Write markdown content in Body field
 - [ ] Click "Save"
 - [ ] Verify file created in `src/content/portfolio/` directory (format: slug.md, no date prefix)
@@ -254,6 +256,7 @@
 - [ ] Click "New Portfolio" button
 - [ ] Fill required field: Title
 - [ ] Optional: Add Excerpt, Repository URL, Demo URL, Description, Playground URL
+- [ ] Verify Stats Display dropdown shows exactly 4 options: stars, downloads, both, none (no empty "(None)" entry)
 - [ ] Write markdown content in Body field
 - [ ] Click "Save"
 - [ ] Verify file created in `src/content/portfolio/` directory (format: slug.md, no date prefix)

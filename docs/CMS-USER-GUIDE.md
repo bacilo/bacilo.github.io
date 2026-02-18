@@ -145,6 +145,7 @@ Association for Computing Machinery, New York, NY, USA, 1-12.
    - **Repository URL** (optional): GitHub repo link (must be valid URL: https://...)
    - **Demo URL** (optional): Live demo link (must be valid URL: https://...)
    - **Description** (optional): Extended description (multi-line supported)
+   - **Stats Display** (required): Which GitHub stats to show on the card — stars, downloads, both, or none (defaults to "stars")
    - **Playground URL** (optional): Interactive demo link (must be valid URL: https://...)
    - **Collection** (auto-set): Automatically set to "portfolio" (hidden field)
    - **Body** (required): Full project description in Markdown
@@ -155,6 +156,25 @@ Association for Computing Machinery, New York, NY, USA, 1-12.
 **URL fields:** All URL fields require valid URLs starting with `https://` (or `http://`). Examples:
 - Valid: `https://github.com/username/repo`
 - Invalid: `github.com/username/repo` (missing protocol)
+
+---
+
+### Site Settings
+
+**How to manage site settings:**
+
+1. Click "Settings" in the left sidebar
+2. Click "Site" to open the site configuration
+3. Available settings:
+   - **Site Title**: The site name displayed in the browser tab and header
+   - **Description**: Site meta description for SEO
+   - **Navigation Items**: A list of navigation links. Each item has:
+     - **Label**: Display text (e.g., "Publications")
+     - **Path**: URL path (e.g., "/publications/")
+     - **Visible**: Toggle to show/hide the item from the navigation bar
+4. Click "Save"
+
+**Hiding a navigation item:** To hide a page like "Talks" from the navigation, find it in the Navigation Items list and uncheck the "Visible" toggle. The page still exists and is accessible by direct URL, but won't appear in the nav bar.
 
 ---
 
@@ -367,7 +387,7 @@ The CMS field configurations mirror Zod schemas defined in `src/content.config.t
 | Blog Posts | `src/content.config.ts` → `posts` | `public/admin/config.yml` → `posts` | title, date, body |
 | Publications | `src/content.config.ts` → `publications` | `public/admin/config.yml` → `publications` | title, collection, permalink, date, venue, citation, body |
 | Talks | `src/content.config.ts` → `talks` | `public/admin/config.yml` → `talks` | title, collection, type, permalink, venue, date, location, body |
-| Portfolio | `src/content.config.ts` → `portfolio` | `public/admin/config.yml` → `portfolio` | title, body |
+| Portfolio | `src/content.config.ts` → `portfolio` | `public/admin/config.yml` → `portfolio` | title, statsDisplay, body |
 
 ### Schema Synchronization
 
@@ -389,6 +409,6 @@ Both files contain comments linking them:
 
 ---
 
-**Last Updated:** 2026-02-13
+**Last Updated:** 2026-02-18
 **CMS Version:** Sveltia CMS (beta)
 **Astro Version:** 5.0+
