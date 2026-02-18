@@ -41,10 +41,10 @@ Requirements for immersive Minecraft theme transformation. Each maps to roadmap 
 
 ### Decorative Assets
 
-- [ ] **DECOR-01**: Creeper face SVG appears as recurring design element (sidebar/footer)
+- [x] **DECOR-01**: Creeper face SVG appears as recurring design element (sidebar/footer)
 - [x] **DECOR-02**: Mob silhouette SVGs (zombie, enderman, chicken) used as decorative accents
 - [x] **DECOR-03**: Tool icon SVGs (sword, pickaxe) used as section dividers or accents
-- [ ] **DECOR-04**: XP bar accent displayed under section headings using XP green (#7fcc19)
+- [x] **DECOR-04**: XP bar accent displayed under section headings using XP green (#7fcc19)
 - [x] **DECOR-05**: Health bar heart SVGs displayed as decorative elements
 
 ### Component Transforms
@@ -102,11 +102,11 @@ Requirements for immersive Minecraft theme transformation. Each maps to roadmap 
 | CARD-03 | Phase 23 | Complete |
 | INT-01 | Phase 23 | Complete |
 | INT-02 | Phase 23 | Complete |
-| INT-03 | Phase 24 | Complete |
-| DECOR-01 | Phase 24 | Pending |
+| INT-03 | Phase 23 | Complete |
+| DECOR-01 | Phase 24 | Complete |
 | DECOR-02 | Phase 24 | Complete |
 | DECOR-03 | Phase 24 | Complete |
-| DECOR-04 | Phase 24 | Pending |
+| DECOR-04 | Phase 24 | Complete |
 | DECOR-05 | Phase 24 | Complete |
 | COMP-01 | Phase 23 | Complete |
 | COMP-02 | Phase 23 | Complete |
@@ -123,4 +123,4 @@ Requirements for immersive Minecraft theme transformation. Each maps to roadmap 
 
 ---
 *Requirements defined: 2026-02-18*
-*Last updated: 2026-02-18 after roadmap created — all 29 requirements mapped*
+*Last updated: 2026-02-18 after Phase 24 Plan 02 — DECOR-01 through DECOR-05 complete, INT-03 traceability corrected to Phase 23*
