@@ -603,3 +603,48 @@
   image-rendering: pixelated;
   image-rendering: crisp-edges;
 }
+
+/* ===== Phase 25: 320px Responsive Fixes ===== */
+
+/* Heading overflow prevention (QUAL-02)
+ * Press Start 2P and Silkscreen are fixed-width bitmap fonts that cannot
+ * naturally break long words. word-break + overflow-wrap prevent horizontal
+ * scroll at 320px viewports (e.g. "Recent Publications" heading).
+ */
+[data-theme="minecraft"] h1 {
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+[data-theme="minecraft"] h2 {
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+[data-theme="minecraft"] h3 {
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Author sidebar at 320px (QUAL-02)
+ * On the home page, the sidebar stays visible at 480px and below.
+ * Prevent the 250px-wide sidebar from overflowing a 320px viewport.
+ */
+@media (max-width: 480px) {
+  [data-theme="minecraft"] .author-sidebar {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+/* Code block overflow — verified: overflow-x: auto already set in COMP-01 section above.
+ * No additional rules needed; this comment confirms QUAL-02 check passed.
+ */
+
+/* Portfolio grid — verified: auto-fill, minmax(280px, 1fr) collapses to 1 column at 320px.
+ * No additional rules needed; this comment confirms QUAL-02 check passed.
+ */
+
+/* Footer decorative elements — verified: footer::before (48px creeper) and footer::after
+ * (90px hearts) are both centered and well within 320px. No additional rules needed.
+ */
