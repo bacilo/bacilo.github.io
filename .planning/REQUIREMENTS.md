@@ -29,15 +29,15 @@ Requirements for immersive Minecraft theme transformation. Each maps to roadmap 
 
 ### Cards
 
-- [ ] **CARD-01**: Content cards styled as inventory slots with dark background and bevel borders
-- [ ] **CARD-02**: Card hover displays Minecraft-style tooltip with dark background and purple border
-- [ ] **CARD-03**: Cards render responsively (1 col mobile, 2 col tablet, 3 col desktop)
+- [x] **CARD-01**: Content cards styled as inventory slots with dark background and bevel borders
+- [x] **CARD-02**: Card hover displays Minecraft-style tooltip with dark background and purple border
+- [x] **CARD-03**: Cards render responsively (1 col mobile, 2 col tablet, 3 col desktop)
 
 ### Interactive Elements
 
-- [ ] **INT-01**: Buttons and links styled as Minecraft stone buttons with raised 3D bevel
-- [ ] **INT-02**: Button press state inverts bevel shadow (pressed-in effect)
-- [ ] **INT-03**: Hover animations respect `prefers-reduced-motion` with instant fallback
+- [x] **INT-01**: Buttons and links styled as Minecraft stone buttons with raised 3D bevel
+- [x] **INT-02**: Button press state inverts bevel shadow (pressed-in effect)
+- [x] **INT-03**: Hover animations respect `prefers-reduced-motion` with instant fallback
 
 ### Decorative Assets
 
@@ -97,12 +97,12 @@ Requirements for immersive Minecraft theme transformation. Each maps to roadmap 
 | NAV-01 | Phase 23 | Complete |
 | NAV-02 | Phase 23 | Complete |
 | NAV-03 | Phase 23 | Complete |
-| CARD-01 | Phase 23 | Pending |
-| CARD-02 | Phase 23 | Pending |
-| CARD-03 | Phase 23 | Pending |
-| INT-01 | Phase 23 | Pending |
-| INT-02 | Phase 23 | Pending |
-| INT-03 | Phase 24 | Pending |
+| CARD-01 | Phase 23 | Complete |
+| CARD-02 | Phase 23 | Complete |
+| CARD-03 | Phase 23 | Complete |
+| INT-01 | Phase 23 | Complete |
+| INT-02 | Phase 23 | Complete |
+| INT-03 | Phase 24 | Complete |
 | DECOR-01 | Phase 24 | Pending |
 | DECOR-02 | Phase 24 | Pending |
 | DECOR-03 | Phase 24 | Pending |

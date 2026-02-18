@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-18)
 ## Current Position
 
 Phase: 23 of 25 (Component Transforms)
-Plan: 01 of 03 (Hotbar Navigation — complete)
-Status: Plan 01 complete — ready for Plan 02 (Cards and Tooltips)
-Last activity: 2026-02-18 — 23-01 complete: hotbar nav with stone-gray beveled slots, active glow, mobile fallback
+Plan: 02 of 03 (Cards and Buttons — complete)
+Status: Plan 02 complete — ready for Plan 03 (remaining interactive elements)
+Last activity: 2026-02-18 — 23-02 complete: inventory slot cards with tooltip popup, purple glow, stone buttons with bevel
 
-Progress: [███░░░░░░░] 37% (v5.0 — 3/8 plans complete)
+Progress: [████░░░░░░] 50% (v5.0 — 4/8 plans complete)
 
 ## Performance Metrics
 
@@ -39,16 +39,16 @@ Progress: [███░░░░░░░] 37% (v5.0 — 3/8 plans complete)
 - Total execution time: ~13 minutes
 
 **Velocity (v5.0):**
-- Total plans completed: 3
+- Total plans completed: 4
 - Average duration: ~1.5 minutes
-- Total execution time: ~5 minutes
+- Total execution time: ~7 minutes
 
 **Overall:**
 - Total plans: 35 (across 23 phases, 5 milestones)
 - Cumulative time: ~2.4 hours
 - Average: ~4.5 minutes per plan
 
-*Updated: 2026-02-18 after 23-01 complete*
+*Updated: 2026-02-18 after 23-02 complete*
 
 ## Accumulated Context
 
@@ -72,6 +72,10 @@ Key decisions relevant to v5.0:
 - [23-01] Desktop 768px media query added to override Navigation.astro vertical stacking behavior
 - [23-01] Active slot uses --mc-stone-gray (#8b8b8b, lighter than --mc-bg-stone #6b6b6b) for visual distinction
 - [23-01] border-bottom: none on slot anchors removes Navigation.astro active underline
+- [23-02] Tooltip uses static content:'View Details' — no attr(data-tooltip) because CSS attr() returns empty string for absent attributes
+- [23-02] overflow:visible on .portfolio-grid and .portfolio-item required to prevent tooltip ::after from being clipped by parent
+- [23-02] Transitions placed exclusively inside prefers-reduced-motion:no-preference — no transitions outside the guard (accessible by default)
+- [23-02] !important on color and border-radius for buttons overrides Astro scoped component styles
 
 ### Pending Todos
 
@@ -84,8 +88,8 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-18
-Stopped at: 23-01-PLAN.md complete — Hotbar Navigation CSS appended to minecraft.css
-Resume: Run `/gsd:execute-phase 23` to continue Phase 23 with Plan 02 (Cards and Tooltips)
+Stopped at: 23-02-PLAN.md complete — Inventory slot cards, tooltip popup, stone buttons appended to minecraft.css
+Resume: Run `/gsd:execute-phase 23` to continue Phase 23 with Plan 03
 
 ## Archives
 
