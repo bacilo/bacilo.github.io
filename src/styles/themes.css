@@ -808,6 +808,26 @@
       0 2px 6px rgba(0, 0, 0, 0.15),
       0 4px 12px rgba(0, 0, 0, 0.12);
   }
+
+  /* Override Navigation.astro vertical stacking — keep bricks horizontal with wrapping */
+  :root[data-theme="lego"] nav:not(.author-links) .nav-list {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+}
+
+/* LEGO compact brick sizing for very small screens */
+@media (max-width: 480px) {
+  :root[data-theme="lego"] nav:not(.author-links) a {
+    padding: 10px var(--space-xs) var(--space-xs);
+    font-size: 0.85em;
+  }
+
+  :root[data-theme="lego"] nav:not(.author-links) a::before {
+    height: 8px;
+    top: -3px;
+  }
 }
 
 /* LEGO accessibility - reduced motion */
