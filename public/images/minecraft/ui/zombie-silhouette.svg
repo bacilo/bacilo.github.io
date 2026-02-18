@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" shape-rendering="crispEdges">
+  <!-- Head: 4x4 block centered at x=6, y=0 -->
+  <rect x="6" y="0" width="4" height="4" fill="#c8c8c8"/>
+  <!-- Body: 4x6 at x=6, y=4 -->
+  <rect x="6" y="4" width="4" height="6" fill="#c8c8c8"/>
+  <!-- Left arm: 2x5 at x=4, y=4 (arms extended forward) -->
+  <rect x="4" y="4" width="2" height="5" fill="#c8c8c8"/>
+  <!-- Right arm: 2x5 at x=10, y=4 -->
+  <rect x="10" y="4" width="2" height="5" fill="#c8c8c8"/>
+  <!-- Left leg: 2x6 at x=6, y=10 -->
+  <rect x="6" y="10" width="2" height="6" fill="#c8c8c8"/>
+  <!-- Right leg: 2x5 at x=8, y=11 (offset 1px for walking look) -->
+  <rect x="8" y="11" width="2" height="5" fill="#c8c8c8"/>
+</svg>

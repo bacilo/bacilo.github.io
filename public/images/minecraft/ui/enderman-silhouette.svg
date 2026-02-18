@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" shape-rendering="crispEdges">
+  <!-- Head: 2x2 at x=7, y=0 (small head) -->
+  <rect x="7" y="0" width="2" height="2" fill="#c8c8c8"/>
+  <!-- Body: 2x8 at x=7, y=2 (very thin body) -->
+  <rect x="7" y="2" width="2" height="8" fill="#c8c8c8"/>
+  <!-- Left arm: 1x6 at x=5, y=2 (long thin arms) -->
+  <rect x="5" y="2" width="1" height="6" fill="#c8c8c8"/>
+  <!-- Right arm: 1x6 at x=10, y=2 -->
+  <rect x="10" y="2" width="1" height="6" fill="#c8c8c8"/>
+  <!-- Left leg: 1x6 at x=7, y=10 (very thin legs) -->
+  <rect x="7" y="10" width="1" height="6" fill="#c8c8c8"/>
+  <!-- Right leg: 1x6 at x=8, y=10 -->
+  <rect x="8" y="10" width="1" height="6" fill="#c8c8c8"/>
+</svg>
