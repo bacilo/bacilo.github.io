@@ -69,7 +69,7 @@
 
 - [x] **Phase 22: Visual Foundation** — Color palette, SVG block textures, pixel fonts, contrast-safe mapping (completed 2026-02-18)
 - [x] **Phase 23: Component Transforms** — Hotbar nav, inventory cards, stone buttons, tooltips, sidebar, footer, code blocks, theme switcher (completed 2026-02-18)
-- [ ] **Phase 24: Decorative Assets & Animations** — Mob silhouettes, tool icons, Creeper motif, XP/heart accents, hover animations
+- [x] **Phase 24: Decorative Assets & Animations** — Mob silhouettes, tool icons, Creeper motif, XP/heart accents, hover animations (completed 2026-02-18)
 - [ ] **Phase 25: Validation & Polish** — WCAG contrast audit, cross-browser, mobile responsive, Lighthouse, theme switching
 
 ## Phase Details
@@ -115,7 +115,7 @@ Plans:
   3. Sword and pickaxe tool icon SVGs serve as section dividers or accents, reinforcing the Minecraft aesthetic
   4. An XP bar element in XP green (#7fcc19) appears beneath section headings, and health bar heart SVGs appear as decorative elements
   5. All hover animations (buttons, cards, interactive elements) play smoothly under normal settings and instantly snap to their end state when `prefers-reduced-motion: reduce` is set
-**Plans:** 1/2 plans executed
+**Plans:** 2/2 plans complete
 Plans:
 - [ ] 24-01-PLAN.md — SVG asset creation (mob silhouettes, tool icons, health hearts)
 - [ ] 24-02-PLAN.md — CSS decoration wiring, XP bar, footer accents, INT-03 audit
@@ -157,7 +157,7 @@ Plans:
 | 21. Integration Validation | v4.0 | 2/2 | Complete | 2026-02-18 |
 | 22. Visual Foundation | 2/2 | Complete    | 2026-02-18 | - |
 | 23. Component Transforms | 3/3 | Complete    | 2026-02-18 | - |
-| 24. Decorative Assets & Animations | 1/2 | In Progress|  | - |
+| 24. Decorative Assets & Animations | 2/2 | Complete   | 2026-02-18 | - |
 | 25. Validation & Polish | v5.0 | 0/? | Not started | - |
 
 ---
