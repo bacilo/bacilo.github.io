@@ -63,3 +63,20 @@
 
 ---
 
+
+## v5.0 Immersive Minecraft Theme (Shipped: 2026-02-18)
+
+**Phases completed:** 4 phases, 9 plans, 18 tasks
+**Git range:** 9ab5bfd → a3f8272 (35 commits)
+**Files modified:** 50 (+28,291/-96 lines)
+
+**Key accomplishments:**
+- Complete Minecraft visual foundation — color palette, 6 SVG block textures (dirt/stone/grass/wood/cobblestone/bedrock), pixel font stack (Silkscreen, Press Start 2P, Pixelify Sans) with WCAG AA contrast verification
+- Hotbar navigation with slot borders and 3D bevel, inventory slot cards with Minecraft-style tooltips, stone buttons with pressed-state bevel inversion
+- Command block code styling preserving Shiki syntax highlighting, bedrock-textured footer, Creeper face sidebar accent, themed switcher dropdown
+- 7 pixel-art SVG decorative assets (zombie/enderman/chicken silhouettes, sword/pickaxe tools, health hearts) wired via CSS pseudo-elements
+- XP bar accents under headings, repeating sword HR dividers, 5-heart footer health row — all decorative, no layout impact
+- Zero CSS leakage verified (85 scoped selectors), 320px responsive with word-break fixes, Lighthouse within 4 points of no-theme baseline
+
+---
+

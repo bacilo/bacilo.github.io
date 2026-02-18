@@ -2,7 +2,7 @@
 
 ## What This Is
 
-A personal academic website built with Astro showcasing publications, talks, blog posts, and an interactive portfolio. Deployed to GitHub Pages at bacilo.github.io with 8 switchable CSS themes including an immersive LEGO experience (brick shapes, studs, playful fonts, bounce animations), syntax-highlighted code embeds, configurable GitHub stats, and a web-based CMS for effortless content management.
+A personal academic website built with Astro showcasing publications, talks, blog posts, and an interactive portfolio. Deployed to GitHub Pages at bacilo.github.io with 8 switchable CSS themes including immersive LEGO (brick shapes, studs, playful fonts) and Minecraft (pixel typography, hotbar nav, inventory cards, SVG block textures, decorative assets) experiences, syntax-highlighted code embeds, configurable GitHub stats, and a web-based CMS for effortless content management.
 
 ## Core Value
 
@@ -90,25 +90,16 @@ A professional online presence that showcases work and is easy to maintain with 
 - ✓ **v4.0 TYPE-01-03**: LEGO typography hierarchy (Fredoka, Slackey, Baloo 2) — v4.0
 - ✓ **v4.0 ANIM-01-02**: Bounce hover animations with reduced-motion fallback — v4.0
 - ✓ **v4.0 RESP-01**: Mobile sidebar hidden on non-Home pages — v4.0
+- ✓ **v5.0 VIS-01-04**: Minecraft color palette, SVG block textures, pixel-crisp rendering, WCAG AA contrast — v5.0
+- ✓ **v5.0 TYPE-01-04**: Pixel typography (Silkscreen, Press Start 2P, Pixelify Sans), text-shadow — v5.0
+- ✓ **v5.0 NAV-01-03**: Hotbar navigation with slot borders, active highlight, mobile responsive — v5.0
+- ✓ **v5.0 CARD-01-03**: Inventory slot cards with tooltips, responsive grid — v5.0
+- ✓ **v5.0 INT-01-03**: Stone buttons with pressed bevel, reduced-motion guard — v5.0
+- ✓ **v5.0 DECOR-01-05**: Creeper motif, mob silhouettes, tool icons, XP bar, health hearts — v5.0
+- ✓ **v5.0 COMP-01-04**: Command block code, bedrock footer, Creeper sidebar, themed switcher — v5.0
+- ✓ **v5.0 QUAL-01-03**: Zero CSS leakage, 320px responsive, Lighthouse within 4 points — v5.0
 
 ### Active
-
-## Current Milestone: v5.0 Immersive Minecraft Theme
-
-**Goal:** Transform the Minecraft theme into a fully immersive experience with pixel typography, game-UI navigation, inventory-style cards, SVG assets, and authentic textures across every page element.
-
-**Target features:**
-- Minecraft pixel typography hierarchy via Fontsource
-- Hotbar-style navigation with slot borders and selected-item highlight
-- Inventory/crafting-style content cards with slot aesthetics
-- Creeper face motif as recurring subtle design element
-- Dirt/grass/stone/wood texture backgrounds via SVG patterns
-- Stone button UI elements with game-authentic hover/press states
-- Tooltip-style hover effects matching in-game tooltips
-- Mob silhouettes, tool icons, block borders as decorative SVG assets
-- XP bar accents and progress-style elements
-- WCAG AA contrast compliance across all themed elements
-- Full mobile responsiveness with no overlapping elements
 
 ### Future (candidates)
 
@@ -126,7 +117,7 @@ A professional online presence that showcases work and is easy to maintain with 
 - [ ] CONT-02: Search functionality
 - [ ] BRICK-05-07: Advanced LEGO brick elements (sidebar panel, footer, varied stud patterns)
 - [ ] ANIM-03-04: LEGO building animation and instruction manual styling
-- [x] IMMERSIVE-01: Minecraft theme immersive transform (→ v5.0)
+- [x] IMMERSIVE-01: Minecraft theme immersive transform (→ v5.0, shipped)
 - [ ] IMMERSIVE-02: Synthwave theme immersive transform
 
 ### Out of Scope
@@ -151,13 +142,13 @@ A professional online presence that showcases work and is easy to maintain with 
 
 ## Context
 
-Shipped v4.0 with immersive LEGO theme. Total codebase ~4,200 LOC TypeScript/Astro/CSS.
+Shipped v5.0 with immersive Minecraft theme. Total codebase ~4,900 LOC TypeScript/Astro/CSS.
 Tech stack: Astro 5.x, TypeScript, Sveltia CMS, Shiki, Fontsource, GitHub Pages, CSS custom properties.
 26 content files across 4 collections, all validated against Zod schemas.
 Known tech debt: manual schema sync between content.config.ts and config.yml.
-LEGO immersive theme pattern proven successful — repeatable for Minecraft, Synthwave, Retro Terminal if desired.
-Font payload (170KB Fontsource) is the primary performance cost; Lighthouse 89/100 with all Core Web Vitals green.
-v5.0 scope: Immersive Minecraft theme with pixel fonts, SVG textures/assets, hotbar nav, inventory cards, Creeper motif. Go-all-out creative direction with WCAG compliance.
+Two immersive themes shipped (LEGO + Minecraft) — pattern proven repeatable for Synthwave, Retro Terminal if desired.
+650 lines of Minecraft CSS (minecraft.css), 14 SVG pixel-art assets, 85 scoped selectors with zero leakage.
+Font payload (~230KB total Fontsource across LEGO + Minecraft fonts); Lighthouse 40-44/100 range (acceptable for theme-heavy pages).
 
 ## Key Decisions
 
@@ -188,6 +179,13 @@ v5.0 scope: Immersive Minecraft theme with pixel fonts, SVG textures/assets, hot
 | Static fonts over variable (170KB vs 240KB) | Only specific weights needed, smaller payload | ✓ Good |
 | cubic-bezier bounce over CSS linear() | 99% browser support vs 75%, perceptually equivalent | ✓ Good |
 | Accept Lighthouse 89/100 | All Core Web Vitals green, font payload justified | ✓ Good |
+| Fontsource pixel fonts (Silkscreen, Press Start 2P, Pixelify Sans) | Same pattern as LEGO, ~60KB total, self-hosted | ✓ Good |
+| SVG pixel-art textures/assets (14 files, ~11KB) | No npm deps, image-rendering: pixelated for crisp display | ✓ Good |
+| CSS pseudo-elements for decorative assets | Zero HTML changes, pure CSS, no layout impact | ✓ Good |
+| nav:not(.author-links) scoping | Prevents hotbar rules from affecting sidebar navigation | ✓ Good |
+| Transitions inside prefers-reduced-motion only | Accessible by default, progressive enhancement | ✓ Good |
+| Press Start 2P font-weight 400 only | Bitmap font — synthetic bold at 700 causes artifacts | ✓ Good |
+| word-break on pixel-font headings | Bitmap fonts can't naturally break — prevents 320px overflow | ✓ Good |
 
 ---
-*Last updated: 2026-02-18 after v5.0 milestone started*
+*Last updated: 2026-02-18 after v5.0 milestone shipped*
