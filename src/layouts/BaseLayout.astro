@@ -38,7 +38,9 @@ const {
       (function() {
         try {
           var t = localStorage.getItem('site-theme');
-          if (t && t !== 'auto' && t !== 'light') {
+          if (t === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+          } else if (t && t !== 'auto') {
             document.documentElement.setAttribute('data-theme', t);
           } else if (t === 'auto') {
             if (window.matchMedia('(prefers-color-scheme: dark)').matches) {

@@ -79,8 +79,8 @@ const themes = [
     const docEl = document.documentElement;
 
     if (theme === 'light') {
-      // Light theme uses :root defaults (no attribute)
-      docEl.removeAttribute('data-theme');
+      // Light theme: set explicit attribute so it wins over OS dark preference
+      docEl.setAttribute('data-theme', 'light');
     } else if (theme === 'auto') {
       // Auto mode: check system preference
       if (window.matchMedia('(prefers-color-scheme: dark)').matches) {

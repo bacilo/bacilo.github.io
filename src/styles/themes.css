@@ -29,6 +29,17 @@
   }
 }
 
+/* Light Theme - Explicit light palette, immune to OS dark preference */
+[data-theme="light"] {
+  --color-bg: #ffffff;
+  --color-text: #333333;
+  --color-text-muted: #666666;
+  --color-link: #0066cc;
+  --color-link-hover: #004499;
+  --color-border: #e0e0e0;
+  --color-header-bg: #f8f9fa;
+}
+
 /* Dark Theme */
 [data-theme="dark"] {
   --color-bg: #1a1a1a;
@@ -833,7 +844,9 @@
 
 /* Default (light theme) - use light code colors */
 :root .astro-code,
-:root .astro-code span {
+[data-theme="light"] .astro-code,
+:root .astro-code span,
+[data-theme="light"] .astro-code span {
   color: var(--shiki-light) !important;
   background-color: var(--shiki-light-bg) !important;
 }
