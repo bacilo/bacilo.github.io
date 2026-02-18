@@ -70,7 +70,7 @@
 - [x] **Phase 22: Visual Foundation** — Color palette, SVG block textures, pixel fonts, contrast-safe mapping (completed 2026-02-18)
 - [x] **Phase 23: Component Transforms** — Hotbar nav, inventory cards, stone buttons, tooltips, sidebar, footer, code blocks, theme switcher (completed 2026-02-18)
 - [x] **Phase 24: Decorative Assets & Animations** — Mob silhouettes, tool icons, Creeper motif, XP/heart accents, hover animations (completed 2026-02-18)
-- [ ] **Phase 25: Validation & Polish** — WCAG contrast audit, cross-browser, mobile responsive, Lighthouse, theme switching
+- [x] **Phase 25: Validation & Polish** — WCAG contrast audit, cross-browser, mobile responsive, Lighthouse, theme switching (completed 2026-02-18)
 
 ## Phase Details
 
@@ -128,7 +128,7 @@ Plans:
   1. Switching FROM the Minecraft theme to any other theme (light, dark, sepia, retro terminal, LEGO, synthwave, auto) produces a visually clean result with zero Minecraft styles visible
   2. Every themed element renders without overlapping or truncation on a 320px-wide viewport
   3. Lighthouse performance score with the Minecraft theme active is within 10 points of the score with no theme active
-**Plans:** 1/2 plans executed
+**Plans:** 2/2 plans complete
 Plans:
 - [ ] 25-01-PLAN.md — CSS leakage audit and defensive 320px responsive fixes
 - [ ] 25-02-PLAN.md — Lighthouse performance comparison and visual verification checkpoint
@@ -161,7 +161,7 @@ Plans:
 | 22. Visual Foundation | v5.0 | 2/2 | Complete | 2026-02-18 |
 | 23. Component Transforms | v5.0 | 3/3 | Complete | 2026-02-18 |
 | 24. Decorative Assets & Animations | v5.0 | 2/2 | Complete | 2026-02-18 |
-| 25. Validation & Polish | 1/2 | In Progress|  | - |
+| 25. Validation & Polish | 2/2 | Complete   | 2026-02-18 | - |
 
 ---
 *Roadmap created: 2026-02-16*

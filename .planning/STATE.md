@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-18)
 
 **Core value:** A professional online presence that showcases work and is easy to maintain with monthly content updates
-**Current focus:** v5.0 Immersive Minecraft Theme — Phase 25 in progress (Plan 01 complete)
+**Current focus:** v5.0 Immersive Minecraft Theme — Phase 25 COMPLETE
 
 ## Current Position
 
-Phase: 25 of 25 (Validation & Polish — in progress)
-Plan: 01 of 02 (CSS Leakage Audit & 320px Responsive Fixes — complete)
-Status: Phase 25 Plan 01 complete — QUAL-01 audit passed (zero leakage), QUAL-02 responsive fixes added; ready for Plan 02
-Last activity: 2026-02-18 — 25-01 complete: 5-check leakage audit passed, word-break/overflow-wrap on headings, sidebar max-width at 480px
+Phase: 25 of 25 (Validation & Polish — complete)
+Plan: 02 of 02 (Lighthouse Performance Comparison and Visual QA — complete)
+Status: Phase 25 complete — QUAL-01 (zero leakage, human-verified), QUAL-02 (320px responsive, human-verified), QUAL-03 (Lighthouse delta 4pts, passes)
+Last activity: 2026-02-18 — 25-02 complete: Lighthouse delta 4pts (44 vs 40), all 12 visual checks approved by user
 
-Progress: [████████░░] 89% (v5.0 — 8/9 plans complete)
+Progress: [██████████] 100% (v5.0 — 9/9 plans complete)
 
 ## Performance Metrics
 
@@ -39,16 +39,16 @@ Progress: [████████░░] 89% (v5.0 — 8/9 plans complete)
 - Total execution time: ~13 minutes
 
 **Velocity (v5.0):**
-- Total plans completed: 8
-- Average duration: ~1.9 minutes
-- Total execution time: ~15 minutes
+- Total plans completed: 9
+- Average duration: ~3.9 minutes
+- Total execution time: ~35 minutes
 
 **Overall:**
-- Total plans: 39 (across 25 phases, 5 milestones)
-- Cumulative time: ~2.4 hours
+- Total plans: 40 (across 25 phases, 5 milestones)
+- Cumulative time: ~2.5 hours
 - Average: ~3.9 minutes per plan
 
-*Updated: 2026-02-18 after 25-01 complete*
+*Updated: 2026-02-18 after 25-02 complete (Phase 25 done, v5.0 milestone complete)*
 
 ## Accumulated Context
 
@@ -93,6 +93,8 @@ Key decisions relevant to v5.0:
 - [25-01] Sidebar max-width fix scoped to 480px (not 768px) — global.css already hides sidebar at 768px for non-home pages; fix targets home page only
 - [25-01] Code block overflow-x: auto confirmed already present in COMP-01 section — no duplication added
 - [25-01] Portfolio grid minmax(280px, 1fr) confirmed collapses to single column at 320px — no CSS changes needed
+- [25-02] Lighthouse headless Chrome ignores localStorage — data-theme must be hardcoded in BaseLayout.astro for the themed run, then reverted immediately
+- [25-02] QUAL-03 delta: 44 (no-theme) vs 40 (Minecraft) = 4 points — well within the 10-point threshold; no font preload needed
 
 ### Pending Todos
 
@@ -105,8 +107,8 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-18
-Stopped at: 25-01-PLAN.md complete — QUAL-01 audit passed (81 selectors, zero leakage), QUAL-02 responsive fixes added (selector count now 85)
-Resume: Run `/gsd:execute-phase 25` to continue Phase 25 with Plan 02 (browser rendering verification)
+Stopped at: 25-02-PLAN.md complete — Phase 25 fully done; QUAL-01/02/03 all verified; v5.0 Immersive Minecraft Theme milestone complete
+Resume: v5.0 milestone complete — no further phases planned
 
 ## Archives
 
