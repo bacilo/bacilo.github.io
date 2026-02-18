@@ -3,12 +3,36 @@
     "title": "Pedro Ferreira",
     "description": "Academic website and portfolio",
     "nav": [
-      { "href": "/", "label": "Home", "visible": true },
-      { "href": "/publications/", "label": "Publications", "visible": true },
-      { "href": "/talks/", "label": "Talks", "visible": true },
-      { "href": "/posts/", "label": "Blog", "visible": true },
-      { "href": "/portfolio/", "label": "Portfolio", "visible": true },
-      { "href": "/cv/", "label": "CV", "visible": true }
+      {
+        "label": "Home",
+        "href": "/",
+        "visible": true
+      },
+      {
+        "label": "Publications",
+        "href": "/publications/",
+        "visible": true
+      },
+      {
+        "label": "Talks",
+        "href": "/talks/",
+        "visible": false
+      },
+      {
+        "label": "Blog",
+        "href": "/posts/",
+        "visible": true
+      },
+      {
+        "label": "Portfolio",
+        "href": "/portfolio/",
+        "visible": true
+      },
+      {
+        "label": "CV",
+        "href": "/cv/",
+        "visible": false
+      }
     ]
   },
   "author": {
